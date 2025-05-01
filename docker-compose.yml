@@ -1,0 +1,40 @@
+services:
+
+  mysql:
+    build:
+      context: ./backend/docker/mysql
+      dockerfile: Dockerfile
+    container_name: mysql-container
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+
+  backend:
+    depends_on:
+      - mysql
+    build:
+      context: ./backend
+      dockerfile: ./docker/springboot/Dockerfile
+    container_name: springboot-container
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+    entrypoint: ["sh", "-c", "until nc -z mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done; java -jar /app/myapp.jar"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - "4200:80"
+    networks:
+      - my-network
+    depends_on:
+      - springboot
+
+networks:
+  my-network:
+    driver: bridge
