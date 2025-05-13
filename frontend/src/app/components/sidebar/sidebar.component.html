@@ -1,0 +1,32 @@
+<nav class="sidebar">
+  <div class="logo">
+    <img ngSrc="assets/img/logoBlanco.png" alt="Logo oPROsita" height="1024" width="1024" />
+  </div>
+  <ul class="menu">
+    <li>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <mat-icon>home</mat-icon> Inicio
+      </a>
+    </li>
+    <li>
+      <a routerLink="/grupos" routerLinkActive="active">
+        <mat-icon>group</mat-icon> Grupos
+      </a>
+    </li>
+    <li>
+      <a routerLink="/alumnado" routerLinkActive="active">
+        <mat-icon>school</mat-icon> Alumnado
+      </a>
+    </li>
+    <li>
+      <a routerLink="/simulacros" routerLinkActive="active">
+        <mat-icon>description</mat-icon> Simulacros
+      </a>
+    </li>
+    <li>
+      <a routerLink="/noticias" routerLinkActive="active">
+        <mat-icon>article</mat-icon> Noticias
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+// Cargar estilos base de Material una sola vez
+@include mat.core();
+
+// Definir el tema personalizado
+$frontend-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,   // puedes cambiar esto luego por tu verde custom
+    tertiary: mat.$blue-palette,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+// Aplicar el tema a todos los componentes
+:root {
+  @include mat.all-component-themes($frontend-theme);
+}
+
+// Tipografía (opcional)
+@include mat.typography-hierarchy($frontend-theme);
