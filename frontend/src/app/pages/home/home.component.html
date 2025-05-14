@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="home-container">
+  <div class="content-left">
+    <app-plank
+      [title]="'Novedades para profesor'"
+      [lines]="novedadesProfesor">
+    </app-plank>
+
+    <app-plank
+      [title]="'Novedades para alumnos'"
+      [editable]=true
+      [lines]="novedadesAlumno"
+      (add)="addNuevaNovedad($event)">
+    </app-plank>
+  </div>
+
+  <div class="content-right">
+    <app-calendar></app-calendar>
+    <app-ui-button text="Reunirse"></app-ui-button>
+  </div>
+</div>

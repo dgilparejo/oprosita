@@ -1,0 +1,53 @@
+.calendar-container {
+  width: 100%;
+  max-width: 300px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-icon {
+  color: var(--forest-green);
+}
+
+.month-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #666;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+}
+
+.day-label {
+  font-weight: bold;
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+}
+
+.day-cell {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 13px;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.day-cell .today {
+  background-color: var(--forest-green);
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+}

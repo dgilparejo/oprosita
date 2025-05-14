@@ -1,0 +1,10 @@
+<button mat-icon-button [matMenuTriggerFor]="menu" class="avatar-btn">
+  <div class="avatar-circle">{{ initials }}</div>
+</button>
+
+<mat-menu #menu="matMenu" yPosition="below" xPosition="before" class="user-menu">
+  <button mat-menu-item (click)="logout()" class="logout-button">
+    <mat-icon class="logout-icon">logout</mat-icon>
+    <span class="logout-text">Cerrar sesión</span>
+  </button>
+</mat-menu>

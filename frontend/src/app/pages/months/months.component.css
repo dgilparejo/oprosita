@@ -1,0 +1,9 @@
+.months-container {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+app-list {
+  width: 95%;
+}

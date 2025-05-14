@@ -1,6 +1,6 @@
 .sidebar {
   width: 180px;
-  background-color: #00664f;
+  background-color: var(--forest-green);
   color: white;
   height: 100vh;
   display: flex;
@@ -11,13 +11,19 @@
 
 .logo {
   width: 100%;
-  padding: 1rem 0;
   text-align: center;
-  border-bottom: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 57px;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 .logo img {
-  width: 80%;
+  width: 100%;
   max-width: 100px;
   height: auto;
 }
@@ -30,7 +36,6 @@
 }
 
 .menu li {
-  text-align: center;
   margin: 1rem 0;
 }
 
@@ -38,12 +43,15 @@
   color: white;
   text-decoration: none;
   font-weight: bold;
-  display: block;
-  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
   transition: background-color 0.3s;
 }
 
 .menu a.active,
 .menu a:hover {
-  background-color: #004d3f;
+  background-color: var(--hover-green);
 }

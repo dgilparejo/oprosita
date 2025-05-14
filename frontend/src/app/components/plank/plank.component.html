@@ -1,0 +1,22 @@
+<div class="plank">
+  <h2>{{ title }}</h2>
+
+  <div class="scrollable-content">
+    <ul>
+      <li *ngFor="let line of lines; let i = index">
+        {{ line }}
+        <button *ngIf="editable" (click)="delete(i)">🗑</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="editable" class="form-area">
+    <textarea [(ngModel)]="newLine"
+              rows="2"
+              placeholder="Escribe una novedad..."
+              (keyup.enter)="submit()"
+              (blur)="submit()"></textarea>
+
+    <app-ui-button text="Añadir contenido" (click)="submit()"></app-ui-button>
+  </div>
+</div>

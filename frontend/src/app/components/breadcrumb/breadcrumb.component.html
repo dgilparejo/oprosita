@@ -1,2 +1,16 @@
-<p>sidebar works!</p>
-<li><a routerLink="/chat" routerLinkActive="active">Chat</a></li>
+<div class="breadcrumb-container">
+  <div class="breadcrumb-left">
+    <ng-container *ngFor="let bc of breadcrumbs; let last = last">
+      <a [routerLink]="bc.url" class="breadcrumb-link">{{ bc.label }}</a>
+      <span *ngIf="!last">&nbsp;&gt;&nbsp;</span>
+    </ng-container>
+  </div>
+
+  <div class="breadcrumb-right">
+    <a mat-stroked-button routerLink="/chat" class="chat-button">
+      <mat-icon>chat</mat-icon>
+      Chat
+    </a>
+    <app-user-profile></app-user-profile>
+  </div>
+</div>

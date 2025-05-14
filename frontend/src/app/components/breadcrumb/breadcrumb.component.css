@@ -1,0 +1,47 @@
+.breadcrumb-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+}
+
+.breadcrumb-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chat-button mat-icon {
+  margin-right: 0.4rem;
+}
+
+app-breadcrumb {
+  height: 65px;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.chat-button {
+  border-color: var(--forest-green);
+  color: var(--forest-green) !important;
+}
+
+.chat-button mat-icon {
+  color: var(--forest-green);
+}
+
+.chat-button:hover {
+  background-color: #e6f2ef;
+}
+
+.breadcrumb-link {
+  color: var(--forest-green);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}

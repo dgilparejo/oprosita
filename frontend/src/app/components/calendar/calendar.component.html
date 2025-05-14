@@ -1,0 +1,12 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <mat-icon class="calendar-icon">calendar_month</mat-icon>
+    <span class="month-label">{{ currentMonth }}</span>
+  </div>
+  <div class="calendar-grid">
+    <div class="day-label" *ngFor="let day of daysOfWeek">{{ day }}</div>
+    <div class="day-cell" *ngFor="let day of days">
+      <span [class.today]="day === 16">{{ day }}</span>
+    </div>
+  </div>
+</div>
