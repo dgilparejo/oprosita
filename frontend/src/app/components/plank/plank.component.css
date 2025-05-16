@@ -57,3 +57,22 @@ app-ui-button {
   margin-top: 0.5rem;
   align-self: flex-start;
 }
+
+.archivo-link {
+  display: flex;
+  align-items: center;
+  color: var(--forest-green);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.archivo-link:hover {
+  text-decoration: underline;
+}
+
+.documento-icon {
+  margin-left: 8px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}

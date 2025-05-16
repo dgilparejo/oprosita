@@ -1,0 +1,37 @@
+<div class="monthdetail-container">
+  <app-ui-item [label]="mes | titlecase"></app-ui-item>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Temas"
+      [editable]="false"
+      [lines]="contenido.temas"
+      [allowDeleteOnly]="true">
+      (add)="addNuevoTema($event)">
+    </app-plank>
+  </div>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Programación"
+      [editable]="false"
+      [lines]="contenido.programacion"
+      [allowDeleteOnly]="true">
+      (add)="addNuevaProgramacion($event)">
+    </app-plank>
+  </div>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Práctico"
+      [editable]="false"
+      [lines]="contenido.practico"
+      [allowDeleteOnly]="true">
+      (add)="addNuevoPractico($event)">
+    </app-plank>
+  </div>
+
+  <div class="boton-contenido">
+    <app-ui-button text="Añadir contenido" (click)="addContent()"></app-ui-button>
+  </div>
+</div>

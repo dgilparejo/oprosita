@@ -1,14 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf} from '@angular/common';
+import {UiItemComponent} from '../ui-item/ui-item.component';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [
-    NgForOf
-  ],
+  imports: [NgForOf, UiItemComponent],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.css'
+  styleUrls: ['./list.component.css']
 })
 export class ListComponent {
   @Input() items: string[] = [];
@@ -17,5 +16,4 @@ export class ListComponent {
   emitClick(item: string) {
     this.itemClicked.emit(item);
   }
-
 }

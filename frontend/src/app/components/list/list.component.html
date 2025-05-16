@@ -1,5 +1,7 @@
 <ul class="list">
-  <li *ngFor="let item of items" (click)="emitClick(item)">
-    {{ item }}
-  </li>
+  <app-ui-item
+    *ngFor="let item of items"
+    [label]="item"
+    (clicked)="emitClick(item)">
+  </app-ui-item>
 </ul>

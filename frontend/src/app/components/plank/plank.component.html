@@ -5,7 +5,7 @@
     <ul>
       <li *ngFor="let line of lines; let i = index">
         {{ line }}
-        <button *ngIf="editable" (click)="delete(i)">🗑</button>
+        <button *ngIf="editable || allowDeleteOnly" (click)="delete(i)">🗑</button>
       </li>
     </ul>
   </div>

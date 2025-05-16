@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
-import {UiButtonComponent} from '../ui-button/ui-button.component';
+import { UiButtonComponent } from '../ui-button/ui-button.component';
 
 @Component({
   selector: 'app-plank',
@@ -15,6 +15,7 @@ export class PlankComponent {
   @Input() lines: string[] = [];
   @Input() title = '';
   @Input() editable = false;
+  @Input() allowDeleteOnly = false;
 
   @Output() add = new EventEmitter<string>();
 
@@ -26,6 +27,7 @@ export class PlankComponent {
       this.newLine = '';
     }
   }
+
   delete(index: number) {
     this.lines.splice(index, 1);
   }

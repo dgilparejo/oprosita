@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Añadir nuevo contenido</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>Tipo de contenido</mat-label>
+    <mat-select [(ngModel)]="data.tipo">
+      <mat-option value="temas">Tema</mat-option>
+      <mat-option value="programacion">Programación</mat-option>
+      <mat-option value="practico">Práctico</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>Descripción</mat-label>
+    <input matInput [(ngModel)]="data.descripcion" placeholder="Ej: Tema 1">
+  </mat-form-field>
+
+  <div class="pdf-upload-container">
+    <label for="document-upload" class="pdf-upload-label">
+      <mat-icon>upload_file</mat-icon>
+      <span>{{ data.documentFile ? data.documentFile.name : 'Añadir documento' }}</span>
+    </label>
+    <input type="file" id="document-upload"
+           accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+           (change)="onFileSelected($event)"
+           style="display: none;">
+    <small class="supported-formats">Formatos: PDF, Word, PowerPoint, Excel</small>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button color="primary" (click)="onSubmit()" [disabled]="!isValid()">Añadir</button>
+</mat-dialog-actions>

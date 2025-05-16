@@ -1,0 +1,58 @@
+.monthdetail-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plank-wrapper {
+  width: 95%;
+  margin-bottom: 1.5rem;
+}
+
+app-ui-item {
+  margin-bottom: 1.5rem;
+  display: block;
+  width: 95%;
+}
+
+.monthdetail-wrapper {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contenido-item {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contenido-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.contenido-item strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--forest-green);
+}
+
+.contenido-item p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.boton-contenido {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}

@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
   standalone: true,
   imports: [CommonModule, ListComponent],
   templateUrl: './groups.component.html',
-  styleUrl: './groups.component.css'
+  styleUrls: ['./groups.component.css']
 })
 export class GroupsComponent {
   grupos = ['Grupo 1', 'Grupo 2', 'Grupo 3'];
@@ -16,7 +16,7 @@ export class GroupsComponent {
   constructor(private router: Router) {}
 
   irAMeses(nombreGrupo: string) {
-    const id = nombreGrupo.toLowerCase().replace(/\s/g, '-'); // grupo-1
+    const id = nombreGrupo.toLowerCase().replace(/\s/g, '-');
     this.router.navigate([`/grupos/${id}`]);
   }
 }
