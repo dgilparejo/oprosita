@@ -6,7 +6,9 @@
 app-sidebar {
   width: 180px;
   flex-shrink: 0;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
 }
 
 .main-content {
