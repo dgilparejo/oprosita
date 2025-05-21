@@ -2,14 +2,33 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.0.0
+  version: 1.0.1
 
 servers:
   - url: http://localhost:8080/api
 
+tags:
+  - name: grupos
+    description: Operaciones con grupos de alumnos
+  - name: alumnos
+    description: Gestión de alumnos
+  - name: contenido
+    description: Gestión de contenido educativo
+  - name: simulacros
+    description: Operaciones con simulacros de examen
+  - name: novedades
+    description: Sistema de novedades y notificaciones
+  - name: noticias
+    description: Gestión de noticias
+  - name: archivos
+    description: Gestión de archivos y documentos
+
 paths:
   /grupos:
     get:
+      tags:
+        - grupos
+      operationId: getGrupos
       summary: Obtener todos los grupos
       responses:
         '200':
@@ -23,6 +42,9 @@ paths:
         '500':
           description: Error interno
     post:
+      tags:
+        - grupos
+      operationId: createGrupo
       summary: Crear un nuevo grupo
       requestBody:
         required: true
@@ -36,6 +58,9 @@ paths:
 
   /grupos/{id}:
     get:
+      tags:
+        - grupos
+      operationId: getGrupoById
       summary: Obtener detalle de un grupo
       parameters:
         - in: path
@@ -53,6 +78,9 @@ paths:
         '404':
           description: Grupo no encontrado
     put:
+      tags:
+        - grupos
+      operationId: updateGrupo
       summary: Actualizar un grupo
       parameters:
         - in: path
@@ -70,6 +98,9 @@ paths:
         '200':
           description: Grupo actualizado
     delete:
+      tags:
+        - grupos
+      operationId: deleteGrupo
       summary: Eliminar un grupo
       parameters:
         - in: path
@@ -85,6 +116,10 @@ paths:
 
   /grupos/{grupoId}/alumnos:
     get:
+      tags:
+        - grupos
+        - alumnos
+      operationId: getAlumnosByGrupo
       summary: Obtener alumnos de un grupo
       parameters:
         - in: path
@@ -96,6 +131,10 @@ paths:
         '200':
           description: Lista de alumnos
     post:
+      tags:
+        - grupos
+        - alumnos
+      operationId: addAlumnoToGrupo
       summary: Añadir un alumno a un grupo
       parameters:
         - in: path
@@ -115,6 +154,10 @@ paths:
 
   /grupos/{grupoId}/alumnos/{alumnoId}:
     delete:
+      tags:
+        - grupos
+        - alumnos
+      operationId: removeAlumnoFromGrupo
       summary: Eliminar un alumno de un grupo
       parameters:
         - in: path
@@ -133,6 +176,9 @@ paths:
 
   /alumnos/{id}:
     delete:
+      tags:
+        - alumnos
+      operationId: deleteAlumno
       summary: Eliminar un alumno
       parameters:
         - in: path
@@ -146,6 +192,10 @@ paths:
 
   /alumnos/{alumnoId}/contenido:
     get:
+      tags:
+        - alumnos
+        - contenido
+      operationId: getContenidoByAlumno
       summary: Obtener contenido de un alumno
       parameters:
         - in: path
@@ -158,6 +208,10 @@ paths:
           description: Lista de contenido
 
     post:
+      tags:
+        - alumnos
+        - contenido
+      operationId: addContenidoToAlumno
       summary: Añadir contenido al alumno (texto + tipo + PDF)
       parameters:
         - in: path
@@ -188,6 +242,10 @@ paths:
 
   /alumnos/{alumnoId}/contenido/{contenidoId}:
     delete:
+      tags:
+        - alumnos
+        - contenido
+      operationId: deleteContenidoFromAlumno
       summary: Eliminar un contenido del alumno
       parameters:
         - in: path
@@ -206,6 +264,10 @@ paths:
 
   /grupos/{grupoId}/meses/{mes}/contenido:
     get:
+      tags:
+        - grupos
+        - contenido
+      operationId: getContenidoByGrupoAndMes
       summary: Obtener contenido por grupo y mes
       parameters:
         - in: path
@@ -228,6 +290,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/ContenidoItem'
     post:
+      tags:
+        - grupos
+        - contenido
+      operationId: addContenidoToGrupoByMes
       summary: Añadir contenido a un grupo en un mes
       parameters:
         - in: path
@@ -252,6 +318,9 @@ paths:
 
   /contenido/{id}:
     delete:
+      tags:
+        - contenido
+      operationId: deleteContenido
       summary: Eliminar un contenido
       parameters:
         - in: path
@@ -262,9 +331,32 @@ paths:
       responses:
         '204':
           description: Contenido eliminado correctamente
+    put:
+      tags:
+        - contenido
+      operationId: updateContenido
+      summary: Actualizar un contenido
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContenidoItem'
+      responses:
+        '200':
+          description: Contenido actualizado
 
   /simulacros:
     get:
+      tags:
+        - simulacros
+      operationId: getSimulacros
       summary: Obtener simulacros
       responses:
         '200':
@@ -277,6 +369,9 @@ paths:
                   $ref: '#/components/schemas/Simulacro'
 
     post:
+      tags:
+        - simulacros
+      operationId: createSimulacro
       summary: Crear un nuevo simulacro (PDF + descripción)
       requestBody:
         required: true
@@ -298,6 +393,9 @@ paths:
 
   /simulacros/{id}:
     delete:
+      tags:
+        - simulacros
+      operationId: deleteSimulacro
       summary: Eliminar un simulacro
       parameters:
         - in: path
@@ -311,6 +409,9 @@ paths:
 
   /novedades/profesor:
     get:
+      tags:
+        - novedades
+      operationId: getNovedadesProfesor
       summary: Obtener novedades para profesores
       responses:
         '200':
@@ -323,6 +424,9 @@ paths:
                   $ref: '#/components/schemas/Novedad'
 
     post:
+      tags:
+        - novedades
+      operationId: createNovedadProfesor
       summary: Crear novedad para profesores
       requestBody:
         required: true
@@ -336,6 +440,9 @@ paths:
 
   /novedades/alumno:
     get:
+      tags:
+        - novedades
+      operationId: getNovedadesAlumno
       summary: Obtener novedades para alumnos
       responses:
         '200':
@@ -348,6 +455,9 @@ paths:
                   $ref: '#/components/schemas/Novedad'
 
     post:
+      tags:
+        - novedades
+      operationId: createNovedadAlumno
       summary: Crear novedad para alumnos
       requestBody:
         required: true
@@ -360,6 +470,9 @@ paths:
           description: Novedad creada
 
     put:
+      tags:
+        - novedades
+      operationId: updateNovedadAlumno
       summary: Actualizar novedad para alumno
       requestBody:
         required: true
@@ -372,6 +485,9 @@ paths:
           description: Novedad actualizada
 
     delete:
+      tags:
+        - novedades
+      operationId: deleteNovedadesAlumno
       summary: Eliminar todas las novedades para alumno
       responses:
         '204':
@@ -379,6 +495,9 @@ paths:
 
   /novedades/{id}:
     delete:
+      tags:
+        - novedades
+      operationId: deleteNovedad
       summary: Eliminar una novedad
       parameters:
         - in: path
@@ -392,6 +511,9 @@ paths:
 
   /noticias:
     get:
+      tags:
+        - noticias
+      operationId: getNoticias
       summary: Obtener noticias
       responses:
         '200':
@@ -404,6 +526,9 @@ paths:
                   $ref: '#/components/schemas/Noticia'
 
     post:
+      tags:
+        - noticias
+      operationId: createNoticia
       summary: Crear una nueva noticia (PDF + descripción)
       requestBody:
         required: true
@@ -424,6 +549,9 @@ paths:
           description: Noticia creada
   /noticias/{id}:
     delete:
+      tags:
+        - noticias
+      operationId: deleteNoticia
       summary: Eliminar una noticia
       parameters:
         - in: path
@@ -437,6 +565,9 @@ paths:
 
   /archivos/upload:
     post:
+      tags:
+        - archivos
+      operationId: uploadArchivo
       summary: Subir archivo
       requestBody:
         required: true
@@ -454,6 +585,9 @@ paths:
 
   /archivos/{id}/download:
     get:
+      tags:
+        - archivos
+      operationId: downloadArchivo
       summary: Descargar archivo por ID
       parameters:
         - in: path
