@@ -1,0 +1,13 @@
+<div class="monthdetail-container">
+  <app-ui-item label="Últimas noticias"></app-ui-item>
+
+  <div class="plank-wrapper">
+    <div class="contenido-item" *ngFor="let noticia of noticias">
+      {{ noticia }}
+    </div>
+  </div>
+
+  <div class="boton-contenido">
+    <app-ui-button text="Añadir contenido" (click)="addNoticia()"></app-ui-button>
+  </div>
+</div>
