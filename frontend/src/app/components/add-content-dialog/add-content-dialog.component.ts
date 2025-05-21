@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +31,17 @@ export class AddContentDialogComponent {
     documentFile: null as File | null
   };
 
-  constructor(private dialogRef: MatDialogRef<AddContentDialogComponent>) {}
+  fixedTipo: string | null = null;
+
+  constructor(
+    private dialogRef: MatDialogRef<AddContentDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public injectedData: { fixedTipo?: string } // <-- nuevo
+  ) {
+    if (injectedData?.fixedTipo) {
+      this.fixedTipo = injectedData.fixedTipo;
+      this.data.tipo = this.fixedTipo;
+    }
+  }
 
   isValid(): boolean {
     return this.data.tipo !== '' && this.data.descripcion.trim() !== '';
