@@ -14,5 +14,25 @@ export const routes: Routes = [
   {
     path: 'grupos/:id/:mes',
     component: MonthDetailComponent
+  },
+  {
+    path: 'alumnado',
+    component: GroupsComponent,
+    title: 'Alumnado'
+  },
+  {
+    path: 'alumnado/:id',
+    loadComponent: () => import('./pages/students/students.component').then(m => m.StudentsComponent),
+    title: 'Alumnado'
+  },
+  {
+    path: 'simulacros',
+    loadComponent: () => import('./pages/simulation/simulation.component').then(m => m.SimulationComponent),
+    title: 'Simulacros'
+  },
+  {
+    path: 'noticias',
+    loadComponent: () => import('./pages/news/news.component').then(m => m.NewsComponent),
+    title: 'Noticias'
   }
 ];

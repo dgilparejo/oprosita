@@ -1,0 +1,39 @@
+<div class="monthdetail-container">
+  <app-ui-item [label]="grupoNombre"></app-ui-item>
+  <mat-accordion class="students-accordion" multi>
+    <mat-expansion-panel *ngFor="let alumno of alumnos">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ alumno.nombre }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="plank-wrapper">
+        <app-plank
+          title="Temas"
+          [editable]="false"
+          [lines]="alumno.contenido.temas"
+          [allowDeleteOnly]="false">
+        </app-plank>
+      </div>
+
+      <div class="plank-wrapper">
+        <app-plank
+          title="Programación"
+          [editable]="false"
+          [lines]="alumno.contenido.programacion"
+          [allowDeleteOnly]="false">
+        </app-plank>
+      </div>
+
+      <div class="plank-wrapper">
+        <app-plank
+          title="Práctico"
+          [editable]="false"
+          [lines]="alumno.contenido.practico"
+          [allowDeleteOnly]="false">
+        </app-plank>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
