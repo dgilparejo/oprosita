@@ -33,18 +33,18 @@ public class ProfesorServiceImpl implements ProfesorService {
     public ProfesorDto obtenerPorId(Long id) {
         Profesor profesor = profesorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        return mapper.toDto(profesor);
+        return mapper.toProfesorDto(profesor);
     }
 
     @Override
     public List<ProfesorDto> obtenerTodos() {
-        return mapper.toDtoList(profesorRepository.findAll());
+        return mapper.toProfesorDtoList(profesorRepository.findAll());
     }
 
     @Override
     public ProfesorDto crear(ProfesorDto dto) {
-        Profesor profesor = mapper.toEntity(dto);
-        return mapper.toDto(profesorRepository.save(profesor));
+        Profesor profesor = mapper.toProfesorEntity(dto);
+        return mapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override
@@ -52,9 +52,9 @@ public class ProfesorServiceImpl implements ProfesorService {
         if (!profesorRepository.existsById(id)) {
             throw new NotFoundException("Profesor no encontrado");
         }
-        Profesor profesor = mapper.toEntity(dto);
+        Profesor profesor = mapper.toProfesorEntity(dto);
         profesor.setId(id);
-        return mapper.toDto(profesorRepository.save(profesor));
+        return mapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     public List<GrupoDto> obtenerGruposPorProfesor(Long profesorId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        return List.of(mapper.toDto(profesor.getGrupo()));
+        return List.of(mapper.toGrupoDto(profesor.getGrupo()));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ProfesorServiceImpl implements ProfesorService {
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
         profesor.setGrupo(grupo);
-        return mapper.toDto(profesorRepository.save(profesor));
+        return mapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override

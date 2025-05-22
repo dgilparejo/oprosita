@@ -30,21 +30,21 @@ public class ReunionServiceImpl implements ReunionService {
     public ReunionDto obtenerPorId(Long id) {
         Reunion reunion = reunionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Reunión no encontrada"));
-        return generalMapper.toDto(reunion);
+        return generalMapper.toReunionDto(reunion);
     }
 
     @Override
     public List<ReunionDto> obtenerTodos() {
         return reunionRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toReunionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ReunionDto crear(ReunionDto dto) {
-        Reunion reunion = generalMapper.toEntity(dto);
+        Reunion reunion = generalMapper.toReunionEntity(dto);
         reunion.setFechaHora(OffsetDateTime.parse(dto.getFechaHora(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        return generalMapper.toDto(reunionRepository.save(reunion));
+        return generalMapper.toReunionDto(reunionRepository.save(reunion));
     }
 
     @Override
@@ -53,10 +53,10 @@ public class ReunionServiceImpl implements ReunionService {
             throw new NotFoundException("Reunión no encontrada");
         }
 
-        Reunion reunion = generalMapper.toEntity(dto);
+        Reunion reunion = generalMapper.toReunionEntity(dto);
         reunion.setId(id);
         reunion.setFechaHora(OffsetDateTime.parse(dto.getFechaHora(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        return generalMapper.toDto(reunionRepository.save(reunion));
+        return generalMapper.toReunionDto(reunionRepository.save(reunion));
     }
 
     @Override
@@ -71,15 +71,15 @@ public class ReunionServiceImpl implements ReunionService {
     public List<ReunionDto> obtenerReunionesPorGrupo(Long grupoId) {
         return reunionRepository.findAll().stream()
                 .filter(r -> r.getGrupoId().equals(grupoId))
-                .map(generalMapper::toDto)
+                .map(generalMapper::toReunionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ReunionDto crearReunionParaGrupo(Long grupoId, ReunionDto reunionDto) {
-        Reunion reunion = generalMapper.toEntity(reunionDto);
+        Reunion reunion = generalMapper.toReunionEntity(reunionDto);
         reunion.setGrupoId(grupoId);
         reunion.setFechaHora(OffsetDateTime.parse(reunionDto.getFechaHora(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-        return generalMapper.toDto(reunionRepository.save(reunion));
+        return generalMapper.toReunionDto(reunionRepository.save(reunion));
     }
 }

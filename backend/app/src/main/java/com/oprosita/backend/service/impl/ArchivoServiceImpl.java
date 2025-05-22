@@ -32,21 +32,21 @@ public class ArchivoServiceImpl implements ArchivoService {
     public ArchivoDto obtenerPorId(Long id) {
         Archivo archivo = archivoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Archivo no encontrado"));
-        return generalMapper.toDto(archivo);
+        return generalMapper.toArchivoDto(archivo);
     }
 
     @Override
     public List<ArchivoDto> obtenerTodos() {
         return archivoRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toArchivoDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ArchivoDto crear(ArchivoDto dto) {
-        Archivo archivo = generalMapper.toEntity(dto);
+        Archivo archivo = generalMapper.toArchivoEntity(dto);
         archivo = archivoRepository.save(archivo);
-        return generalMapper.toDto(archivo);
+        return generalMapper.toArchivoDto(archivo);
     }
 
     @Override
@@ -54,10 +54,10 @@ public class ArchivoServiceImpl implements ArchivoService {
         if (!archivoRepository.existsById(id)) {
             throw new NotFoundException("Archivo no encontrado");
         }
-        Archivo archivo = generalMapper.toEntity(dto);
+        Archivo archivo = generalMapper.toArchivoEntity(dto);
         archivo.setId(id);
         archivo = archivoRepository.save(archivo);
-        return generalMapper.toDto(archivo);
+        return generalMapper.toArchivoDto(archivo);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ArchivoServiceImpl implements ArchivoService {
                     .build();
 
             archivo = archivoRepository.save(archivo);
-            return generalMapper.toDto(archivo);
+            return generalMapper.toArchivoDto(archivo);
 
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar el archivo", e);

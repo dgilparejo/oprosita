@@ -192,20 +192,23 @@ paths:
 
   /alumnos/{alumnoId}/contenido:
     get:
-      tags:
-        - alumnos
-        - contenido
-      operationId: getContenidoByAlumno
       summary: Obtener contenido de un alumno
+      operationId: getContenidoByAlumno
       parameters:
-        - in: path
-          name: alumnoId
+        - name: alumnoId
+          in: path
           required: true
           schema:
             type: integer
       responses:
         '200':
           description: Lista de contenido
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContenidoItem'
 
     post:
       tags:
@@ -426,20 +429,23 @@ paths:
 
   /alumnos/{alumnoId}/grupos:
     get:
-      tags:
-        - alumnos
-        - grupos
-      operationId: getGruposByAlumno
       summary: Obtener grupos de un alumno
+      operationId: getGruposByAlumno
       parameters:
-        - in: path
-          name: alumnoId
+        - name: alumnoId
+          in: path
           required: true
           schema:
             type: integer
       responses:
         '200':
           description: Lista de grupos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Grupo'
 
   /novedades/profesor:
     get:

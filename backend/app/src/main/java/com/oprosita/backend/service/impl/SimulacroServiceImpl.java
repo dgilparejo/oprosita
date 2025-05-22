@@ -36,26 +36,26 @@ public class SimulacroServiceImpl implements SimulacroService {
     public SimulacroDto obtenerPorId(Long id) {
         Simulacro simulacro = simulacroRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Simulacro no encontrado"));
-        return generalMapper.toDto(simulacro);
+        return generalMapper.toSimulacroDto(simulacro);
     }
 
     @Override
     public List<SimulacroDto> obtenerTodos() {
         return simulacroRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toSimulacroDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public SimulacroDto crear(SimulacroDto dto) {
-        Simulacro simulacro = generalMapper.toEntity(dto);
+        Simulacro simulacro = generalMapper.toSimulacroEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
             simulacro.setGrupo(grupo);
         }
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toDto(simulacro);
+        return generalMapper.toSimulacroDto(simulacro);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SimulacroServiceImpl implements SimulacroService {
         if (!simulacroRepository.existsById(id)) {
             throw new NotFoundException("Simulacro no encontrado");
         }
-        Simulacro simulacro = generalMapper.toEntity(dto);
+        Simulacro simulacro = generalMapper.toSimulacroEntity(dto);
         simulacro.setId(id);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
@@ -71,7 +71,7 @@ public class SimulacroServiceImpl implements SimulacroService {
             simulacro.setGrupo(grupo);
         }
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toDto(simulacro);
+        return generalMapper.toSimulacroDto(simulacro);
     }
 
     @Override
@@ -98,6 +98,6 @@ public class SimulacroServiceImpl implements SimulacroService {
                 .build();
 
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toDto(simulacro);
+        return generalMapper.toSimulacroDto(simulacro);
     }
 }

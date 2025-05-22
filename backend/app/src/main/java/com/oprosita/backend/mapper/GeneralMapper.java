@@ -10,74 +10,80 @@ import java.util.List;
 public interface GeneralMapper {
 
     // Grupo
-    GrupoDto toDto(Grupo grupo);
-    Grupo toEntity(GrupoDto grupoDto);
-    List<GrupoDto> toDtoList(List<Grupo> grupos);
-    List<Grupo> toEntityList(List<GrupoDto> grupoDtos);
+    GrupoDto toGrupoDto(Grupo grupo);
+    Grupo toGrupoEntity(GrupoDto grupoDto);
+    List<GrupoDto> toGrupoDtoList(List<Grupo> grupos);
+    List<Grupo> toGrupoEntityList(List<GrupoDto> grupoDtos);
 
     // Mes
-    MesDto toDto(Mes mes);
-    Mes toEntity(MesDto mesDto);
-    List<MesDto> toDtoList(List<Mes> meses);
-    List<Mes> toEntityList(List<MesDto> mesesDto);
+    MesDto toMesDto(Mes mes);
+    Mes toMesEntity(MesDto mesDto);
+    List<MesDto> toMesDtoList(List<Mes> meses);
+    List<Mes> toMesEntityList(List<MesDto> mesesDto);
+
+    // Reunion
+    ReunionDto toReunionDto(Reunion reunion);
+    Reunion toReunionEntity(ReunionDto reunionDto);
+    List<ReunionDto> toReunionDtoList(List<Reunion> reuniones);
+    List<Reunion> toReunionEntityList(List<ReunionDto> reunionesDto);
 
     // Usuario
-    UsuarioDto toDto(Usuario usuario);
-    Usuario toEntity(UsuarioDto usuarioDto);
-    List<UsuarioDto> toDtoList(List<Usuario> usuarios);
-    List<Usuario> toEntityList(List<UsuarioDto> usuariosDto);
+    UsuarioDto toUsuarioDto(Usuario usuario);
+    Usuario toUsuarioEntity(UsuarioDto usuarioDto);
+    List<UsuarioDto> toUsuarioDtoList(List<Usuario> usuarios);
+    List<Usuario> toUsuarioEntityList(List<UsuarioDto> usuariosDto);
 
     // Alumno
-    AlumnoDto toDto(Alumno alumno);
-    Alumno toEntity(AlumnoDto alumnoDto);
-    List<AlumnoDto> toDtoList(List<Alumno> alumnos);
-    List<Alumno> toEntityList(List<AlumnoDto> alumnosDto);
+    AlumnoDto toAlumnoDto(Alumno alumno);
+    Alumno toAlumnoEntity(AlumnoDto alumnoDto);
+    List<AlumnoDto> toAlumnoDtoList(List<Alumno> alumnos);
+    List<Alumno> toAlumnoEntityList(List<AlumnoDto> alumnosDto);
 
     // Profesor
-    ProfesorDto toDto(Profesor profesor);
-    Profesor toEntity(ProfesorDto profesorDto);
-    List<ProfesorDto> toDtoList(List<Profesor> profesores);
-    List<Profesor> toEntityList(List<ProfesorDto> profesoresDto);
+    ProfesorDto toProfesorDto(Profesor profesor);
+    Profesor toProfesorEntity(ProfesorDto profesorDto);
+    List<ProfesorDto> toProfesorDtoList(List<Profesor> profesores);
+    List<Profesor> toProfesorEntityList(List<ProfesorDto> profesoresDto);
 
     // ContenidoItem
-    ContenidoItemDto toDto(ContenidoItem item);
-    ContenidoItem toEntity(ContenidoItemDto dto);
-    List<ContenidoItemDto> toDtoList(List<ContenidoItem> items);
-    List<ContenidoItem> toEntityList(List<ContenidoItemDto> dtos);
+    ContenidoItemDto toContenidoItemDto(ContenidoItem item);
+    ContenidoItem toContenidoItemEntity(ContenidoItemDto dto);
+    List<ContenidoItemDto> toContenidoItemDtoList(List<ContenidoItem> items);
+    List<ContenidoItem> toContenidoItemEntityList(List<ContenidoItemDto> dtos);
 
     // Simulacro
-    SimulacroDto toDto(Simulacro simulacro);
-    Simulacro toEntity(SimulacroDto dto);
-    List<SimulacroDto> toDtoList(List<Simulacro> simulacros);
-    List<Simulacro> toEntityList(List<SimulacroDto> dtos);
+    SimulacroDto toSimulacroDto(Simulacro simulacro);
+    Simulacro toSimulacroEntity(SimulacroDto dto);
+    List<SimulacroDto> toSimulacroDtoList(List<Simulacro> simulacros);
+    List<Simulacro> toSimulacroEntityList(List<SimulacroDto> dtos);
 
     // Novedad
-    NovedadDto toDto(Novedad novedad);
-    Novedad toEntity(NovedadDto dto);
-    List<NovedadDto> toDtoList(List<Novedad> novedades);
-    List<Novedad> toEntityList(List<NovedadDto> dtos);
+    NovedadDto toNovedadDto(Novedad novedad);
+    Novedad toNovedadEntity(NovedadDto dto);
+    List<NovedadDto> toNovedadDtoList(List<Novedad> novedades);
+    List<Novedad> toNovedadEntityList(List<NovedadDto> dtos);
 
     // Noticia
-    NoticiaDto toDto(Noticia noticia);
-    Noticia toEntity(NoticiaDto dto);
-    List<NoticiaDto> toDtoList(List<Noticia> noticias);
-    List<Noticia> toEntityList(List<NoticiaDto> dtos);
+    NoticiaDto toNoticiaDto(Noticia noticia);
+    Noticia toNoticiaEntity(NoticiaDto dto);
+    List<NoticiaDto> toNoticiaDtoList(List<Noticia> noticias);
+    List<Noticia> toNoticiaEntityList(List<NoticiaDto> dtos);
 
     // Archivo
-    ArchivoDto toDto(Archivo archivo);
-    Archivo toEntity(ArchivoDto dto);
-    List<ArchivoDto> toDtoList(List<Archivo> archivos);
-    List<Archivo> toEntityList(List<ArchivoDto> dtos);
+    ArchivoDto toArchivoDto(Archivo archivo);
+    Archivo toArchivoEntity(ArchivoDto dto);
+    List<ArchivoDto> toArchivoDtoList(List<Archivo> archivos);
+    List<Archivo> toArchivoEntityList(List<ArchivoDto> dtos);
 
     // Conversacion
-    ConversacionDto toDto(Conversacion conversacion);
-    Conversacion toEntity(ConversacionDto dto);
-    List<ConversacionDto> toDtoList(List<Conversacion> conversaciones);
-    List<Conversacion> toEntityList(List<ConversacionDto> dtos);
+    ConversacionDto toConversacionDto(Conversacion conversacion);
+    Conversacion toConversacionEntity(ConversacionDto dto);
+    List<ConversacionDto> toConversacionDtoList(List<Conversacion> conversaciones);
+    List<Conversacion> toConversacionEntityList(List<ConversacionDto> dtos);
 
     // Mensaje
-    MensajeDto toDto(Mensaje mensaje);
-    Mensaje toEntity(MensajeDto dto);
-    List<MensajeDto> toDtoList(List<Mensaje> mensajes);
-    List<Mensaje> toEntityList(List<MensajeDto> dtos);
+    MensajeDto toMensajeDto(Mensaje mensaje);
+    Mensaje toMensajeEntity(MensajeDto dto);
+    List<MensajeDto> toMensajeDtoList(List<Mensaje> mensajes);
+    List<Mensaje> toMensajeEntityList(List<MensajeDto> dtos);
 }

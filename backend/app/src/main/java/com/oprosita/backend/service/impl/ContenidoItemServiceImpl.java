@@ -42,19 +42,19 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     public ContenidoItemDto obtenerPorId(Long id) {
         ContenidoItem contenido = contenidoItemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
-        return mapper.toDto(contenido);
+        return mapper.toContenidoItemDto(contenido);
     }
 
     @Override
     public List<ContenidoItemDto> obtenerTodos() {
         return contenidoItemRepository.findAll().stream()
-                .map(mapper::toDto)
+                .map(mapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContenidoItemDto crear(ContenidoItemDto dto) {
-        ContenidoItem contenido = mapper.toEntity(dto);
+        ContenidoItem contenido = mapper.toContenidoItemEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
@@ -66,7 +66,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
             contenido.setAlumno(alumno);
         }
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toDto(contenido);
+        return mapper.toContenidoItemDto(contenido);
     }
 
     @Override
@@ -74,10 +74,10 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         if (!contenidoItemRepository.existsById(id)) {
             throw new NotFoundException("Contenido no encontrado");
         }
-        ContenidoItem contenido = mapper.toEntity(dto);
+        ContenidoItem contenido = mapper.toContenidoItemEntity(dto);
         contenido.setId(id);
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toDto(contenido);
+        return mapper.toContenidoItemDto(contenido);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Alumno alumno = alumnoRepository.findById(alumnoId)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
         return alumno.getContenidos().stream()
-                .map(mapper::toDto)
+                .map(mapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -112,7 +112,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
                 .archivoId(archivoId)
                 .build();
 
-        return mapper.toDto(contenidoItemRepository.save(contenido));
+        return mapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
     }
 
     @Override
@@ -122,7 +122,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
 
         return contenidoItemRepository.findAll().stream()
                 .filter(c -> grupo.equals(c.getGrupo()) && mes.equalsIgnoreCase(c.getMes()))
-                .map(mapper::toDto)
+                .map(mapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -131,10 +131,10 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
-        ContenidoItem contenido = mapper.toEntity(contenidoDto);
+        ContenidoItem contenido = mapper.toContenidoItemEntity(contenidoDto);
         contenido.setGrupo(grupo);
         contenido.setMes(mes);
 
-        return mapper.toDto(contenidoItemRepository.save(contenido));
+        return mapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
     }
 }

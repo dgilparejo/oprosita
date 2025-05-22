@@ -28,7 +28,7 @@ public class MensajeServiceImpl implements MensajeService {
     public MensajeDto obtenerPorId(Long id) {
         Mensaje mensaje = mensajeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mensaje no encontrado"));
-        return generalMapper.toDto(mensaje);
+        return generalMapper.toMensajeDto(mensaje);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class MensajeServiceImpl implements MensajeService {
                 .filter(m -> m.getRemitente().equals(remitente)
                         && m.getDestinatario().equals(destinatario))
                 .collect(Collectors.toList());
-        return generalMapper.toDtoList(mensajes);
+        return generalMapper.toMensajeDtoList(mensajes);
     }
 
     @Override
     public MensajeDto enviar(MensajeDto mensajeDto) {
-        Mensaje mensaje = generalMapper.toEntity(mensajeDto);
+        Mensaje mensaje = generalMapper.toMensajeEntity(mensajeDto);
         mensaje = mensajeRepository.save(mensaje);
-        return generalMapper.toDto(mensaje);
+        return generalMapper.toMensajeDto(mensaje);
     }
 
     @Override

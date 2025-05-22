@@ -30,21 +30,21 @@ public class NovedadServiceImpl implements NovedadService {
     public NovedadDto obtenerPorId(Long id) {
         Novedad novedad = novedadRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Novedad no encontrada"));
-        return generalMapper.toDto(novedad);
+        return generalMapper.toNovedadDto(novedad);
     }
 
     @Override
     public List<NovedadDto> obtenerTodos() {
         return novedadRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public NovedadDto crear(NovedadDto dto) {
-        Novedad novedad = generalMapper.toEntity(dto);
+        Novedad novedad = generalMapper.toNovedadEntity(dto);
         novedad.setFechaCreacion(OffsetDateTime.now());
-        return generalMapper.toDto(novedadRepository.save(novedad));
+        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -52,9 +52,9 @@ public class NovedadServiceImpl implements NovedadService {
         if (!novedadRepository.existsById(id)) {
             throw new NotFoundException("Novedad no encontrada");
         }
-        Novedad novedad = generalMapper.toEntity(dto);
+        Novedad novedad = generalMapper.toNovedadEntity(dto);
         novedad.setId(id);
-        return generalMapper.toDto(novedadRepository.save(novedad));
+        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class NovedadServiceImpl implements NovedadService {
     public List<NovedadDto> obtenerNovedadesProfesor() {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == TipoDestinatario.PROFESOR)
-                .map(generalMapper::toDto)
+                .map(generalMapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
@@ -77,15 +77,15 @@ public class NovedadServiceImpl implements NovedadService {
     public NovedadDto crearNovedadProfesor(NovedadDto novedadDto) {
         novedadDto.setTipoDestinatario(TipoDestinatario.PROFESOR);
         novedadDto.setFechaCreacion(OffsetDateTime.now());
-        Novedad novedad = generalMapper.toEntity(novedadDto);
-        return generalMapper.toDto(novedadRepository.save(novedad));
+        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
+        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
     public List<NovedadDto> obtenerNovedadesAlumno() {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == TipoDestinatario.ALUMNO)
-                .map(generalMapper::toDto)
+                .map(generalMapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
@@ -93,8 +93,8 @@ public class NovedadServiceImpl implements NovedadService {
     public NovedadDto crearNovedadAlumno(NovedadDto novedadDto) {
         novedadDto.setTipoDestinatario(TipoDestinatario.ALUMNO);
         novedadDto.setFechaCreacion(OffsetDateTime.now());
-        Novedad novedad = generalMapper.toEntity(novedadDto);
-        return generalMapper.toDto(novedadRepository.save(novedad));
+        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
+        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -102,8 +102,8 @@ public class NovedadServiceImpl implements NovedadService {
         if (novedadDto.getId() == null || !novedadRepository.existsById(novedadDto.getId().longValue())) {
             throw new NotFoundException("Novedad no encontrada");
         }
-        Novedad novedad = generalMapper.toEntity(novedadDto);
-        return generalMapper.toDto(novedadRepository.save(novedad));
+        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
+        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -120,7 +120,7 @@ public class NovedadServiceImpl implements NovedadService {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == destinatario &&
                         n.getFechaCreacion().isAfter(fechaDesde))
-                .map(generalMapper::toDto)
+                .map(generalMapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 

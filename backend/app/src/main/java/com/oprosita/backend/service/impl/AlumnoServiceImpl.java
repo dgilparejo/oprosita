@@ -3,6 +3,7 @@ package com.oprosita.backend.service.impl;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
+import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.GeneralMapper;
 import com.oprosita.backend.model.Alumno;
@@ -44,20 +45,20 @@ public class AlumnoServiceImpl implements AlumnoService {
     public AlumnoDto obtenerPorId(Long id) {
         Alumno alumno = alumnoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
-        return mapper.toDto(alumno);
+        return mapper.toAlumnoDto(alumno);
     }
 
     @Override
     public List<AlumnoDto> obtenerTodos() {
         return alumnoRepository.findAll().stream()
-                .map(mapper::toDto)
+                .map(mapper::toAlumnoDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public AlumnoDto crear(AlumnoDto dto) {
-        Alumno alumno = mapper.toEntity(dto);
-        return mapper.toDto(alumnoRepository.save(alumno));
+        Alumno alumno = mapper.toAlumnoEntity(dto);
+        return mapper.toAlumnoDto(alumnoRepository.save(alumno));
     }
 
     @Override
@@ -65,9 +66,9 @@ public class AlumnoServiceImpl implements AlumnoService {
         if (!alumnoRepository.existsById(id)) {
             throw new NotFoundException("Alumno no encontrado");
         }
-        Alumno alumno = mapper.toEntity(dto);
+        Alumno alumno = mapper.toAlumnoEntity(dto);
         alumno.setId(id);
-        return mapper.toDto(alumnoRepository.save(alumno));
+        return mapper.toAlumnoDto(alumnoRepository.save(alumno));
     }
 
     @Override
@@ -84,7 +85,7 @@ public class AlumnoServiceImpl implements AlumnoService {
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
         return grupo.getUsuarios().stream()
                 .filter(Alumno.class::isInstance)
-                .map(usuario -> mapper.toDto((Alumno) usuario))
+                .map(usuario -> mapper.toAlumnoDto((Alumno) usuario))
                 .collect(Collectors.toList());
     }
 
@@ -92,9 +93,9 @@ public class AlumnoServiceImpl implements AlumnoService {
     public AlumnoDto agregarAlumnoAGrupo(Long grupoId, AlumnoDto alumnoDto) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        Alumno alumno = mapper.toEntity(alumnoDto);
+        Alumno alumno = mapper.toAlumnoEntity(alumnoDto);
         alumno.setGrupo(grupo);
-        return mapper.toDto(alumnoRepository.save(alumno));
+        return mapper.toAlumnoDto(alumnoRepository.save(alumno));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class AlumnoServiceImpl implements AlumnoService {
         Alumno alumno = alumnoRepository.findById(alumnoId)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
         return alumno.getContenidos().stream()
-                .map(mapper::toDto)
+                .map(mapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -134,7 +135,7 @@ public class AlumnoServiceImpl implements AlumnoService {
                 .build();
 
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toDto(contenido);
+        return mapper.toContenidoItemDto(contenido);
     }
 
     @Override
@@ -150,5 +151,17 @@ public class AlumnoServiceImpl implements AlumnoService {
         } else {
             throw new NotFoundException("Contenido no pertenece al alumno");
         }
+    }
+
+    @Override
+    public List<GrupoDto> obtenerGrupoPorAlumno(Long alumnoId) {
+        Alumno alumno = alumnoRepository.findById(alumnoId)
+                .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+
+        if (alumno.getGrupo() == null) {
+            return List.of(); // Vacío si no está asignado a ningún grupo
+        }
+
+        return List.of(mapper.toGrupoDto(alumno.getGrupo()));
     }
 }

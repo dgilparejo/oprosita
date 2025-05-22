@@ -40,26 +40,26 @@ public class NoticiaServiceImpl implements NoticiaService {
     public NoticiaDto obtenerPorId(Long id) {
         Noticia noticia = noticiaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Noticia no encontrada"));
-        return generalMapper.toDto(noticia);
+        return generalMapper.toNoticiaDto(noticia);
     }
 
     @Override
     public List<NoticiaDto> obtenerTodos() {
         return noticiaRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toNoticiaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public NoticiaDto crear(NoticiaDto dto) {
-        Noticia noticia = generalMapper.toEntity(dto);
+        Noticia noticia = generalMapper.toNoticiaEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
             noticia.setGrupo(grupo);
         }
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toDto(noticia);
+        return generalMapper.toNoticiaDto(noticia);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class NoticiaServiceImpl implements NoticiaService {
         if (!noticiaRepository.existsById(id)) {
             throw new NotFoundException("Noticia no encontrada");
         }
-        Noticia noticia = generalMapper.toEntity(dto);
+        Noticia noticia = generalMapper.toNoticiaEntity(dto);
         noticia.setId(id);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
@@ -75,7 +75,7 @@ public class NoticiaServiceImpl implements NoticiaService {
             noticia.setGrupo(grupo);
         }
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toDto(noticia);
+        return generalMapper.toNoticiaDto(noticia);
     }
 
     @Override
@@ -101,6 +101,6 @@ public class NoticiaServiceImpl implements NoticiaService {
                 .build();
 
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toDto(noticia);
+        return generalMapper.toNoticiaDto(noticia);
     }
 }

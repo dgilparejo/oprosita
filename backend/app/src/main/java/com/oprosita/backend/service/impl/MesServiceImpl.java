@@ -34,21 +34,21 @@ public class MesServiceImpl implements MesService {
     public MesDto obtenerPorId(Long id) {
         Mes mes = mesRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mes no encontrado"));
-        return generalMapper.toDto(mes);
+        return generalMapper.toMesDto(mes);
     }
 
     @Override
     public List<MesDto> obtenerTodos() {
         return mesRepository.findAll().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toMesDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public MesDto crear(MesDto dto) {
-        Mes mes = generalMapper.toEntity(dto);
+        Mes mes = generalMapper.toMesEntity(dto);
         mes = mesRepository.save(mes);
-        return generalMapper.toDto(mes);
+        return generalMapper.toMesDto(mes);
     }
 
     @Override
@@ -56,10 +56,10 @@ public class MesServiceImpl implements MesService {
         if (!mesRepository.existsById(id)) {
             throw new NotFoundException("Mes no encontrado");
         }
-        Mes mes = generalMapper.toEntity(dto);
+        Mes mes = generalMapper.toMesEntity(dto);
         mes.setId(id);
         mes = mesRepository.save(mes);
-        return generalMapper.toDto(mes);
+        return generalMapper.toMesDto(mes);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MesServiceImpl implements MesService {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
         return grupo.getMeses().stream()
-                .map(generalMapper::toDto)
+                .map(generalMapper::toMesDto)
                 .collect(Collectors.toList());
     }
 
@@ -83,9 +83,9 @@ public class MesServiceImpl implements MesService {
     public MesDto agregarMesAGrupo(Long grupoId, MesDto mesDto) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        Mes mes = generalMapper.toEntity(mesDto);
+        Mes mes = generalMapper.toMesEntity(mesDto);
         mes.setGrupo(grupo);
         mes = mesRepository.save(mes);
-        return generalMapper.toDto(mes);
+        return generalMapper.toMesDto(mes);
     }
 }

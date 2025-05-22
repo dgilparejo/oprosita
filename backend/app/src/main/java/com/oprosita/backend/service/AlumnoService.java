@@ -2,7 +2,9 @@ package com.oprosita.backend.service;
 
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
+import com.oprosita.backend.dto.GrupoDto;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface AlumnoService {
@@ -20,4 +22,5 @@ public interface AlumnoService {
     List<ContenidoItemDto> obtenerContenidoPorAlumno(Long alumnoId);
     ContenidoItemDto agregarContenidoAAlumno(Long alumnoId, String texto, String tipoContenido, String mes, MultipartFile file);
     void eliminarContenidoDeAlumno(Long alumnoId, Long contenidoId);
+    List<GrupoDto> obtenerGrupoPorAlumno(Long alumnoId);
 }
