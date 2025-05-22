@@ -1,6 +1,6 @@
 package com.oprosita.backend.dto;
 
-import com.oprosita.backend.model.generated.Novedad;
+import com.oprosita.backend.model.TipoDestinatario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,6 @@ public class NovedadDto {
     private Integer id;
     private String texto;
     private String value;
-    private Novedad.TipoDestinatarioEnum tipoDestinatario;
+    private TipoDestinatario tipoDestinatario;
     private OffsetDateTime fechaCreacion;
 }

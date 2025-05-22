@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.0.1
+  version: 1.0.2
 
 servers:
   - url: http://localhost:8080/api
@@ -407,21 +407,62 @@ paths:
         '204':
           description: Simulacro eliminado correctamente
 
+  /profesores/{profesorId}/grupos:
+    get:
+      tags:
+        - profesores
+        - grupos
+      operationId: getGruposByProfesor
+      summary: Obtener grupos de un profesor
+      parameters:
+        - in: path
+          name: profesorId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de grupos
+
+  /alumnos/{alumnoId}/grupos:
+    get:
+      tags:
+        - alumnos
+        - grupos
+      operationId: getGruposByAlumno
+      summary: Obtener grupos de un alumno
+      parameters:
+        - in: path
+          name: alumnoId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de grupos
+
   /novedades/profesor:
     get:
       tags:
         - novedades
       operationId: getNovedadesProfesor
       summary: Obtener novedades para profesores
+      parameters:
+        - in: query
+          name: tipo
+          required: false
+          schema:
+            type: string
+            enum: [ chat, contenido, todos ]
+        - in: query
+          name: fechaDesde
+          required: false
+          schema:
+            type: string
+            format: date-time
       responses:
         '200':
           description: Lista de novedades
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Novedad'
 
     post:
       tags:
@@ -563,6 +604,78 @@ paths:
         '204':
           description: Noticia eliminada correctamente
 
+  /grupos/{grupoId}/reuniones:
+    get:
+      tags:
+        - reuniones
+      operationId: getReunionesByGrupo
+      summary: Obtener reuniones de un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de reuniones
+    post:
+      tags:
+        - reuniones
+      operationId: createReunion
+      summary: Crear una reunión para un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reunion'
+      responses:
+        '201':
+          description: Reunión creada
+
+  /reuniones/{id}:
+    put:
+      tags:
+        - reuniones
+      operationId: updateReunion
+      summary: Actualizar una reunión
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reunion'
+      responses:
+        '200':
+          description: Reunión actualizada
+    delete:
+      tags:
+        - reuniones
+      operationId: deleteReunion
+      summary: Eliminar una reunión
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Reunión eliminada correctamente
+
   /archivos/upload:
     post:
       tags:
@@ -605,6 +718,96 @@ paths:
                 format: binary
         '404':
           description: Archivo no encontrado
+
+  /grupos/{grupoId}/meses:
+    get:
+      tags:
+        - grupos
+        - meses
+      operationId: getMesesByGrupo
+      summary: Obtener meses de un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de meses
+    post:
+      tags:
+        - grupos
+        - meses
+      operationId: addMesToGrupo
+      summary: Añadir mes a un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mes'
+      responses:
+        '201':
+          description: Mes añadido
+
+  /chat/mensajes:
+    get:
+      tags:
+        - chat
+      operationId: getMensajes
+      summary: Obtener mensajes
+      parameters:
+        - in: query
+          name: remitente
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: destinatario
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de mensajes
+    post:
+      tags:
+        - chat
+      operationId: enviarMensaje
+      summary: Enviar un mensaje
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mensaje'
+      responses:
+        '201':
+          description: Mensaje enviado
+
+  /chat/conversaciones:
+    get:
+      tags:
+        - chat
+      operationId: getConversaciones
+      summary: Obtener lista de conversaciones
+      parameters:
+        - in: query
+          name: usuarioId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de conversaciones
+
 components:
   schemas:
     Grupo:
@@ -730,3 +933,68 @@ components:
           type: integer
         grupoId:
           type: integer
+
+    Reunion:
+      type: object
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        descripcion:
+          type: string
+        fechaHora:
+          type: string
+          format: date-time
+        enlace:
+          type: string
+        grupoId:
+          type: integer
+
+    Mensaje:
+      type: object
+      properties:
+        id:
+          type: integer
+        remitente:
+          type: integer
+          description: ID del usuario remitente
+        destinatario:
+          type: integer
+          description: ID del usuario destinatario
+        contenido:
+          type: string
+        leido:
+          type: boolean
+        fechaEnvio:
+          type: string
+          format: date-time
+
+    Conversacion:
+      type: object
+      properties:
+        id:
+          type: integer
+        usuarioId:
+          type: integer
+        otroUsuarioId:
+          type: integer
+        ultimoMensaje:
+          type: string
+        fechaUltimoMensaje:
+          type: string
+          format: date-time
+        noLeidos:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensaje:
+          type: string
+        detalles:
+          type: array
+          items:
+            type: string

@@ -26,7 +26,7 @@ public class RepositoryGenerator {
             if (!repoFile.exists()) {
                 try (FileWriter writer = new FileWriter(repoFile)) {
                     writer.write("package com.oprosita.backend.repository;\n\n");
-                    writer.write("import com.oprosita.backend.model.generated." + className + ";\n");
+                    writer.write("import com.oprosita.backend.model." + className + ";\n");
                     writer.write("import org.springframework.data.jpa.repository.JpaRepository;\n");
                     writer.write("import org.springframework.stereotype.Repository;\n\n");
                     writer.write("@Repository\n");

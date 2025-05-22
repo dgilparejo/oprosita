@@ -1,12 +1,22 @@
 package com.oprosita.backend.service;
 
-import com.oprosita.backend.model.generated.Grupo;
+import com.oprosita.backend.dto.AlumnoDto;
+import com.oprosita.backend.dto.ContenidoItemDto;
+import com.oprosita.backend.dto.GrupoDto;
 import java.util.List;
 
 public interface GrupoService {
-    Grupo obtenerPorId(Long id);
-    List<Grupo> obtenerTodos();
-    Grupo crear(Grupo grupo);
-    Grupo actualizar(Long id, Grupo grupo);
+    // Métodos CRUD
+    GrupoDto obtenerPorId(Long id);
+    List<GrupoDto> obtenerTodos();
+    GrupoDto crear(GrupoDto dto);
+    GrupoDto actualizar(Long id, GrupoDto dto);
     void eliminar(Long id);
+
+    // Métodos del OpenAPI
+    List<AlumnoDto> obtenerAlumnosPorGrupo(Long grupoId);
+    AlumnoDto agregarAlumnoAGrupo(Long grupoId, AlumnoDto alumnoDto);
+    void eliminarAlumnoDeGrupo(Long grupoId, Long alumnoId);
+    List<ContenidoItemDto> obtenerContenidoPorGrupoYMes(Long grupoId, String mes);
+    ContenidoItemDto agregarContenidoAGrupoPorMes(Long grupoId, String mes, ContenidoItemDto contenidoDto);
 }

@@ -1,5 +1,5 @@
 package com.oprosita.backend.model;
 
 public enum TipoContenido {
-    temas, programacion, practico
+    TEMAS, PROGRAMACION, PRACTICO
 }

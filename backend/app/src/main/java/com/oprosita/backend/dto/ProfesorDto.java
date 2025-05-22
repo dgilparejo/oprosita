@@ -1,6 +1,6 @@
 package com.oprosita.backend.dto;
 
-import com.oprosita.backend.model.generated.Profesor;
+import com.oprosita.backend.model.TipoDestinatario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfesorDto {
     private String value;
-    private Profesor.TipoEnum tipo;
+    private TipoDestinatario tipo;
 }

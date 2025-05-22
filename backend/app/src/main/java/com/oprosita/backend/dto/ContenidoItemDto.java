@@ -1,6 +1,6 @@
 package com.oprosita.backend.dto;
 
-import com.oprosita.backend.model.generated.ContenidoItem;
+import com.oprosita.backend.model.TipoContenido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ public class ContenidoItemDto {
     private Integer id;
     private String texto;
     private String value;
-    private ContenidoItem.TipoContenidoEnum tipoContenido;
+    private TipoContenido tipoContenido;
     private Integer alumnoId;
     private Integer grupoId;
     private String mes;

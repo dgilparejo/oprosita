@@ -3,7 +3,7 @@ package com.oprosita.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -21,5 +21,5 @@ public class Novedad {
     @Enumerated(EnumType.STRING)
     private TipoDestinatario tipoDestinatario;
 
-    private LocalDateTime fechaCreacion;
+    private OffsetDateTime fechaCreacion;
 }
