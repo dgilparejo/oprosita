@@ -1,5 +1,6 @@
 package com.oprosita.backend.mapper;
 
+import com.oprosita.backend.dto.*;
 import com.oprosita.backend.model.*;
 import org.mapstruct.Mapper;
 
@@ -9,44 +10,44 @@ import java.util.List;
 public interface GeneralMapper {
 
     // Grupo
-    com.oprosita.backend.model.generated.Grupo toDto(Grupo grupo);
-    Grupo toEntity(com.oprosita.backend.model.generated.Grupo grupoDto);
-    List<com.oprosita.backend.model.generated.Grupo> toDtoList(List<Grupo> grupos);
-    List<Grupo> toEntityList(List<com.oprosita.backend.model.generated.Grupo> grupoDtos);
+    GrupoDto toDto(Grupo grupo);
+    Grupo toEntity(GrupoDto grupoDto);
+    List<GrupoDto> toDtoList(List<Grupo> grupos);
+    List<Grupo> toEntityList(List<GrupoDto> grupoDtos);
 
     // Mes
-    com.oprosita.backend.model.generated.Mes toDto(Mes mes);
-    Mes toEntity(com.oprosita.backend.model.generated.Mes mesDto);
+    MesDto toDto(Mes mes);
+    Mes toEntity(MesDto mesDto);
 
     // Usuario
-    com.oprosita.backend.model.generated.Usuario toDto(Usuario usuario);
-    Usuario toEntity(com.oprosita.backend.model.generated.Usuario usuarioDto);
+    UsuarioDto toDto(Usuario usuario);
+    Usuario toEntity(UsuarioDto usuarioDto);
 
     // Alumno
-    com.oprosita.backend.model.generated.Alumno toDto(Alumno alumno);
-    Alumno toEntity(com.oprosita.backend.model.generated.Alumno alumnoDto);
+    AlumnoDto toDto(Alumno alumno);
+    Alumno toEntity(AlumnoDto alumnoDto);
 
     // Profesor
-    com.oprosita.backend.model.generated.Profesor toDto(Profesor profesor);
-    Profesor toEntity(com.oprosita.backend.model.generated.Profesor profesorDto);
+    ProfesorDto toDto(Profesor profesor);
+    Profesor toEntity(ProfesorDto profesorDto);
 
     // ContenidoItem
-    com.oprosita.backend.model.generated.ContenidoItem toDto(ContenidoItem item);
-    ContenidoItem toEntity(com.oprosita.backend.model.generated.ContenidoItem dto);
+    ContenidoItemDto toDto(ContenidoItem item);
+    ContenidoItem toEntity(ContenidoItemDto dto);
 
     // Simulacro
-    com.oprosita.backend.model.generated.Simulacro toDto(Simulacro simulacro);
-    Simulacro toEntity(com.oprosita.backend.model.generated.Simulacro dto);
+    SimulacroDto toDto(Simulacro simulacro);
+    Simulacro toEntity(SimulacroDto dto);
 
     // Novedad
-    com.oprosita.backend.model.generated.Novedad toDto(Novedad novedad);
-    Novedad toEntity(com.oprosita.backend.model.generated.Novedad dto);
+    NovedadDto toDto(Novedad novedad);
+    Novedad toEntity(NovedadDto dto);
 
     // Noticia
-    com.oprosita.backend.model.generated.Noticia toDto(Noticia noticia);
-    Noticia toEntity(com.oprosita.backend.model.generated.Noticia dto);
+    NoticiaDto toDto(Noticia noticia);
+    Noticia toEntity(NoticiaDto dto);
 
     // Archivo
-    com.oprosita.backend.model.generated.Archivo toDto(Archivo archivo);
-    Archivo toEntity(com.oprosita.backend.model.generated.Archivo dto);
+    ArchivoDto toDto(Archivo archivo);
+    Archivo toEntity(ArchivoDto dto);
 }
