@@ -1,16 +1,12 @@
 package com.oprosita.backend.mapper;
 
 import com.oprosita.backend.model.*;
-
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface GeneralMapper {
-
-    GeneralMapper INSTANCE = Mappers.getMapper(GeneralMapper.class);
 
     // Grupo
     com.oprosita.backend.model.generated.Grupo toDto(Grupo grupo);

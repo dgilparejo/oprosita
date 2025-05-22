@@ -148,7 +148,7 @@
             <version>1.6.11</version>
         </dependency>
 
-        <!-- Opcional: evita errores en código generado que usa reflection -->
+        <!-- Evita errores en código generado que usa reflection -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -159,6 +159,7 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>4.12.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
