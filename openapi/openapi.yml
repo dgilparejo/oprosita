@@ -292,6 +292,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ContenidoItem'
+    delete:
+      tags:
+        - grupos
+        - contenido
+      operationId: deleteContenidoFromGrupoByMes
+      summary: Eliminar un contenido de un grupo en un mes
+      parameters:
+        - name: grupoId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: mes
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contenidoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Contenido eliminado correctamente
+
     post:
       tags:
         - grupos

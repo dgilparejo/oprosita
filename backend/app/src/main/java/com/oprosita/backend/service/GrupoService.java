@@ -3,6 +3,8 @@ package com.oprosita.backend.service;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
+import com.oprosita.backend.dto.MesDto;
+
 import java.util.List;
 
 public interface GrupoService {
@@ -19,4 +21,7 @@ public interface GrupoService {
     void eliminarAlumnoDeGrupo(Long grupoId, Long alumnoId);
     List<ContenidoItemDto> obtenerContenidoPorGrupoYMes(Long grupoId, String mes);
     ContenidoItemDto agregarContenidoAGrupoPorMes(Long grupoId, String mes, ContenidoItemDto contenidoDto);
+    void eliminarContenidoDeGrupoPorMes(Long grupoId, String mes, Long contenidoId);
+    MesDto agregarMesAGrupo(Long grupoId, MesDto mesDto);
+    List<MesDto> obtenerMesesPorGrupo(Long grupoId);
 }

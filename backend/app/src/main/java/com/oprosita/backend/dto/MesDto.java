@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class MesDto {
     private Integer id;
     private String nombre;
+    private Long grupoId;
 }

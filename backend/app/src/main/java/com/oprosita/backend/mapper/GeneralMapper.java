@@ -50,6 +50,7 @@ public interface GeneralMapper {
     ContenidoItem toContenidoItemEntity(ContenidoItemDto dto);
     List<ContenidoItemDto> toContenidoItemDtoList(List<ContenidoItem> items);
     List<ContenidoItem> toContenidoItemEntityList(List<ContenidoItemDto> dtos);
+    ContenidoItem toContenidoItemEntity(com.oprosita.backend.model.generated.ContenidoItem generatedItem);
 
     // Simulacro
     SimulacroDto toSimulacroDto(Simulacro simulacro);

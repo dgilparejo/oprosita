@@ -3,6 +3,7 @@ package com.oprosita.backend.service.impl;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
+import com.oprosita.backend.dto.MesDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.GeneralMapper;
 import com.oprosita.backend.model.Alumno;
@@ -12,6 +13,7 @@ import com.oprosita.backend.repository.AlumnoRepository;
 import com.oprosita.backend.repository.ContenidoItemRepository;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.service.GrupoService;
+import com.oprosita.backend.service.MesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +27,18 @@ public class GrupoServiceImpl implements GrupoService {
     private final GrupoRepository grupoRepository;
     private final AlumnoRepository alumnoRepository;
     private final ContenidoItemRepository contenidoItemRepository;
+    private final MesService mesService;
     private final GeneralMapper mapper;
 
     public GrupoServiceImpl(GrupoRepository grupoRepository,
                             AlumnoRepository alumnoRepository,
                             ContenidoItemRepository contenidoItemRepository,
+                            MesService mesService,
                             GeneralMapper mapper) {
         this.grupoRepository = grupoRepository;
         this.alumnoRepository = alumnoRepository;
         this.contenidoItemRepository = contenidoItemRepository;
+        this.mesService = mesService;
         this.mapper = mapper;
     }
 
@@ -128,5 +133,30 @@ public class GrupoServiceImpl implements GrupoService {
 
         contenido = contenidoItemRepository.save(contenido);
         return mapper.toContenidoItemDto(contenido);
+    }
+
+    @Override
+    public void eliminarContenidoDeGrupoPorMes(Long grupoId, String mes, Long contenidoId) {
+        ContenidoItem contenido = contenidoItemRepository.findById(contenidoId)
+                .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
+
+        if (contenido.getGrupo() == null || !contenido.getGrupo().getId().equals(grupoId) || !mes.equalsIgnoreCase(contenido.getMes())) {
+            throw new NotFoundException("Contenido no pertenece al grupo o mes indicado");
+        }
+
+        contenidoItemRepository.deleteById(contenidoId);
+    }
+
+    @Override
+    public MesDto agregarMesAGrupo(Long grupoId, MesDto mesDto) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        mesDto.setGrupoId(grupo.getId());
+        return mesService.crear(mesDto);
+    }
+
+    @Override
+    public List<MesDto> obtenerMesesPorGrupo(Long grupoId) {
+        return mesService.obtenerMesesPorGrupo(grupoId);
     }
 }
