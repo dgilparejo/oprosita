@@ -159,6 +159,10 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>4.12.0</version>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
     </dependencies>
@@ -184,6 +188,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/../../openapi/openapi.yml</inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.oprosita.backend.api</apiPackage>
                             <modelPackage>com.oprosita.backend.model.generated</modelPackage>
@@ -201,6 +206,23 @@
             </plugin>
 
             <!-- Plugin necesario para añadir la carpeta generada al classpath -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-repositories</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.oprosita.backend.util.RepositoryGenerator</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
