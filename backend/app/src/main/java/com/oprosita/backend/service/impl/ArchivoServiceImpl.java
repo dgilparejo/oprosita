@@ -2,10 +2,11 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.ArchivoMapper;
 import com.oprosita.backend.model.Archivo;
 import com.oprosita.backend.repository.ArchivoRepository;
 import com.oprosita.backend.service.ArchivoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -18,35 +19,31 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ArchivoServiceImpl implements ArchivoService {
 
     private final ArchivoRepository archivoRepository;
-    private final GeneralMapper generalMapper;
-
-    public ArchivoServiceImpl(ArchivoRepository archivoRepository, GeneralMapper generalMapper) {
-        this.archivoRepository = archivoRepository;
-        this.generalMapper = generalMapper;
-    }
+    private final ArchivoMapper mapper;
 
     @Override
     public ArchivoDto obtenerPorId(Long id) {
         Archivo archivo = archivoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Archivo no encontrado"));
-        return generalMapper.toArchivoDto(archivo);
+        return mapper.toArchivoDto(archivo);
     }
 
     @Override
     public List<ArchivoDto> obtenerTodos() {
         return archivoRepository.findAll().stream()
-                .map(generalMapper::toArchivoDto)
+                .map(mapper::toArchivoDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ArchivoDto crear(ArchivoDto dto) {
-        Archivo archivo = generalMapper.toArchivoEntity(dto);
+        Archivo archivo = mapper.toArchivoEntity(dto);
         archivo = archivoRepository.save(archivo);
-        return generalMapper.toArchivoDto(archivo);
+        return mapper.toArchivoDto(archivo);
     }
 
     @Override
@@ -54,10 +51,10 @@ public class ArchivoServiceImpl implements ArchivoService {
         if (!archivoRepository.existsById(id)) {
             throw new NotFoundException("Archivo no encontrado");
         }
-        Archivo archivo = generalMapper.toArchivoEntity(dto);
+        Archivo archivo = mapper.toArchivoEntity(dto);
         archivo.setId(id);
         archivo = archivoRepository.save(archivo);
-        return generalMapper.toArchivoDto(archivo);
+        return mapper.toArchivoDto(archivo);
     }
 
     @Override
@@ -79,7 +76,7 @@ public class ArchivoServiceImpl implements ArchivoService {
                     .build();
 
             archivo = archivoRepository.save(archivo);
-            return generalMapper.toArchivoDto(archivo);
+            return mapper.toArchivoDto(archivo);
 
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar el archivo", e);

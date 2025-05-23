@@ -14,7 +14,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Alumno extends Usuario {
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
     private List<ContenidoItem> contenidos;

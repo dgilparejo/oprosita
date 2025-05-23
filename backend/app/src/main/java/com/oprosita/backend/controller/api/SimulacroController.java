@@ -2,9 +2,9 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.SimulacrosApi;
 import com.oprosita.backend.dto.SimulacroDto;
+import com.oprosita.backend.mapper.SimulacroMapper;
 import com.oprosita.backend.model.generated.Simulacro;
 import com.oprosita.backend.service.SimulacroService;
-import com.oprosita.backend.mapper.GeneralMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SimulacroController implements SimulacrosApi {
 
     private final SimulacroService simulacroService;
-    private final GeneralMapper mapper;
+    private final SimulacroMapper mapper;
 
     @Override
     public ResponseEntity<List<Simulacro>> getSimulacros() {

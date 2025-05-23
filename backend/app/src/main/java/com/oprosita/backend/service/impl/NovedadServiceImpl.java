@@ -2,11 +2,12 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.NovedadDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.NovedadMapper;
 import com.oprosita.backend.model.Novedad;
 import com.oprosita.backend.model.TipoDestinatario;
 import com.oprosita.backend.repository.NovedadRepository;
 import com.oprosita.backend.service.NovedadService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,35 +17,31 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class NovedadServiceImpl implements NovedadService {
 
     private final NovedadRepository novedadRepository;
-    private final GeneralMapper generalMapper;
-
-    public NovedadServiceImpl(NovedadRepository novedadRepository, GeneralMapper generalMapper) {
-        this.novedadRepository = novedadRepository;
-        this.generalMapper = generalMapper;
-    }
+    private final NovedadMapper mapper;
 
     @Override
     public NovedadDto obtenerPorId(Long id) {
         Novedad novedad = novedadRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Novedad no encontrada"));
-        return generalMapper.toNovedadDto(novedad);
+        return mapper.toNovedadDto(novedad);
     }
 
     @Override
     public List<NovedadDto> obtenerTodos() {
         return novedadRepository.findAll().stream()
-                .map(generalMapper::toNovedadDto)
+                .map(mapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public NovedadDto crear(NovedadDto dto) {
-        Novedad novedad = generalMapper.toNovedadEntity(dto);
+        Novedad novedad = mapper.toNovedadEntity(dto);
         novedad.setFechaCreacion(OffsetDateTime.now());
-        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
+        return mapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -52,9 +49,9 @@ public class NovedadServiceImpl implements NovedadService {
         if (!novedadRepository.existsById(id)) {
             throw new NotFoundException("Novedad no encontrada");
         }
-        Novedad novedad = generalMapper.toNovedadEntity(dto);
+        Novedad novedad = mapper.toNovedadEntity(dto);
         novedad.setId(id);
-        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
+        return mapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -69,7 +66,7 @@ public class NovedadServiceImpl implements NovedadService {
     public List<NovedadDto> obtenerNovedadesProfesor() {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == TipoDestinatario.PROFESOR)
-                .map(generalMapper::toNovedadDto)
+                .map(mapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
@@ -77,15 +74,15 @@ public class NovedadServiceImpl implements NovedadService {
     public NovedadDto crearNovedadProfesor(NovedadDto novedadDto) {
         novedadDto.setTipoDestinatario(TipoDestinatario.PROFESOR);
         novedadDto.setFechaCreacion(OffsetDateTime.now());
-        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
-        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
+        Novedad novedad = mapper.toNovedadEntity(novedadDto);
+        return mapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
     public List<NovedadDto> obtenerNovedadesAlumno() {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == TipoDestinatario.ALUMNO)
-                .map(generalMapper::toNovedadDto)
+                .map(mapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 
@@ -93,8 +90,8 @@ public class NovedadServiceImpl implements NovedadService {
     public NovedadDto crearNovedadAlumno(NovedadDto novedadDto) {
         novedadDto.setTipoDestinatario(TipoDestinatario.ALUMNO);
         novedadDto.setFechaCreacion(OffsetDateTime.now());
-        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
-        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
+        Novedad novedad = mapper.toNovedadEntity(novedadDto);
+        return mapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -102,8 +99,8 @@ public class NovedadServiceImpl implements NovedadService {
         if (novedadDto.getId() == null || !novedadRepository.existsById(novedadDto.getId().longValue())) {
             throw new NotFoundException("Novedad no encontrada");
         }
-        Novedad novedad = generalMapper.toNovedadEntity(novedadDto);
-        return generalMapper.toNovedadDto(novedadRepository.save(novedad));
+        Novedad novedad = mapper.toNovedadEntity(novedadDto);
+        return mapper.toNovedadDto(novedadRepository.save(novedad));
     }
 
     @Override
@@ -120,7 +117,7 @@ public class NovedadServiceImpl implements NovedadService {
         return novedadRepository.findAll().stream()
                 .filter(n -> n.getTipoDestinatario() == destinatario &&
                         n.getFechaCreacion().isAfter(fechaDesde))
-                .map(generalMapper::toNovedadDto)
+                .map(mapper::toNovedadDto)
                 .collect(Collectors.toList());
     }
 

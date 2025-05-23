@@ -2,12 +2,14 @@ package com.oprosita.backend.dto;
 
 import com.oprosita.backend.model.TipoContenido;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ContenidoItemDto {
     private Integer id;
     private String texto;

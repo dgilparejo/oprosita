@@ -2,13 +2,14 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.model.*;
 import com.oprosita.backend.repository.AlumnoRepository;
 import com.oprosita.backend.repository.ContenidoItemRepository;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.service.ArchivoService;
 import com.oprosita.backend.service.ContenidoItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,43 +19,32 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ContenidoItemServiceImpl implements ContenidoItemService {
 
     private final ContenidoItemRepository contenidoItemRepository;
     private final GrupoRepository grupoRepository;
     private final AlumnoRepository alumnoRepository;
-    private final GeneralMapper mapper;
+    private final ContenidoItemMapper contenidoItemMapper;
     private final ArchivoService archivoService;
-
-    public ContenidoItemServiceImpl(ContenidoItemRepository contenidoItemRepository,
-                                    GrupoRepository grupoRepository,
-                                    AlumnoRepository alumnoRepository,
-                                    GeneralMapper mapper,
-                                    ArchivoService archivoService) {
-        this.contenidoItemRepository = contenidoItemRepository;
-        this.grupoRepository = grupoRepository;
-        this.alumnoRepository = alumnoRepository;
-        this.mapper = mapper;
-        this.archivoService = archivoService;
-    }
 
     @Override
     public ContenidoItemDto obtenerPorId(Long id) {
         ContenidoItem contenido = contenidoItemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
-        return mapper.toContenidoItemDto(contenido);
+        return contenidoItemMapper.toContenidoItemDto(contenido);
     }
 
     @Override
     public List<ContenidoItemDto> obtenerTodos() {
         return contenidoItemRepository.findAll().stream()
-                .map(mapper::toContenidoItemDto)
+                .map(contenidoItemMapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContenidoItemDto crear(ContenidoItemDto dto) {
-        ContenidoItem contenido = mapper.toContenidoItemEntity(dto);
+        ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
@@ -66,7 +56,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
             contenido.setAlumno(alumno);
         }
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toContenidoItemDto(contenido);
+        return contenidoItemMapper.toContenidoItemDto(contenido);
     }
 
     @Override
@@ -74,10 +64,10 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         if (!contenidoItemRepository.existsById(id)) {
             throw new NotFoundException("Contenido no encontrado");
         }
-        ContenidoItem contenido = mapper.toContenidoItemEntity(dto);
+        ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(dto);
         contenido.setId(id);
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toContenidoItemDto(contenido);
+        return contenidoItemMapper.toContenidoItemDto(contenido);
     }
 
     @Override
@@ -93,7 +83,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Alumno alumno = alumnoRepository.findById(alumnoId)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
         return alumno.getContenidos().stream()
-                .map(mapper::toContenidoItemDto)
+                .map(contenidoItemMapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -112,7 +102,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
                 .archivoId(archivoId)
                 .build();
 
-        return mapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
+        return contenidoItemMapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
     }
 
     @Override
@@ -122,7 +112,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
 
         return contenidoItemRepository.findAll().stream()
                 .filter(c -> grupo.equals(c.getGrupo()) && mes.equalsIgnoreCase(c.getMes()))
-                .map(mapper::toContenidoItemDto)
+                .map(contenidoItemMapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -131,10 +121,10 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
-        ContenidoItem contenido = mapper.toContenidoItemEntity(contenidoDto);
+        ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(contenidoDto);
         contenido.setGrupo(grupo);
         contenido.setMes(mes);
 
-        return mapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
+        return contenidoItemMapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
     }
 }

@@ -2,7 +2,7 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.ConversacionDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.ConversacionMapper;
 import com.oprosita.backend.model.Conversacion;
 import com.oprosita.backend.repository.ConversacionRepository;
 import com.oprosita.backend.service.ConversacionService;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ConversacionServiceImpl implements ConversacionService {
 
     private final ConversacionRepository conversacionRepository;
-    private final GeneralMapper generalMapper;
+    private final ConversacionMapper mapper;
 
     @Override
     public List<ConversacionDto> obtenerPorUsuario(Long usuarioId) {
@@ -31,6 +31,6 @@ public class ConversacionServiceImpl implements ConversacionService {
             throw new NotFoundException("No se encontraron conversaciones para el usuario con ID: " + usuarioId);
         }
 
-        return generalMapper.toConversacionDtoList(conversaciones);
+        return mapper.toConversacionDtoList(conversaciones);
     }
 }

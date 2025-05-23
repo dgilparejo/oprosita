@@ -2,9 +2,9 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.ReunionesApi;
 import com.oprosita.backend.dto.ReunionDto;
+import com.oprosita.backend.mapper.ReunionMapper;
 import com.oprosita.backend.model.generated.Reunion;
 import com.oprosita.backend.service.ReunionService;
-import com.oprosita.backend.mapper.GeneralMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ReunionController implements ReunionesApi {
 
     private final ReunionService reunionService;
-    private final GeneralMapper mapper;
+    private final ReunionMapper mapper;
 
     @Override
     public ResponseEntity<List<Reunion>> getReunionesByGrupo(Integer grupoId) {

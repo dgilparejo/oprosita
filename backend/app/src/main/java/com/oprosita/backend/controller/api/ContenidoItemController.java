@@ -2,7 +2,7 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.ContenidoApi;
 import com.oprosita.backend.dto.ContenidoItemDto;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.model.ContenidoItem;
 import com.oprosita.backend.service.ContenidoItemService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContenidoItemController implements ContenidoApi {
 
     private final ContenidoItemService contenidoItemService;
-    private final GeneralMapper mapper;
+    private final ContenidoItemMapper mapper;
 
     @Override
     public ResponseEntity<Void> deleteContenido(Integer id) {

@@ -3,13 +3,14 @@ package com.oprosita.backend.service.impl;
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.NoticiaDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.NoticiaMapper;
 import com.oprosita.backend.model.Grupo;
 import com.oprosita.backend.model.Noticia;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.repository.NoticiaRepository;
 import com.oprosita.backend.service.ArchivoService;
 import com.oprosita.backend.service.NoticiaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,47 +20,38 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class NoticiaServiceImpl implements NoticiaService {
 
     private final NoticiaRepository noticiaRepository;
     private final GrupoRepository grupoRepository;
     private final ArchivoService archivoService;
-    private final GeneralMapper generalMapper;
-
-    public NoticiaServiceImpl(NoticiaRepository noticiaRepository,
-                              GrupoRepository grupoRepository,
-                              ArchivoService archivoService,
-                              GeneralMapper generalMapper) {
-        this.noticiaRepository = noticiaRepository;
-        this.grupoRepository = grupoRepository;
-        this.archivoService = archivoService;
-        this.generalMapper = generalMapper;
-    }
+    private final NoticiaMapper mapper;
 
     @Override
     public NoticiaDto obtenerPorId(Long id) {
         Noticia noticia = noticiaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Noticia no encontrada"));
-        return generalMapper.toNoticiaDto(noticia);
+        return mapper.toNoticiaDto(noticia);
     }
 
     @Override
     public List<NoticiaDto> obtenerTodos() {
         return noticiaRepository.findAll().stream()
-                .map(generalMapper::toNoticiaDto)
+                .map(mapper::toNoticiaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public NoticiaDto crear(NoticiaDto dto) {
-        Noticia noticia = generalMapper.toNoticiaEntity(dto);
+        Noticia noticia = mapper.toNoticiaEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
             noticia.setGrupo(grupo);
         }
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toNoticiaDto(noticia);
+        return mapper.toNoticiaDto(noticia);
     }
 
     @Override
@@ -67,7 +59,7 @@ public class NoticiaServiceImpl implements NoticiaService {
         if (!noticiaRepository.existsById(id)) {
             throw new NotFoundException("Noticia no encontrada");
         }
-        Noticia noticia = generalMapper.toNoticiaEntity(dto);
+        Noticia noticia = mapper.toNoticiaEntity(dto);
         noticia.setId(id);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
@@ -75,7 +67,7 @@ public class NoticiaServiceImpl implements NoticiaService {
             noticia.setGrupo(grupo);
         }
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toNoticiaDto(noticia);
+        return mapper.toNoticiaDto(noticia);
     }
 
     @Override
@@ -101,6 +93,6 @@ public class NoticiaServiceImpl implements NoticiaService {
                 .build();
 
         noticia = noticiaRepository.save(noticia);
-        return generalMapper.toNoticiaDto(noticia);
+        return mapper.toNoticiaDto(noticia);
     }
 }

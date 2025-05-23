@@ -2,9 +2,9 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.NoticiasApi;
 import com.oprosita.backend.dto.NoticiaDto;
+import com.oprosita.backend.mapper.NoticiaMapper;
 import com.oprosita.backend.model.generated.Noticia;
 import com.oprosita.backend.service.NoticiaService;
-import com.oprosita.backend.mapper.GeneralMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class NoticiaController implements NoticiasApi {
 
     private final NoticiaService noticiaService;
-    private final GeneralMapper mapper;
+    private final NoticiaMapper mapper;
 
     @Override
     public ResponseEntity<Void> deleteNoticia(Integer id) {

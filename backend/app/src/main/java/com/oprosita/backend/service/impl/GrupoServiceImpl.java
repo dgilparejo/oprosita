@@ -5,7 +5,9 @@ import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.dto.MesDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.AlumnoMapper;
+import com.oprosita.backend.mapper.ContenidoItemMapper;
+import com.oprosita.backend.mapper.GrupoMapper;
 import com.oprosita.backend.model.Alumno;
 import com.oprosita.backend.model.ContenidoItem;
 import com.oprosita.backend.model.Grupo;
@@ -14,6 +16,7 @@ import com.oprosita.backend.repository.ContenidoItemRepository;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.service.GrupoService;
 import com.oprosita.backend.service.MesService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,45 +25,36 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GrupoServiceImpl implements GrupoService {
 
     private final GrupoRepository grupoRepository;
     private final AlumnoRepository alumnoRepository;
     private final ContenidoItemRepository contenidoItemRepository;
     private final MesService mesService;
-    private final GeneralMapper mapper;
-
-    public GrupoServiceImpl(GrupoRepository grupoRepository,
-                            AlumnoRepository alumnoRepository,
-                            ContenidoItemRepository contenidoItemRepository,
-                            MesService mesService,
-                            GeneralMapper mapper) {
-        this.grupoRepository = grupoRepository;
-        this.alumnoRepository = alumnoRepository;
-        this.contenidoItemRepository = contenidoItemRepository;
-        this.mesService = mesService;
-        this.mapper = mapper;
-    }
+    private final GrupoMapper grupoMapper;
+    private final AlumnoMapper alumnoMapper;
+    private final ContenidoItemMapper contenidoItemMapper;
 
     @Override
     public GrupoDto obtenerPorId(Long id) {
         Grupo grupo = grupoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        return mapper.toGrupoDto(grupo);
+        return grupoMapper.toGrupoDto(grupo);
     }
 
     @Override
     public List<GrupoDto> obtenerTodos() {
         return grupoRepository.findAll().stream()
-                .map(mapper::toGrupoDto)
+                .map(grupoMapper::toGrupoDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public GrupoDto crear(GrupoDto dto) {
-        Grupo grupo = mapper.toGrupoEntity(dto);
+        Grupo grupo = grupoMapper.toGrupoEntity(dto);
         grupo = grupoRepository.save(grupo);
-        return mapper.toGrupoDto(grupo);
+        return grupoMapper.toGrupoDto(grupo);
     }
 
     @Override
@@ -68,10 +62,10 @@ public class GrupoServiceImpl implements GrupoService {
         if (!grupoRepository.existsById(id)) {
             throw new NotFoundException("Grupo no encontrado");
         }
-        Grupo grupo = mapper.toGrupoEntity(dto);
+        Grupo grupo = grupoMapper.toGrupoEntity(dto);
         grupo.setId(id);
         grupo = grupoRepository.save(grupo);
-        return mapper.toGrupoDto(grupo);
+        return grupoMapper.toGrupoDto(grupo);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class GrupoServiceImpl implements GrupoService {
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
         return grupo.getUsuarios().stream()
                 .filter(u -> u instanceof Alumno)
-                .map(u -> mapper.toAlumnoDto((Alumno) u))
+                .map(u -> alumnoMapper.toAlumnoDto((Alumno) u))
                 .collect(Collectors.toList());
     }
 
@@ -96,10 +90,10 @@ public class GrupoServiceImpl implements GrupoService {
     public AlumnoDto agregarAlumnoAGrupo(Long grupoId, AlumnoDto alumnoDto) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        Alumno alumno = mapper.toAlumnoEntity(alumnoDto);
+        Alumno alumno = alumnoMapper.toAlumnoEntity(alumnoDto);
         alumno.setGrupo(grupo);
         alumno = alumnoRepository.save(alumno);
-        return mapper.toAlumnoDto(alumno);
+        return alumnoMapper.toAlumnoDto(alumno);
     }
 
     @Override
@@ -118,13 +112,13 @@ public class GrupoServiceImpl implements GrupoService {
                 .filter(c -> c.getGrupo() != null &&
                         c.getGrupo().getId().equals(grupoId) &&
                         c.getMes().equalsIgnoreCase(mes))
-                .map(mapper::toContenidoItemDto)
+                .map(contenidoItemMapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContenidoItemDto agregarContenidoAGrupoPorMes(Long grupoId, String mes, ContenidoItemDto contenidoDto) {
-        ContenidoItem contenido = mapper.toContenidoItemEntity(contenidoDto);
+        ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(contenidoDto);
 
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
@@ -132,7 +126,7 @@ public class GrupoServiceImpl implements GrupoService {
         contenido.setMes(mes);
 
         contenido = contenidoItemRepository.save(contenido);
-        return mapper.toContenidoItemDto(contenido);
+        return contenidoItemMapper.toContenidoItemDto(contenido);
     }
 
     @Override

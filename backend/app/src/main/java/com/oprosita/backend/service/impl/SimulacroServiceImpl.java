@@ -3,12 +3,13 @@ package com.oprosita.backend.service.impl;
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.SimulacroDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.SimulacroMapper;
 import com.oprosita.backend.model.Grupo;
 import com.oprosita.backend.model.Simulacro;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.repository.SimulacroRepository;
 import com.oprosita.backend.service.SimulacroService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,44 +19,38 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SimulacroServiceImpl implements SimulacroService {
 
     private final SimulacroRepository simulacroRepository;
     private final GrupoRepository grupoRepository;
-    private final GeneralMapper generalMapper;
+    private final SimulacroMapper mapper;
     private final ArchivoServiceImpl archivoService;
-
-    public SimulacroServiceImpl(SimulacroRepository simulacroRepository, GrupoRepository grupoRepository, GeneralMapper generalMapper, ArchivoServiceImpl archivoService) {
-        this.simulacroRepository = simulacroRepository;
-        this.grupoRepository = grupoRepository;
-        this.generalMapper = generalMapper;
-        this.archivoService = archivoService;
-    }
 
     @Override
     public SimulacroDto obtenerPorId(Long id) {
         Simulacro simulacro = simulacroRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Simulacro no encontrado"));
-        return generalMapper.toSimulacroDto(simulacro);
+        return mapper.toSimulacroDto(simulacro);
     }
 
     @Override
     public List<SimulacroDto> obtenerTodos() {
         return simulacroRepository.findAll().stream()
-                .map(generalMapper::toSimulacroDto)
+                .map(mapper::toSimulacroDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public SimulacroDto crear(SimulacroDto dto) {
-        Simulacro simulacro = generalMapper.toSimulacroEntity(dto);
+        Simulacro simulacro = mapper.toSimulacroEntity(dto);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
                     .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
             simulacro.setGrupo(grupo);
         }
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toSimulacroDto(simulacro);
+        return mapper.toSimulacroDto(simulacro);
     }
 
     @Override
@@ -63,7 +58,7 @@ public class SimulacroServiceImpl implements SimulacroService {
         if (!simulacroRepository.existsById(id)) {
             throw new NotFoundException("Simulacro no encontrado");
         }
-        Simulacro simulacro = generalMapper.toSimulacroEntity(dto);
+        Simulacro simulacro = mapper.toSimulacroEntity(dto);
         simulacro.setId(id);
         if (dto.getGrupoId() != null) {
             Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
@@ -71,7 +66,7 @@ public class SimulacroServiceImpl implements SimulacroService {
             simulacro.setGrupo(grupo);
         }
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toSimulacroDto(simulacro);
+        return mapper.toSimulacroDto(simulacro);
     }
 
     @Override
@@ -98,6 +93,6 @@ public class SimulacroServiceImpl implements SimulacroService {
                 .build();
 
         simulacro = simulacroRepository.save(simulacro);
-        return generalMapper.toSimulacroDto(simulacro);
+        return mapper.toSimulacroDto(simulacro);
     }
 }

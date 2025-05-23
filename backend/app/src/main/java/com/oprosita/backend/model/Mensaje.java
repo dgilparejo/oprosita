@@ -1,10 +1,7 @@
 package com.oprosita.backend.model;
 
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
@@ -15,6 +12,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "mensajes")
+@Builder
 public class Mensaje {
 
     @Id

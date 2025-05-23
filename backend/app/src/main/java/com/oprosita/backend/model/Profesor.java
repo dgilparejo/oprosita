@@ -4,13 +4,11 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
-@Entity
-@DiscriminatorValue("profesor")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@DiscriminatorValue("profesor")
+@Entity
 public class Profesor extends Usuario {
 }
 

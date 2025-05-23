@@ -2,10 +2,11 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.MensajeDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.MensajeMapper;
 import com.oprosita.backend.model.Mensaje;
 import com.oprosita.backend.repository.MensajeRepository;
 import com.oprosita.backend.service.MensajeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,21 +15,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MensajeServiceImpl implements MensajeService {
 
     private final MensajeRepository mensajeRepository;
-    private final GeneralMapper generalMapper;
-
-    public MensajeServiceImpl(MensajeRepository mensajeRepository, GeneralMapper generalMapper) {
-        this.mensajeRepository = mensajeRepository;
-        this.generalMapper = generalMapper;
-    }
+    private final MensajeMapper mapper;
 
     @Override
     public MensajeDto obtenerPorId(Long id) {
         Mensaje mensaje = mensajeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Mensaje no encontrado"));
-        return generalMapper.toMensajeDto(mensaje);
+        return mapper.toMensajeDto(mensaje);
     }
 
     @Override
@@ -37,14 +34,14 @@ public class MensajeServiceImpl implements MensajeService {
                 .filter(m -> m.getRemitente().equals(remitente)
                         && m.getDestinatario().equals(destinatario))
                 .collect(Collectors.toList());
-        return generalMapper.toMensajeDtoList(mensajes);
+        return mapper.toMensajeDtoList(mensajes);
     }
 
     @Override
     public MensajeDto enviar(MensajeDto mensajeDto) {
-        Mensaje mensaje = generalMapper.toMensajeEntity(mensajeDto);
+        Mensaje mensaje = mapper.toMensajeEntity(mensajeDto);
         mensaje = mensajeRepository.save(mensaje);
-        return generalMapper.toMensajeDto(mensaje);
+        return mapper.toMensajeDto(mensaje);
     }
 
     @Override

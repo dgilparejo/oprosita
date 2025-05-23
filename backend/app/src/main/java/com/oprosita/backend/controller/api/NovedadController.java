@@ -2,9 +2,9 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.NovedadesApi;
 import com.oprosita.backend.dto.NovedadDto;
+import com.oprosita.backend.mapper.NovedadMapper;
 import com.oprosita.backend.model.generated.Novedad;
 import com.oprosita.backend.service.NovedadService;
-import com.oprosita.backend.mapper.GeneralMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class NovedadController implements NovedadesApi {
 
     private final NovedadService novedadService;
-    private final GeneralMapper mapper;
+    private final NovedadMapper mapper;
 
     @Override
     public ResponseEntity<Void> deleteNovedad(Integer id) {

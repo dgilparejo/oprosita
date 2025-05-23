@@ -1,15 +1,16 @@
-
 package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.dto.ProfesorDto;
 import com.oprosita.backend.exception.NotFoundException;
-import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.mapper.GrupoMapper;
+import com.oprosita.backend.mapper.ProfesorMapper;
 import com.oprosita.backend.model.Grupo;
 import com.oprosita.backend.model.Profesor;
 import com.oprosita.backend.repository.GrupoRepository;
 import com.oprosita.backend.repository.ProfesorRepository;
 import com.oprosita.backend.service.ProfesorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,34 +18,30 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ProfesorServiceImpl implements ProfesorService {
 
     private final ProfesorRepository profesorRepository;
     private final GrupoRepository grupoRepository;
-    private final GeneralMapper mapper;
-
-    public ProfesorServiceImpl(ProfesorRepository profesorRepository, GrupoRepository grupoRepository, GeneralMapper mapper) {
-        this.profesorRepository = profesorRepository;
-        this.grupoRepository = grupoRepository;
-        this.mapper = mapper;
-    }
+    private final ProfesorMapper profesorMapper;
+    private final GrupoMapper grupoMapper;
 
     @Override
     public ProfesorDto obtenerPorId(Long id) {
         Profesor profesor = profesorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        return mapper.toProfesorDto(profesor);
+        return profesorMapper.toProfesorDto(profesor);
     }
 
     @Override
     public List<ProfesorDto> obtenerTodos() {
-        return mapper.toProfesorDtoList(profesorRepository.findAll());
+        return profesorMapper.toProfesorDtoList(profesorRepository.findAll());
     }
 
     @Override
     public ProfesorDto crear(ProfesorDto dto) {
-        Profesor profesor = mapper.toProfesorEntity(dto);
-        return mapper.toProfesorDto(profesorRepository.save(profesor));
+        Profesor profesor = profesorMapper.toProfesorEntity(dto);
+        return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override
@@ -52,9 +49,9 @@ public class ProfesorServiceImpl implements ProfesorService {
         if (!profesorRepository.existsById(id)) {
             throw new NotFoundException("Profesor no encontrado");
         }
-        Profesor profesor = mapper.toProfesorEntity(dto);
+        Profesor profesor = profesorMapper.toProfesorEntity(dto);
         profesor.setId(id);
-        return mapper.toProfesorDto(profesorRepository.save(profesor));
+        return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override
@@ -69,7 +66,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     public List<GrupoDto> obtenerGruposPorProfesor(Long profesorId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        return List.of(mapper.toGrupoDto(profesor.getGrupo()));
+        return List.of(grupoMapper.toGrupoDto(profesor.getGrupo()));
     }
 
     @Override
@@ -80,7 +77,7 @@ public class ProfesorServiceImpl implements ProfesorService {
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
         profesor.setGrupo(grupo);
-        return mapper.toProfesorDto(profesorRepository.save(profesor));
+        return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
     @Override
