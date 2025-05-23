@@ -5,9 +5,6 @@ WORKDIR /app
 # Copiar únicamente el pom.xml para descargar dependencias
 COPY app/pom.xml ./pom.xml
 
-# Descargar dependencias (aprovecha la cache de Docker)
-RUN mvn dependency:go-offline
-
 # Copiar el resto del código fuente
 COPY app/src ./src
 
