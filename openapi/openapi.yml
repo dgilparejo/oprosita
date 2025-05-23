@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.0.2
+  version: 1.1.0
 
 servers:
   - url: http://localhost:8080/api
@@ -130,6 +130,13 @@ paths:
       responses:
         '200':
           description: Lista de alumnos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alumno'
+
     post:
       tags:
         - grupos
@@ -192,6 +199,9 @@ paths:
 
   /alumnos/{alumnoId}/contenido:
     get:
+      tags:
+        - alumnos
+        - contenido
       summary: Obtener contenido de un alumno
       operationId: getContenidoByAlumno
       parameters:
@@ -344,6 +354,10 @@ paths:
       responses:
         '201':
           description: Contenido añadido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContenidoItem'
 
   /contenido/{id}:
     delete:
@@ -419,6 +433,10 @@ paths:
       responses:
         '201':
           description: Simulacro creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulacro'
 
   /simulacros/{id}:
     delete:
@@ -452,9 +470,18 @@ paths:
       responses:
         '200':
           description: Lista de grupos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Grupo'
 
   /alumnos/{alumnoId}/grupos:
     get:
+      tags:
+        - alumnos
+        - grupos
       summary: Obtener grupos de un alumno
       operationId: getGruposByAlumno
       parameters:
@@ -495,6 +522,13 @@ paths:
       responses:
         '200':
           description: Lista de novedades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Novedad'
+
 
     post:
       tags:
@@ -510,6 +544,10 @@ paths:
       responses:
         '201':
           description: Novedad creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Novedad'
 
   /novedades/alumno:
     get:
@@ -541,6 +579,10 @@ paths:
       responses:
         '201':
           description: Novedad creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Novedad'
 
     put:
       tags:
@@ -556,6 +598,10 @@ paths:
       responses:
         '200':
           description: Novedad actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Novedad'
 
     delete:
       tags:
@@ -620,6 +666,10 @@ paths:
       responses:
         '201':
           description: Noticia creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Noticia'
   /noticias/{id}:
     delete:
       tags:
@@ -651,6 +701,12 @@ paths:
       responses:
         '200':
           description: Lista de reuniones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reunion'
     post:
       tags:
         - reuniones
@@ -671,6 +727,10 @@ paths:
       responses:
         '201':
           description: Reunión creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reunion'
 
   /reuniones/{id}:
     put:
@@ -693,6 +753,11 @@ paths:
       responses:
         '200':
           description: Reunión actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reunion'
+
     delete:
       tags:
         - reuniones
@@ -767,6 +832,13 @@ paths:
       responses:
         '200':
           description: Lista de meses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Mes'
+
     post:
       tags:
         - grupos
@@ -809,6 +881,12 @@ paths:
       responses:
         '200':
           description: Lista de mensajes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Mensaje'
     post:
       tags:
         - chat
@@ -839,6 +917,12 @@ paths:
       responses:
         '200':
           description: Lista de conversaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conversacion'
 
 components:
   schemas:

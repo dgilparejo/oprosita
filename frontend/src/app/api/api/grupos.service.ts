@@ -116,10 +116,10 @@ export class GruposService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ContenidoItem>;
+    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ContenidoItem>>;
+    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ContenidoItem>>;
+    public addContenidoToGrupoByMes(grupoId: number, mes: string, contenidoItem: ContenidoItem, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (grupoId === null || grupoId === undefined) {
             throw new Error('Required parameter grupoId was null or undefined when calling addContenidoToGrupoByMes.');
         }
@@ -133,6 +133,7 @@ export class GruposService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -165,7 +166,7 @@ export class GruposService extends BaseService {
 
         let localVarPath = `/grupos/${this.configuration.encodeParam({name: "grupoId", value: grupoId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/meses/${this.configuration.encodeParam({name: "mes", value: mes, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/contenido`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<ContenidoItem>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: contenidoItem,
@@ -310,6 +311,67 @@ export class GruposService extends BaseService {
     }
 
     /**
+     * Eliminar un contenido de un grupo en un mes
+     * @param grupoId 
+     * @param mes 
+     * @param contenidoId 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteContenidoFromGrupoByMes(grupoId: number, mes: string, contenidoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public deleteContenidoFromGrupoByMes(grupoId: number, mes: string, contenidoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public deleteContenidoFromGrupoByMes(grupoId: number, mes: string, contenidoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public deleteContenidoFromGrupoByMes(grupoId: number, mes: string, contenidoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (grupoId === null || grupoId === undefined) {
+            throw new Error('Required parameter grupoId was null or undefined when calling deleteContenidoFromGrupoByMes.');
+        }
+        if (mes === null || mes === undefined) {
+            throw new Error('Required parameter mes was null or undefined when calling deleteContenidoFromGrupoByMes.');
+        }
+        if (contenidoId === null || contenidoId === undefined) {
+            throw new Error('Required parameter contenidoId was null or undefined when calling deleteContenidoFromGrupoByMes.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/grupos/${this.configuration.encodeParam({name: "grupoId", value: grupoId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/meses/${this.configuration.encodeParam({name: "mes", value: mes, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/contenido`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<any>('delete', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Eliminar un grupo
      * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -368,10 +430,10 @@ export class GruposService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAlumnosByGrupo(grupoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getAlumnosByGrupo(grupoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getAlumnosByGrupo(grupoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public getAlumnosByGrupo(grupoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAlumnosByGrupo(grupoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Alumno>>;
+    public getAlumnosByGrupo(grupoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Alumno>>>;
+    public getAlumnosByGrupo(grupoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Alumno>>>;
+    public getAlumnosByGrupo(grupoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (grupoId === null || grupoId === undefined) {
             throw new Error('Required parameter grupoId was null or undefined when calling getAlumnosByGrupo.');
         }
@@ -379,6 +441,7 @@ export class GruposService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -402,7 +465,7 @@ export class GruposService extends BaseService {
 
         let localVarPath = `/grupos/${this.configuration.encodeParam({name: "grupoId", value: grupoId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/alumnos`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Alumno>>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -583,10 +646,10 @@ export class GruposService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGruposByAlumno(alumnoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getGruposByAlumno(alumnoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getGruposByAlumno(alumnoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public getGruposByAlumno(alumnoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getGruposByAlumno(alumnoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Grupo>>;
+    public getGruposByAlumno(alumnoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Grupo>>>;
+    public getGruposByAlumno(alumnoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Grupo>>>;
+    public getGruposByAlumno(alumnoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (alumnoId === null || alumnoId === undefined) {
             throw new Error('Required parameter alumnoId was null or undefined when calling getGruposByAlumno.');
         }
@@ -594,6 +657,7 @@ export class GruposService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -617,7 +681,7 @@ export class GruposService extends BaseService {
 
         let localVarPath = `/alumnos/${this.configuration.encodeParam({name: "alumnoId", value: alumnoId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/grupos`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Grupo>>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -636,10 +700,10 @@ export class GruposService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGruposByProfesor(profesorId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getGruposByProfesor(profesorId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getGruposByProfesor(profesorId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public getGruposByProfesor(profesorId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getGruposByProfesor(profesorId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Grupo>>;
+    public getGruposByProfesor(profesorId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Grupo>>>;
+    public getGruposByProfesor(profesorId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Grupo>>>;
+    public getGruposByProfesor(profesorId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (profesorId === null || profesorId === undefined) {
             throw new Error('Required parameter profesorId was null or undefined when calling getGruposByProfesor.');
         }
@@ -647,6 +711,7 @@ export class GruposService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -670,7 +735,7 @@ export class GruposService extends BaseService {
 
         let localVarPath = `/profesores/${this.configuration.encodeParam({name: "profesorId", value: profesorId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/grupos`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Grupo>>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -689,10 +754,10 @@ export class GruposService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getMesesByGrupo(grupoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getMesesByGrupo(grupoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getMesesByGrupo(grupoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public getMesesByGrupo(grupoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getMesesByGrupo(grupoId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Mes>>;
+    public getMesesByGrupo(grupoId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Mes>>>;
+    public getMesesByGrupo(grupoId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Mes>>>;
+    public getMesesByGrupo(grupoId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (grupoId === null || grupoId === undefined) {
             throw new Error('Required parameter grupoId was null or undefined when calling getMesesByGrupo.');
         }
@@ -700,6 +765,7 @@ export class GruposService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -723,7 +789,7 @@ export class GruposService extends BaseService {
 
         let localVarPath = `/grupos/${this.configuration.encodeParam({name: "grupoId", value: grupoId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: undefined})}/meses`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<any>('get', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<Mes>>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

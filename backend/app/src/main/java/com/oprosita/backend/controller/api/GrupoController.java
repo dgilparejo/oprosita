@@ -4,16 +4,19 @@ import com.oprosita.backend.api.GruposApi;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
+import com.oprosita.backend.dto.MesDto;
 import com.oprosita.backend.mapper.GeneralMapper;
-import com.oprosita.backend.model.Grupo;
-import com.oprosita.backend.model.ContenidoItem;
-import com.oprosita.backend.model.Mes;
+import com.oprosita.backend.model.generated.Alumno;
+import com.oprosita.backend.model.generated.ContenidoItem;
+import com.oprosita.backend.model.generated.Grupo;
+import com.oprosita.backend.model.generated.Mes;
 import com.oprosita.backend.service.GrupoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,15 +32,17 @@ public class GrupoController implements GruposApi {
     }
 
     @Override
-    public ResponseEntity<List<AlumnoDto>> getAlumnosByGrupo(Integer grupoId) {
-        return ResponseEntity.ok(grupoService.obtenerAlumnosPorGrupo(grupoId.longValue()));
+    public ResponseEntity<List<Alumno>> getAlumnosByGrupo(Integer grupoId) {
+        List<AlumnoDto> dtos = grupoService.obtenerAlumnosPorGrupo(grupoId.longValue());
+        List<Alumno> alumnos = dtos.stream().map(mapper::toAlumnoGenerated).collect(Collectors.toList());
+        return ResponseEntity.ok(alumnos);
     }
 
     @Override
-    public ResponseEntity<AlumnoDto> addAlumnoToGrupo(Integer grupoId, com.oprosita.backend.model.generated.Alumno alumno) {
-        AlumnoDto alumnoDto = mapper.toAlumnoDto(mapper.toAlumnoEntity(alumno));
-        AlumnoDto result = grupoService.agregarAlumnoAGrupo(grupoId.longValue(), alumnoDto);
-        return ResponseEntity.status(201).body(result);
+    public ResponseEntity<Void> addAlumnoToGrupo(Integer grupoId, Alumno alumno) {
+        AlumnoDto dto = mapper.toAlumnoDto(alumno);
+        grupoService.agregarAlumnoAGrupo(grupoId.longValue(), dto);
+        return ResponseEntity.status(201).build(); // sin body
     }
 
     @Override
@@ -47,52 +52,56 @@ public class GrupoController implements GruposApi {
     }
 
     @Override
-    public ResponseEntity<List<ContenidoItemDto>> getContenidoByGrupoAndMes(Integer grupoId, String mes) {
-        List<ContenidoItemDto> contenido = grupoService.obtenerContenidoPorGrupoYMes(grupoId.longValue(), mes);
+    public ResponseEntity<List<ContenidoItem>> getContenidoByGrupoAndMes(Integer grupoId, String mes) {
+        List<ContenidoItemDto> dtos = grupoService.obtenerContenidoPorGrupoYMes(grupoId.longValue(), mes);
+        List<ContenidoItem> contenido = dtos.stream().map(mapper::toContenidoItemGenerated).collect(Collectors.toList());
         return ResponseEntity.ok(contenido);
     }
 
     @Override
-    public ResponseEntity<ContenidoItemDto> addContenidoToGrupoByMes(Integer grupoId, String mes, com.oprosita.backend.model.generated.ContenidoItem contenidoItem) {
-        ContenidoItemDto dto = mapper.toContenidoItemDto(mapper.toContenidoItemEntity(contenidoItem));
+    public ResponseEntity<ContenidoItem> addContenidoToGrupoByMes(Integer grupoId, String mes, ContenidoItem contenidoItem) {
+        ContenidoItemDto dto = mapper.toContenidoItemDto(contenidoItem);
         ContenidoItemDto creado = grupoService.agregarContenidoAGrupoPorMes(grupoId.longValue(), mes, dto);
-        return ResponseEntity.status(201).body(creado);
+        return ResponseEntity.status(201).body(mapper.toContenidoItemGenerated(creado));
     }
 
     @Override
     public ResponseEntity<Void> addMesToGrupo(Integer grupoId, Mes mes) {
-        return ResponseEntity.status(501).build(); // NOT_IMPLEMENTED
-    }
-
-    @Override
-    public ResponseEntity<Void> createGrupo(Grupo grupo) {
-        GrupoDto grupoDto = mapper.toGrupoDto(mapper.toGrupoEntity(grupo));
-        grupoService.crear(grupoDto);
+        MesDto dto = mapper.toMesDto(mes);
+        grupoService.agregarMesAGrupo(grupoId.longValue(), dto);
         return ResponseEntity.status(201).build();
     }
 
     @Override
-    public ResponseEntity<com.oprosita.backend.model.generated.Grupo> getGrupoById(Integer id) {
-        GrupoDto grupoDto = grupoService.obtenerPorId(id.longValue());
-        com.oprosita.backend.model.generated.Grupo grupo = mapper.toGrupoGenerated(grupoDto);
-        return ResponseEntity.ok(grupo);
+    public ResponseEntity<Void> createGrupo(Grupo grupo) {
+        GrupoDto dto = mapper.toGrupoDto(grupo);
+        grupoService.crear(dto);
+        return ResponseEntity.status(201).build();
     }
 
     @Override
-    public ResponseEntity<List<GrupoDto>> getGrupos() {
-        return ResponseEntity.ok(grupoService.obtenerTodos());
+    public ResponseEntity<Grupo> getGrupoById(Integer id) {
+        GrupoDto dto = grupoService.obtenerPorId(id.longValue());
+        return ResponseEntity.ok(mapper.toGrupoGenerated(dto));
     }
 
     @Override
-    public ResponseEntity<Void> getMesesByGrupo(Integer grupoId) {
-        // Similar al addMesToGrupo, este método no está en GrupoService.
-        // Puedes ignorarlo o implementarlo si luego añades lógica en el servicio.
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<List<Grupo>> getGrupos() {
+        List<GrupoDto> dtos = grupoService.obtenerTodos();
+        List<Grupo> grupos = dtos.stream().map(mapper::toGrupoGenerated).collect(Collectors.toList());
+        return ResponseEntity.ok(grupos);
     }
+
+    @Override
+    public ResponseEntity<List<Mes>> getMesesByGrupo(Integer grupoId) {
+        List<MesDto> dtos = grupoService.obtenerMesesPorGrupo(grupoId.longValue());
+        List<Mes> meses = dtos.stream().map(mapper::toMesGenerated).collect(Collectors.toList());
+        return ResponseEntity.ok(meses);
+    }
+
     @Override
     public ResponseEntity<Void> deleteContenidoFromGrupoByMes(Integer grupoId, String mes, Integer contenidoId) {
         grupoService.eliminarContenidoDeGrupoPorMes(grupoId.longValue(), mes, contenidoId.longValue());
         return ResponseEntity.noContent().build();
     }
-
 }

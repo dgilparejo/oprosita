@@ -2,7 +2,7 @@
 
 API REST para gestión de grupos, usuarios, contenido y simulacros
 
-The version of the OpenAPI document: 1.0.2
+The version of the OpenAPI document: 1.1.0
 
 ## Building
 

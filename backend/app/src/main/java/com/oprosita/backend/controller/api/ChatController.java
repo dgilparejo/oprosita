@@ -4,6 +4,7 @@ import com.oprosita.backend.api.ChatApi;
 import com.oprosita.backend.dto.ConversacionDto;
 import com.oprosita.backend.dto.MensajeDto;
 import com.oprosita.backend.mapper.GeneralMapper;
+import com.oprosita.backend.model.generated.Conversacion;
 import com.oprosita.backend.model.generated.Mensaje;
 import com.oprosita.backend.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +28,22 @@ public class ChatController implements ChatApi {
     }
 
     @Override
-    public ResponseEntity<List<MensajeDto>> getMensajes(Integer remitente, Integer destinatario) {
+    public ResponseEntity<List<Mensaje>> getMensajes(Integer remitente, Integer destinatario) {
         Long rem = remitente != null ? remitente.longValue() : null;
         Long dest = destinatario != null ? destinatario.longValue() : null;
-        List<MensajeDto> mensajes = chatService.obtenerMensajes(rem, dest);
+        List<MensajeDto> dtos = chatService.obtenerMensajes(rem, dest);
+        List<Mensaje> mensajes = dtos.stream()
+                .map(mapper::toMensajeGenerated)
+                .toList();
         return ResponseEntity.ok(mensajes);
     }
 
     @Override
-    public ResponseEntity<List<ConversacionDto>> getConversaciones(Integer usuarioId) {
-        return ResponseEntity.ok(chatService.obtenerConversacionesPorUsuario(usuarioId.longValue()));
+    public ResponseEntity<List<Conversacion>> getConversaciones(Integer usuarioId) {
+        List<ConversacionDto> dtos = chatService.obtenerConversacionesPorUsuario(usuarioId.longValue());
+        List<Conversacion> conversaciones = dtos.stream()
+                .map(mapper::toConversacionGenerated)
+                .toList();
+        return ResponseEntity.ok(conversaciones);
     }
 }
