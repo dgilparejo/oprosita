@@ -1,3 +1,4 @@
 ./api
 ./.idea
 ./.openapi-generator
+openapi.yaml
