@@ -1,4 +1,4 @@
-name: Build and Push OpenAPI to DockerHub
+name: Build and Push OpenAPI Images
 
 on:
   workflow_dispatch:
@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: openapi
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
@@ -22,13 +21,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build OpenAPI jar
-        working-directory: ./openapi
+      - name: Build OpenAPI JAR (backend)
+        working-directory: ./openapi-backend
         run: mvn clean package -DskipTests
 
       - name: Extract version from pom.xml
         id: extract_version
-        working-directory: ./openapi
+        working-directory: ./openapi-backend
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
@@ -36,13 +35,26 @@ jobs:
       - name: Log in to DockerHub
         run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
 
-      - name: Build Docker image with version tag
-        working-directory: ./openapi
+      # ---------- Build & Push Backend Generator ----------
+      - name: Build backend OpenAPI Docker image
+        working-directory: ./openapi-backend
         run: |
-          docker build -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} .
-          docker tag ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
+          docker build -t ${DOCKERHUB_USERNAME}/openapi-backend:${VERSION} .
+          docker tag ${DOCKERHUB_USERNAME}/openapi-backend:${VERSION} ${DOCKERHUB_USERNAME}/openapi-backend:latest
 
-      - name: Push Docker images to DockerHub
+      - name: Push backend image
         run: |
-          docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION}
-          docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
+          docker push ${DOCKERHUB_USERNAME}/openapi-backend:${VERSION}
+          docker push ${DOCKERHUB_USERNAME}/openapi-backend:latest
+
+      # ---------- Build & Push Frontend Generator ----------
+      - name: Build frontend OpenAPI Docker image
+        working-directory: ./openapi-frontend
+        run: |
+          docker build -t ${DOCKERHUB_USERNAME}/openapi-frontend:${VERSION} .
+          docker tag ${DOCKERHUB_USERNAME}/openapi-frontend:${VERSION} ${DOCKERHUB_USERNAME}/openapi-frontend:latest
+
+      - name: Push frontend image
+        run: |
+          docker push ${DOCKERHUB_USERNAME}/openapi-frontend:${VERSION}
+          docker push ${DOCKERHUB_USERNAME}/openapi-frontend:latest

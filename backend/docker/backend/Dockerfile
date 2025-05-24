@@ -1,18 +1,22 @@
-# Etapa 1: Compilación
-FROM maven:3.8.1-openjdk-17 AS build
+# Etapa 0: Extraer .jar de openapi image
+ARG DOCKERHUB_USERNAME
+FROM ${DOCKERHUB_USERNAME}/openapi:1.0.1 AS openapi
+
+# Etapa 1: Compilación del backend
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copiar únicamente el pom.xml para descargar dependencias
 COPY app/pom.xml ./pom.xml
-
-# Copiar el resto del código fuente
 COPY app/src ./src
 
-# Compilar la aplicación
+# Copia el jar de openapi desde la imagen
+COPY --from=openapi /openapi/target/openapi-1.0.1.jar /root/.m2/repository/com/oprosita/openapi/1.0.1/openapi-1.0.1.jar
+
+# Compila el backend usando el openapi.jar que ahora ya existe en el repo local simulado
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Ejecución
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # Copiar el archivo JAR generado desde la etapa anterior

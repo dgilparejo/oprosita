@@ -13,10 +13,11 @@ services:
   backend:
     depends_on:
       - mysql
-      - openapi-builder
     build:
       context: ./backend
       dockerfile: ./docker/backend/Dockerfile
+      args:
+        DOCKERHUB_USERNAME: ${DOCKERHUB_USERNAME}
     container_name: backend-container
     ports:
       - "8080:8080"
@@ -35,15 +36,6 @@ services:
       - my-network
     depends_on:
       - backend
-
-  openapi-builder:
-    build:
-      context: ./openapi
-      dockerfile: Dockerfile
-    volumes:
-      - C:/Users/dgp8/.m2:/root/.m2  # Caché Maven
-    networks:
-      - my-network
 
 networks:
   my-network:
