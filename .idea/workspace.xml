@@ -82,7 +82,7 @@
       <command value="mvn clean compile" />
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.BackendApplication">
+  <component name="RunManager" selected="OpenAPI/Swagger Code Generator.openapi.yml">
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.oprosita.backend.BackendApplication" />
@@ -109,6 +109,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yml" />
         <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yml" />
         <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yml" />
         <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yml" />
