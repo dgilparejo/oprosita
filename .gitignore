@@ -1,10 +1,4 @@
 ./api
-# Ignorar configuración personal de IntelliJ
-.idea/*
-!.idea/modules.xml
-!.idea/vcs.xml
-!.idea/oprosita.iml
-
 ./.openapi-generator
 openapi.yaml
 ./openapi/target
