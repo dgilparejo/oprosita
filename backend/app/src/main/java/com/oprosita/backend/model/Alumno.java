@@ -1,4 +1,20 @@
 package com.oprosita.backend.model;
 
-public class Alumno {
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import lombok.*;
+
+import java.util.List;
+
+@Entity
+@DiscriminatorValue("alumno")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Alumno extends Usuario {
+    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+    private List<ContenidoItem> contenidos;
 }
