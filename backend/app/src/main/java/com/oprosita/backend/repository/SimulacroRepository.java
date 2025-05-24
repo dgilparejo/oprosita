@@ -1,6 +1,6 @@
 package com.oprosita.backend.repository;
 
-import com.oprosita.backend.model.generated.Simulacro;
+import com.oprosita.backend.model.Simulacro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

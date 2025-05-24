@@ -13,10 +13,11 @@ services:
   backend:
     depends_on:
       - mysql
+      - openapi-builder
     build:
       context: ./backend
-      dockerfile: ./docker/springboot/Dockerfile
-    container_name: springboot-container
+      dockerfile: ./docker/backend/Dockerfile
+    container_name: backend-container
     ports:
       - "8080:8080"
     networks:
@@ -33,7 +34,16 @@ services:
     networks:
       - my-network
     depends_on:
-      - springboot
+      - backend
+
+  openapi-builder:
+    build:
+      context: ./openapi
+      dockerfile: Dockerfile
+    volumes:
+      - C:/Users/dgp8/.m2:/root/.m2  # Caché Maven
+    networks:
+      - my-network
 
 networks:
   my-network:
