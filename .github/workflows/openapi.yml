@@ -1,4 +1,4 @@
-name: Build and Push OpenAPI Images
+name: Build and Push OpenAPI to DockerHub
 
 on:
   workflow_dispatch:
