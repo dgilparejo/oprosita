@@ -1,7 +1,7 @@
 name: Build and Push OpenAPI to DockerHub
 
 on:
-  workflow_dispatch:  # Permite lanzarlo manualmente desde la interfaz de GitHub
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -26,12 +26,23 @@ jobs:
         working-directory: ./openapi
         run: mvn clean package -DskipTests
 
+      - name: Extract version from pom.xml
+        id: extract_version
+        working-directory: ./openapi
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Log in to DockerHub
         run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
 
-      - name: Build Docker image
+      - name: Build Docker image with version tag
         working-directory: ./openapi
-        run: docker build -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest .
+        run: |
+          docker build -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} .
+          docker tag ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION} ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
 
-      - name: Push to DockerHub
-        run: docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
+      - name: Push Docker images to DockerHub
+        run: |
+          docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${VERSION}
+          docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest
