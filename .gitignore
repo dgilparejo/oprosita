@@ -2,3 +2,5 @@
 ./.openapi-generator
 openapi.yaml
 ./openapi/target
+
+.idea/workspace.xml
