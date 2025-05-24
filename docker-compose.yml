@@ -18,11 +18,14 @@ services:
       dockerfile: ./docker/backend/Dockerfile
       args:
         DOCKERHUB_USERNAME: ${DOCKERHUB_USERNAME}
+        OPENAPI_BACKEND_VERSION: ${OPENAPI_BACKEND_VERSION}
     container_name: backend-container
     ports:
       - "8080:8080"
     networks:
       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     entrypoint: ["sh", "-c", "until nc -z mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done; java -jar /app/myapp.jar"]
 
   frontend:

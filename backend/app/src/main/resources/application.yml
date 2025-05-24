@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: docker
+    active: local
   datasource:
     username: myuser
     password: mypassword

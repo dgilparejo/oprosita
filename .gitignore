@@ -1,6 +1,6 @@
 ./api
 ./.openapi-generator
 openapi.yaml
-./openapi/target
+./openapi/openapi-backend/target
 
 .idea/workspace.xml

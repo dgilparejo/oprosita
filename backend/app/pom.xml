@@ -29,6 +29,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
+        <openapi.version>${openapi.version.override}</openapi.version>
+        <openapi.version.override>1.0.1</openapi.version.override>
     </properties>
     <dependencies>
         <!-- Spring Boot base -->
@@ -175,7 +177,7 @@
         <dependency>
             <groupId>com.oprosita</groupId>
             <artifactId>openapi-backend</artifactId>
-            <version>1.0.1</version>
+            <version>${openapi.version}</version>
         </dependency>
 
     </dependencies>
@@ -232,4 +234,31 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!-- Perfil por defecto: compila openapi-backend desde ruta local -->
+        <profile>
+            <id>local</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oprosita</groupId>
+                    <artifactId>openapi-backend</artifactId>
+                    <version>${openapi.version}</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/../../openapi/openapi-backend/target/openapi-backend-${openapi.version}.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- Perfil Docker: asume que openapi-backend ya está instalado en el repo Maven local del contenedor -->
+        <profile>
+            <id>docker</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oprosita</groupId>
+                    <artifactId>openapi-backend</artifactId>
+                    <version>${openapi.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
