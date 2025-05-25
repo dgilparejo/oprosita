@@ -1,5 +1,6 @@
 package com.oprosita.backend.service.impl;
 
+import com.oprosita.backend.model.Mes;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
@@ -72,7 +73,13 @@ public class GrupoServiceImpl implements GrupoService {
         }
 
         Grupo grupo = grupoMapper.toGrupoEntity(dto);
-        grupo = grupoRepository.save(grupo);
+        Grupo finalGrupo = grupo;
+
+        if (finalGrupo.getMeses() != null) {
+            finalGrupo.getMeses().forEach(mes -> mes.setGrupo(finalGrupo));
+        }
+
+        grupo = grupoRepository.save(finalGrupo);
         return grupoMapper.toGrupoDto(grupo);
     }
 
