@@ -24,7 +24,7 @@ public class ChatController implements ChatApi {
 
     @Override
     public ResponseEntity<Void> enviarMensaje(Mensaje mensaje) {
-        MensajeDto mensajeDto = mensajeMapper.toMensajeDto(mensaje);
+        MensajeDto mensajeDto = mensajeMapper.fromGeneratedMensaje(mensaje);
         chatService.enviarMensaje(mensajeDto);
         return ResponseEntity.status(201).build();
     }
@@ -35,7 +35,7 @@ public class ChatController implements ChatApi {
         Long dest = destinatario != null ? destinatario.longValue() : null;
         List<MensajeDto> dtos = chatService.obtenerMensajes(rem, dest);
         List<Mensaje> mensajes = dtos.stream()
-                .map(mensajeMapper::toMensajeGenerated)
+                .map(mensajeMapper::toGeneratedMensaje)
                 .toList();
         return ResponseEntity.ok(mensajes);
     }
@@ -44,7 +44,7 @@ public class ChatController implements ChatApi {
     public ResponseEntity<List<Conversacion>> getConversaciones(Integer usuarioId) {
         List<ConversacionDto> dtos = chatService.obtenerConversacionesPorUsuario(usuarioId.longValue());
         List<Conversacion> conversaciones = dtos.stream()
-                .map(conversacionMapper::toConversacionGenerated)
+                .map(conversacionMapper::toGeneratedConversacion)
                 .toList();
         return ResponseEntity.ok(conversaciones);
     }

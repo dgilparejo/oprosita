@@ -8,11 +8,13 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface NoticiaMapper {
-
+    // JPA ↔ DTO
     NoticiaDto toNoticiaDto(Noticia noticia);
     Noticia toNoticiaEntity(NoticiaDto dto);
     List<NoticiaDto> toNoticiaDtoList(List<Noticia> noticias);
     List<Noticia> toNoticiaEntityList(List<NoticiaDto> dtos);
-    com.oprosita.backend.model.generated.Noticia toNoticiaGenerated(NoticiaDto dto);
-    NoticiaDto toNoticiaDto(com.oprosita.backend.model.generated.Noticia generated);
+
+    // OpenAPI ↔ DTO
+    NoticiaDto fromGeneratedNoticia(com.oprosita.backend.model.generated.Noticia generated);
+    com.oprosita.backend.model.generated.Noticia toGeneratedNoticia(NoticiaDto dto);
 }

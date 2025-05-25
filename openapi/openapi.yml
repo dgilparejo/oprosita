@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.0.0
+  version: 1.1.0
 
 servers:
   - url: http://localhost:8080/api
@@ -425,8 +425,6 @@ paths:
               properties:
                 descripcion:
                   type: string
-                grupoId:
-                  type: integer
                 file:
                   type: string
                   format: binary
@@ -658,8 +656,6 @@ paths:
               properties:
                 descripcion:
                   type: string
-                grupoId:
-                  type: integer
                 file:
                   type: string
                   format: binary
@@ -946,10 +942,8 @@ components:
         nombre:
           type: string
 
-    Usuario:
+    Alumno:
       type: object
-      discriminator:
-        propertyName: tipo
       properties:
         id:
           type: integer
@@ -957,24 +951,22 @@ components:
           type: string
         grupoId:
           type: integer
-
-    Alumno:
-      allOf:
-        - $ref: '#/components/schemas/Usuario'
-        - type: object
-          properties:
-            tipo:
-              type: string
-              enum: [alumno]
+        tipo:
+          type: string
+          enum: [ alumno ]
 
     Profesor:
-      allOf:
-        - $ref: '#/components/schemas/Usuario'
-        - type: object
-          properties:
-            tipo:
-              type: string
-              enum: [profesor]
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        grupoId:
+          type: integer
+        tipo:
+          type: string
+          enum: [ profesor ]
 
     ContenidoItem:
       type: object
@@ -1021,9 +1013,6 @@ components:
           type: string
         archivoId:
           type: integer
-        grupoId:
-          type: integer
-
     Novedad:
       type: object
       properties:
@@ -1046,8 +1035,6 @@ components:
         descripcion:
           type: string
         archivoId:
-          type: integer
-        grupoId:
           type: integer
 
     Reunion:

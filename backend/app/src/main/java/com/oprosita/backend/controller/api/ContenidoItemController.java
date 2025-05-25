@@ -3,7 +3,7 @@ package com.oprosita.backend.controller.api;
 import com.oprosita.backend.api.ContenidoApi;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
-import com.oprosita.backend.model.ContenidoItem;
+import com.oprosita.backend.model.generated.ContenidoItem;
 import com.oprosita.backend.service.ContenidoItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +23,8 @@ public class ContenidoItemController implements ContenidoApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateContenido(Integer id, com.oprosita.backend.model.generated.ContenidoItem contenidoItem) {
-        ContenidoItem entidadInterna = mapper.toContenidoItemEntity(contenidoItem);
-        ContenidoItemDto dto = mapper.toContenidoItemDto(entidadInterna);
+    public ResponseEntity<Void> updateContenido(Integer id, ContenidoItem contenidoItem) {
+        ContenidoItemDto dto = mapper.fromGeneratedContenidoItem(contenidoItem);
         contenidoItemService.actualizar(id.longValue(), dto);
         return ResponseEntity.ok().build();
     }

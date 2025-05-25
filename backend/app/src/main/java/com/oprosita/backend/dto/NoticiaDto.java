@@ -13,5 +13,4 @@ public class NoticiaDto {
     private Integer id;
     private String descripcion;
     private Integer archivoId;
-    private Integer grupoId;
 }

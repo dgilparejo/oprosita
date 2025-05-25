@@ -1,11 +1,14 @@
 package com.oprosita.backend.mapper;
 
 import com.oprosita.backend.dto.GrupoDto;
+import com.oprosita.backend.dto.MesDto;
 import com.oprosita.backend.model.Grupo;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = { MesMapper.class })
 public interface GrupoMapper {

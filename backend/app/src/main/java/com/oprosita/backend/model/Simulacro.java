@@ -16,8 +16,4 @@ public class Simulacro {
 
     private String descripcion;
     private Long archivoId;
-
-    @ManyToOne
-    @JoinColumn(name = "grupo_id")
-    private Grupo grupo;
 }

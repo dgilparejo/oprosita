@@ -30,7 +30,7 @@ public class NoticiaController implements NoticiasApi {
     public ResponseEntity<List<Noticia>> getNoticias() {
         List<NoticiaDto> dtos = noticiaService.obtenerTodos();
         List<Noticia> noticias = dtos.stream()
-                .map(mapper::toNoticiaGenerated)
+                .map(mapper::toGeneratedNoticia)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(noticias);
     }
@@ -38,6 +38,6 @@ public class NoticiaController implements NoticiasApi {
     @Override
     public ResponseEntity<Noticia> createNoticia(String descripcion, Integer grupoId, MultipartFile file) {
         NoticiaDto dto = noticiaService.crearNoticia(descripcion, grupoId != null ? grupoId.longValue() : null, file);
-        return ResponseEntity.status(201).body(mapper.toNoticiaGenerated(dto));
+        return ResponseEntity.status(201).body(mapper.toGeneratedNoticia(dto));
     }
 }

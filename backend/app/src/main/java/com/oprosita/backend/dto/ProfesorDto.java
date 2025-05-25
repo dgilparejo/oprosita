@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProfesorDto {
-    private String value;
+    private Integer id;
+    private String nombre;
+    private Integer grupoId;
     private TipoDestinatario tipo;
 }

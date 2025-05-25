@@ -6,11 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// AlumnoDto extendido desde UsuarioDto
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class AlumnoDto {
-    private String value;
+    private Integer id;
+    private String nombre;
+    private Integer grupoId;
     private TipoDestinatario tipo;
 }

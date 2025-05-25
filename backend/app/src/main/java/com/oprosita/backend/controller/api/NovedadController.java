@@ -36,23 +36,19 @@ public class NovedadController implements NovedadesApi {
     public ResponseEntity<List<Novedad>> getNovedadesAlumno() {
         List<NovedadDto> dtos = novedadService.obtenerNovedadesAlumno();
         List<Novedad> novedades = dtos.stream()
-                .map(mapper::toNovedadGenerated)
+                .map(mapper::toGeneratedNovedad)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(novedades);
     }
 
     @Override
     public ResponseEntity<List<Novedad>> getNovedadesProfesor(String tipo, OffsetDateTime fechaDesde) {
-        List<NovedadDto> dtos;
-
-        if (tipo != null && fechaDesde != null) {
-            dtos = novedadService.obtenerNovedadesProfesorPorTipo(tipo, fechaDesde);
-        } else {
-            dtos = novedadService.obtenerNovedadesProfesor();
-        }
+        List<NovedadDto> dtos = (tipo != null && fechaDesde != null)
+                ? novedadService.obtenerNovedadesProfesorPorTipo(tipo, fechaDesde)
+                : novedadService.obtenerNovedadesProfesor();
 
         List<Novedad> novedades = dtos.stream()
-                .map(mapper::toNovedadGenerated)
+                .map(mapper::toGeneratedNovedad)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(novedades);
@@ -60,22 +56,22 @@ public class NovedadController implements NovedadesApi {
 
     @Override
     public ResponseEntity<Novedad> createNovedadProfesor(Novedad body) {
-        NovedadDto dto = mapper.toNovedadDto(body);
+        NovedadDto dto = mapper.fromGeneratedNovedad(body);
         NovedadDto creado = novedadService.crearNovedadProfesor(dto);
-        return ResponseEntity.status(201).body(mapper.toNovedadGenerated(creado));
+        return ResponseEntity.status(201).body(mapper.toGeneratedNovedad(creado));
     }
 
     @Override
     public ResponseEntity<Novedad> createNovedadAlumno(Novedad body) {
-        NovedadDto dto = mapper.toNovedadDto(body);
+        NovedadDto dto = mapper.fromGeneratedNovedad(body);
         NovedadDto creado = novedadService.crearNovedadAlumno(dto);
-        return ResponseEntity.status(201).body(mapper.toNovedadGenerated(creado));
+        return ResponseEntity.status(201).body(mapper.toGeneratedNovedad(creado));
     }
 
     @Override
     public ResponseEntity<Novedad> updateNovedadAlumno(Novedad body) {
-        NovedadDto dto = mapper.toNovedadDto(body);
+        NovedadDto dto = mapper.fromGeneratedNovedad(body);
         NovedadDto actualizado = novedadService.actualizarNovedadAlumno(dto);
-        return ResponseEntity.ok(mapper.toNovedadGenerated(actualizado));
+        return ResponseEntity.ok(mapper.toGeneratedNovedad(actualizado));
     }
 }

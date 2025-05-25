@@ -9,10 +9,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SimulacroMapper {
 
+    // JPA ↔ DTO
     SimulacroDto toSimulacroDto(Simulacro simulacro);
     Simulacro toSimulacroEntity(SimulacroDto dto);
     List<SimulacroDto> toSimulacroDtoList(List<Simulacro> simulacros);
     List<Simulacro> toSimulacroEntityList(List<SimulacroDto> dtos);
-    com.oprosita.backend.model.generated.Simulacro toSimulacroGenerated(SimulacroDto dto);
-    SimulacroDto toSimulacroDto(com.oprosita.backend.model.generated.Simulacro generated);
+
+    // OpenAPI ↔ DTO
+    SimulacroDto fromGeneratedSimulacro(com.oprosita.backend.model.generated.Simulacro generated);
+    com.oprosita.backend.model.generated.Simulacro toGeneratedSimulacro(SimulacroDto dto);
 }
