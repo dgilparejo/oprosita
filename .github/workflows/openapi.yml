@@ -22,12 +22,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Build OpenAPI JAR (backend)
-        working-directory: ./openapi-backend
+        working-directory: ./openapi/openapi-backend
         run: mvn clean package -DskipTests
 
       - name: Extract version from pom.xml
         id: extract_version
-        working-directory: ./openapi-backend
+        working-directory: ./openapi/openapi-backend
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
@@ -37,7 +37,7 @@ jobs:
 
       # ---------- Build & Push Backend Generator ----------
       - name: Build backend OpenAPI Docker image
-        working-directory: ./openapi-backend
+        working-directory: ./openapi/openapi-backend
         run: |
           docker build -t ${DOCKERHUB_USERNAME}/openapi-backend:${VERSION} .
           docker tag ${DOCKERHUB_USERNAME}/openapi-backend:${VERSION} ${DOCKERHUB_USERNAME}/openapi-backend:latest
@@ -49,7 +49,7 @@ jobs:
 
       # ---------- Build & Push Frontend Generator ----------
       - name: Build frontend OpenAPI Docker image
-        working-directory: ./openapi-frontend
+        working-directory: ./openapi/openapi-frontend
         run: |
           docker build -t ${DOCKERHUB_USERNAME}/openapi-frontend:${VERSION} .
           docker tag ${DOCKERHUB_USERNAME}/openapi-frontend:${VERSION} ${DOCKERHUB_USERNAME}/openapi-frontend:latest
