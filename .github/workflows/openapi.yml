@@ -21,6 +21,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # ---------- Copy openapi.yml to openapi-backend ----------
+      - name: Copy openapi.yml to openapi-backend
+        run: cp openapi/openapi.yml openapi/openapi-backend/openapi.yml
+
       - name: Build OpenAPI JAR (backend)
         working-directory: ./openapi/openapi-backend
         run: mvn clean package -DskipTests
@@ -34,10 +38,6 @@ jobs:
 
       - name: Log in to DockerHub
         run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-
-      # ---------- Copy openapi.yml to openapi-backend ----------
-      - name: Copy openapi.yml to openapi-backend
-        run: cp openapi/openapi.yml openapi/openapi-backend/openapi.yml
 
       # ---------- Build & Push Backend Generator ----------
       - name: Build backend OpenAPI Docker image
