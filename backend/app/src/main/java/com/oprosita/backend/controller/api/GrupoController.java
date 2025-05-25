@@ -40,7 +40,9 @@ public class GrupoController implements GruposApi {
     @Override
     public ResponseEntity<List<Alumno>> getAlumnosByGrupo(Integer grupoId) {
         List<AlumnoDto> dtos = grupoService.obtenerAlumnosPorGrupo(grupoId.longValue());
-        List<Alumno> alumnos = dtos.stream().map(alumnoMapper::toAlumnoGenerated).collect(Collectors.toList());
+        List<Alumno> alumnos = dtos.stream()
+                .map(alumnoMapper::toAlumnoGenerated)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(alumnos);
     }
 
@@ -60,7 +62,9 @@ public class GrupoController implements GruposApi {
     @Override
     public ResponseEntity<List<ContenidoItem>> getContenidoByGrupoAndMes(Integer grupoId, String mes) {
         List<ContenidoItemDto> dtos = grupoService.obtenerContenidoPorGrupoYMes(grupoId.longValue(), mes);
-        List<ContenidoItem> contenido = dtos.stream().map(contenidoItemMapper::toContenidoItemGenerated).collect(Collectors.toList());
+        List<ContenidoItem> contenido = dtos.stream()
+                .map(contenidoItemMapper::toContenidoItemGenerated)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(contenido);
     }
 
@@ -73,14 +77,14 @@ public class GrupoController implements GruposApi {
 
     @Override
     public ResponseEntity<Void> addMesToGrupo(Integer grupoId, Mes mes) {
-        MesDto dto = mesMapper.toMesDto(mes);
+        MesDto dto = mesMapper.fromGeneratedMes(mes);
         grupoService.agregarMesAGrupo(grupoId.longValue(), dto);
         return ResponseEntity.status(201).build();
     }
 
     @Override
     public ResponseEntity<Void> createGrupo(Grupo grupo) {
-        GrupoDto dto = grupoMapper.toGrupoDto(grupo);
+        GrupoDto dto = grupoMapper.fromGeneratedGrupo(grupo);
         grupoService.crear(dto);
         return ResponseEntity.status(201).build();
     }
@@ -88,20 +92,24 @@ public class GrupoController implements GruposApi {
     @Override
     public ResponseEntity<Grupo> getGrupoById(Integer id) {
         GrupoDto dto = grupoService.obtenerPorId(id.longValue());
-        return ResponseEntity.ok(grupoMapper.toGrupoGenerated(dto));
+        return ResponseEntity.ok(grupoMapper.toGeneratedGrupo(dto));
     }
 
     @Override
     public ResponseEntity<List<Grupo>> getGrupos() {
         List<GrupoDto> dtos = grupoService.obtenerTodos();
-        List<Grupo> grupos = dtos.stream().map(grupoMapper::toGrupoGenerated).collect(Collectors.toList());
+        List<Grupo> grupos = dtos.stream()
+                .map(grupoMapper::toGeneratedGrupo)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(grupos);
     }
 
     @Override
     public ResponseEntity<List<Mes>> getMesesByGrupo(Integer grupoId) {
         List<MesDto> dtos = grupoService.obtenerMesesPorGrupo(grupoId.longValue());
-        List<Mes> meses = dtos.stream().map(mesMapper::toMesGenerated).collect(Collectors.toList());
+        List<Mes> meses = dtos.stream()
+                .map(mesMapper::toGeneratedMes)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(meses);
     }
 

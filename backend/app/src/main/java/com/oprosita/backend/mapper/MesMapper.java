@@ -9,10 +9,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MesMapper {
 
+    // JPA ↔ DTO
     MesDto toMesDto(Mes mes);
     Mes toMesEntity(MesDto mesDto);
     List<MesDto> toMesDtoList(List<Mes> meses);
     List<Mes> toMesEntityList(List<MesDto> mesesDto);
-    com.oprosita.backend.model.generated.Mes toMesGenerated(MesDto dto);
-    MesDto toMesDto(com.oprosita.backend.model.generated.Mes generated);
+
+    // OpenAPI ↔ DTO
+    MesDto fromGeneratedMes(com.oprosita.backend.model.generated.Mes generated);
+    com.oprosita.backend.model.generated.Mes toGeneratedMes(MesDto dto);
 }
