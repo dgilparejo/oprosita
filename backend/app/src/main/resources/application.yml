@@ -1,6 +1,4 @@
 spring:
-  servlet:
-    context-path: /api
   profiles:
     active: local
   datasource:
@@ -14,3 +12,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  servlet:
+    context-path: /api

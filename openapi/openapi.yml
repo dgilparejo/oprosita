@@ -52,6 +52,19 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Grupo'
+            example:
+              nombre: Grupo 1
+              meses:
+                - nombre: Septiembre
+                - nombre: Octubre
+                - nombre: Noviembre
+                - nombre: Diciembre
+                - nombre: Enero
+                - nombre: Febrero
+                - nombre: Marzo
+                - nombre: Abril
+                - nombre: Mayo
+                - nombre: Junio
       responses:
         '201':
           description: Grupo creado

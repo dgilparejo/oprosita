@@ -16,6 +16,7 @@ public class Grupo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nombre;
 
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)

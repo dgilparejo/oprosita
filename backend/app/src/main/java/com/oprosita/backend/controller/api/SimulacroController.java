@@ -30,8 +30,8 @@ public class SimulacroController implements SimulacrosApi {
     }
 
     @Override
-    public ResponseEntity<Simulacro> createSimulacro(String descripcion, Integer grupoId, MultipartFile file) {
-        SimulacroDto dto = simulacroService.crearSimulacro(descripcion, grupoId != null ? grupoId.longValue() : null, file);
+    public ResponseEntity<Simulacro> createSimulacro(String descripcion, MultipartFile file) {
+        SimulacroDto dto = simulacroService.crearSimulacro(descripcion, null, file);
         return ResponseEntity.status(201).body(mapper.toGeneratedSimulacro(dto));
     }
 

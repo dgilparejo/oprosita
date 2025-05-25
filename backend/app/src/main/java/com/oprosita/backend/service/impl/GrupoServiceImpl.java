@@ -4,6 +4,7 @@ import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.dto.MesDto;
+import com.oprosita.backend.exception.AlreadyExistsException;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.AlumnoMapper;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
@@ -52,6 +53,24 @@ public class GrupoServiceImpl implements GrupoService {
 
     @Override
     public GrupoDto crear(GrupoDto dto) {
+        // Si alguien manda un ID en el Grupo, lo anulamos o lanzamos excepción
+        if (dto.getId() != null) {
+            throw new IllegalArgumentException("El campo id debe estar vacío al crear un nuevo grupo");
+        }
+
+        // Y hacemos lo mismo con los meses
+        if (dto.getMeses() != null) {
+            dto.getMeses().forEach(m -> {
+                if (m.getId() != null) {
+                    throw new IllegalArgumentException("Los meses no deben tener ID al ser creados");
+                }
+            });
+        }
+
+        if (grupoRepository.existsByNombre(dto.getNombre())) {
+            throw new AlreadyExistsException("Ya existe un grupo con ese nombre");
+        }
+
         Grupo grupo = grupoMapper.toGrupoEntity(dto);
         grupo = grupoRepository.save(grupo);
         return grupoMapper.toGrupoDto(grupo);

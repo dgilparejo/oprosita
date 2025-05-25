@@ -27,6 +27,8 @@ jobs:
 
       - name: Build OpenAPI JAR (backend)
         working-directory: ./openapi/openapi-backend
+        env:
+          WORKFLOW: true
         run: mvn clean package -DskipTests
 
       - name: Extract version from pom.xml

@@ -90,6 +90,13 @@ public class GrupoController implements GruposApi {
     }
 
     @Override
+    public ResponseEntity<Void> updateGrupo(Integer id, Grupo grupo) {
+        GrupoDto dto = grupoMapper.fromGeneratedGrupo(grupo);
+        grupoService.actualizar(id.longValue(), dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<Grupo> getGrupoById(Integer id) {
         GrupoDto dto = grupoService.obtenerPorId(id.longValue());
         return ResponseEntity.ok(grupoMapper.toGeneratedGrupo(dto));
