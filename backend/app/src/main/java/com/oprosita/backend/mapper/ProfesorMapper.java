@@ -15,13 +15,11 @@ public interface ProfesorMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "nombre", target = "nombre")
     @Mapping(source = "grupo.id", target = "grupoId")
-    @Mapping(source = "tipo", target = "tipo", qualifiedByName = "toEntityTipoDestinatario")
     ProfesorDto toProfesorDto(Profesor profesor);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "nombre", target = "nombre")
     @Mapping(source = "grupoId", target = "grupo.id")
-    @Mapping(source = "tipo", target = "tipo", qualifiedByName = "toGeneratedProfesorTipoEnum")
     Profesor toProfesorEntity(ProfesorDto profesorDto);
 
     List<ProfesorDto> toProfesorDtoList(List<Profesor> profesores);

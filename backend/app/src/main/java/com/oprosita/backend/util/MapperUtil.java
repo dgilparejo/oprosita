@@ -4,12 +4,13 @@ import com.oprosita.backend.dto.MensajeDto;
 import com.oprosita.backend.model.TipoDestinatario;
 import com.oprosita.backend.model.generated.Alumno;
 import com.oprosita.backend.model.generated.Profesor;
-import org.mapstruct.Named;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class MapperUtil {
 
     public String map(MensajeDto mensaje) {
@@ -39,7 +40,6 @@ public class MapperUtil {
     }
 
     // === ALUMNO ===
-    @Named("toGeneratedAlumnoTipoEnum")
     public Alumno.TipoEnum toGeneratedAlumnoTipoEnum(TipoDestinatario tipo) {
         if (tipo == null) return null;
         return switch (tipo) {
@@ -48,7 +48,6 @@ public class MapperUtil {
         };
     }
 
-    @Named("toEntityTipoDestinatario")
     public TipoDestinatario toEntityTipoDestinatario(Alumno.TipoEnum tipoEnum) {
         if (tipoEnum == null) return null;
         return switch (tipoEnum) {
@@ -58,7 +57,6 @@ public class MapperUtil {
     }
 
     // === PROFESOR ===
-    @Named("toGeneratedProfesorTipoEnum")
     public Profesor.TipoEnum toGeneratedProfesorTipoEnum(TipoDestinatario tipo) {
         if (tipo == null) return null;
         return switch (tipo) {
@@ -67,7 +65,6 @@ public class MapperUtil {
         };
     }
 
-    @Named("toEntityTipoDestinatario")
     public TipoDestinatario toEntityTipoDestinatario(Profesor.TipoEnum tipoEnum) {
         if (tipoEnum == null) return null;
         return switch (tipoEnum) {

@@ -6,9 +6,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@DiscriminatorValue("profesor")
 @Entity
+@DiscriminatorValue("profesor")
 public class Profesor extends Usuario {
 }
-

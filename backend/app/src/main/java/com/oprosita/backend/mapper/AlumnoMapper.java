@@ -12,16 +12,8 @@ import java.util.List;
 public interface AlumnoMapper {
 
     // JPA ↔ DTO
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
-    @Mapping(source = "grupo.id", target = "grupoId")
-    @Mapping(source = "tipo", target = "tipo", qualifiedByName = "toEntityTipoDestinatario")
     AlumnoDto toAlumnoDto(Alumno alumno);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
-    @Mapping(source = "grupoId", target = "grupo.id")
-    @Mapping(source = "tipo", target = "tipo", qualifiedByName = "toGeneratedAlumnoTipoEnum")
     Alumno toAlumnoEntity(AlumnoDto alumnoDto);
 
     List<AlumnoDto> toAlumnoDtoList(List<Alumno> alumnos);

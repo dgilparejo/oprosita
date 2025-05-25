@@ -8,12 +8,10 @@ import lombok.*;
 
 import java.util.List;
 
-@Entity
-@DiscriminatorValue("alumno")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@DiscriminatorValue("alumno")
 public class Alumno extends Usuario {
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
     private List<ContenidoItem> contenidos;
