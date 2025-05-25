@@ -1,4 +1,6 @@
 spring:
+  servlet:
+    context-path: /api
   profiles:
     active: local
   datasource:
