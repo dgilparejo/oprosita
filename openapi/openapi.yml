@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.1.0
+  version: 1.2.0
 
 servers:
   - url: http://localhost:8080/api
@@ -68,6 +68,10 @@ paths:
       responses:
         '201':
           description: Grupo creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grupo'
 
   /grupos/{id}:
     get:
@@ -90,26 +94,6 @@ paths:
                 $ref: '#/components/schemas/Grupo'
         '404':
           description: Grupo no encontrado
-    put:
-      tags:
-        - grupos
-      operationId: updateGrupo
-      summary: Actualizar un grupo
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Grupo'
-      responses:
-        '200':
-          description: Grupo actualizado
     delete:
       tags:
         - grupos
@@ -171,6 +155,10 @@ paths:
       responses:
         '201':
           description: Alumno añadido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
 
   /grupos/{grupoId}/alumnos/{alumnoId}:
     delete:
@@ -213,10 +201,9 @@ paths:
   /alumnos/{alumnoId}/contenido:
     get:
       tags:
-        - alumnos
         - contenido
-      summary: Obtener contenido de un alumno
-      operationId: getContenidoByAlumno
+      summary: Obtener contenido privado de un alumno
+      operationId: getContenidoPrivadoAlumno
       parameters:
         - name: alumnoId
           in: path
@@ -225,7 +212,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: Lista de contenido
+          description: Lista de contenido privado del alumno
           content:
             application/json:
               schema:
@@ -235,13 +222,127 @@ paths:
 
     post:
       tags:
-        - alumnos
         - contenido
-      operationId: addContenidoToAlumno
-      summary: Añadir contenido al alumno (texto + tipo + PDF)
+      summary: Añadir contenido privado al alumno
+      operationId: addContenidoPrivadoAlumno
+      parameters:
+        - name: alumnoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                texto:
+                  type: string
+                tipoContenido:
+                  type: string
+                  enum: [temas, programacion, practico]
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Contenido añadido a lista privada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContenidoItem'
+
+  /grupos/{grupoId}/meses:
+    get:
+      tags:
+        - grupos
+        - meses
+      operationId: getMesesByGrupo
+      summary: Obtener meses de un grupo
       parameters:
         - in: path
-          name: alumnoId
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de meses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Mes'
+
+    post:
+      tags:
+        - grupos
+        - meses
+      operationId: addMesToGrupo
+      summary: Añadir mes a un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mes'
+      responses:
+        '201':
+          description: Mes añadido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mes'
+
+  /grupos/{grupoId}/meses/{mesId}/contenido:
+    get:
+      tags:
+        - contenido
+      summary: Obtener contenido público de un grupo en un mes
+      operationId: getContenidoGrupoMes
+      parameters:
+        - name: grupoId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: mesId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de contenido del grupo en ese mes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContenidoItem'
+
+    post:
+      tags:
+        - contenido
+      summary: Añadir contenido a un grupo en un mes (profesor)
+      operationId: addContenidoToGrupoMes
+      parameters:
+        - name: grupoId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: mesId
+          in: path
           required: true
           schema:
             type: integer
@@ -257,116 +358,12 @@ paths:
                 tipoContenido:
                   type: string
                   enum: [ temas, programacion, practico ]
-                mes:
-                  type: string
                 file:
                   type: string
                   format: binary
       responses:
         '201':
-          description: Contenido añadido
-
-  /alumnos/{alumnoId}/contenido/{contenidoId}:
-    delete:
-      tags:
-        - alumnos
-        - contenido
-      operationId: deleteContenidoFromAlumno
-      summary: Eliminar un contenido del alumno
-      parameters:
-        - in: path
-          name: alumnoId
-          required: true
-          schema:
-            type: integer
-        - in: path
-          name: contenidoId
-          required: true
-          schema:
-            type: integer
-      responses:
-        '204':
-          description: Contenido eliminado correctamente
-
-  /grupos/{grupoId}/meses/{mes}/contenido:
-    get:
-      tags:
-        - grupos
-        - contenido
-      operationId: getContenidoByGrupoAndMes
-      summary: Obtener contenido por grupo y mes
-      parameters:
-        - in: path
-          name: grupoId
-          required: true
-          schema:
-            type: integer
-        - in: path
-          name: mes
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Lista de contenido
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ContenidoItem'
-    delete:
-      tags:
-        - grupos
-        - contenido
-      operationId: deleteContenidoFromGrupoByMes
-      summary: Eliminar un contenido de un grupo en un mes
-      parameters:
-        - name: grupoId
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: mes
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: contenidoId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '204':
-          description: Contenido eliminado correctamente
-
-    post:
-      tags:
-        - grupos
-        - contenido
-      operationId: addContenidoToGrupoByMes
-      summary: Añadir contenido a un grupo en un mes
-      parameters:
-        - in: path
-          name: grupoId
-          required: true
-          schema:
-            type: integer
-        - in: path
-          name: mes
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ContenidoItem'
-      responses:
-        '201':
-          description: Contenido añadido
+          description: Contenido creado correctamente
           content:
             application/json:
               schema:
@@ -376,37 +373,19 @@ paths:
     delete:
       tags:
         - contenido
+      summary: Eliminar contenido por ID
       operationId: deleteContenido
-      summary: Eliminar un contenido
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
           schema:
             type: integer
       responses:
         '204':
           description: Contenido eliminado correctamente
-    put:
-      tags:
-        - contenido
-      operationId: updateContenido
-      summary: Actualizar un contenido
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ContenidoItem'
-      responses:
-        '200':
-          description: Contenido actualizado
+        '404':
+          description: Contenido no encontrado
 
   /simulacros:
     get:
@@ -595,34 +574,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Novedad'
 
-    put:
-      tags:
-        - novedades
-      operationId: updateNovedadAlumno
-      summary: Actualizar novedad para alumno
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Novedad'
-      responses:
-        '200':
-          description: Novedad actualizada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Novedad'
-
-    delete:
-      tags:
-        - novedades
-      operationId: deleteNovedadesAlumno
-      summary: Eliminar todas las novedades para alumno
-      responses:
-        '204':
-          description: Novedades eliminadas correctamente
-
   /novedades/{id}:
     delete:
       tags:
@@ -801,6 +752,10 @@ paths:
       responses:
         '201':
           description: Archivo subido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Archivo'
 
   /archivos/{id}/download:
     get:
@@ -824,51 +779,6 @@ paths:
                 format: binary
         '404':
           description: Archivo no encontrado
-
-  /grupos/{grupoId}/meses:
-    get:
-      tags:
-        - grupos
-        - meses
-      operationId: getMesesByGrupo
-      summary: Obtener meses de un grupo
-      parameters:
-        - in: path
-          name: grupoId
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Lista de meses
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Mes'
-
-    post:
-      tags:
-        - grupos
-        - meses
-      operationId: addMesToGrupo
-      summary: Añadir mes a un grupo
-      parameters:
-        - in: path
-          name: grupoId
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Mes'
-      responses:
-        '201':
-          description: Mes añadido
 
   /chat/mensajes:
     get:
@@ -910,6 +820,10 @@ paths:
       responses:
         '201':
           description: Mensaje enviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensaje'
 
   /chat/conversaciones:
     get:
@@ -937,180 +851,304 @@ components:
   schemas:
     Grupo:
       type: object
+      description: Representa un grupo de alumnos con sus meses asociados.
       properties:
         id:
           type: integer
+          description: ID único del grupo.
         nombre:
           type: string
+          description: Nombre del grupo.
         meses:
           type: array
+          description: Lista de meses del grupo.
           items:
             $ref: '#/components/schemas/Mes'
+      example:
+        id: 1
+        nombre: Grupo 1
+        meses:
+          - id: 1
+            nombre: Septiembre
+            grupoId: 1
+          - id: 2
+            nombre: Octubre
+            grupoId: 1
 
     Mes:
       type: object
+      description: Representa un mes perteneciente a un grupo.
       properties:
         id:
           type: integer
+          description: ID del mes.
         nombre:
           type: string
+          description: Nombre del mes.
+        grupoId:
+          type: integer
+          description: ID del grupo al que pertenece.
+      example:
+        id: 1
+        nombre: Septiembre
+        grupoId: 1
 
     Alumno:
       type: object
+      description: Representa un alumno de la plataforma.
       properties:
         id:
           type: integer
+          description: ID del alumno.
         nombre:
           type: string
+          description: Nombre completo del alumno.
         grupoId:
           type: integer
+          description: ID del grupo al que pertenece.
         tipo:
           type: string
           enum: [ alumno ]
+          description: Tipo de usuario (siempre "alumno").
+      example:
+        id: 10
+        nombre: Juan Pérez
+        grupoId: 1
+        tipo: alumno
 
     Profesor:
       type: object
+      description: Representa un profesor con uno o varios grupos asignados.
       properties:
         id:
           type: integer
+          description: ID del profesor.
         nombre:
           type: string
-        grupoId:
-          type: integer
+          description: Nombre completo del profesor.
+        grupoIds:
+          type: array
+          description: Lista de IDs de los grupos que gestiona.
+          items:
+            type: integer
         tipo:
           type: string
           enum: [ profesor ]
+          description: Tipo de usuario (siempre "profesor").
+      example:
+        id: 5
+        nombre: María López
+        grupoIds: [1, 2]
+        tipo: profesor
 
     ContenidoItem:
       type: object
+      description: Representa un recurso educativo (tema, programación o práctico).
       properties:
         id:
           type: integer
+          description: ID del contenido.
         texto:
           type: string
+          description: Descripción o contenido textual.
         tipoContenido:
           type: string
-          enum: [temas, programacion, practico]
-        alumnoId:
+          enum: [ temas, programacion, practico ]
+          description: Tipo de contenido.
+        autorId:
           type: integer
-          nullable: true
-        grupoId:
+          description: ID del usuario que subió el contenido.
+        mesId:
           type: integer
-        mes:
-          type: string
+          description: ID del mes al que pertenece el contenido.
         archivoId:
           type: integer
           nullable: true
+          description: ID del archivo asociado (si lo hay).
+      example:
+        id: 1
+        texto: Introducción a la Ley Orgánica
+        tipoContenido: temas
+        autorId: 10
+        mesId: 2
+        archivoId: 7
 
     Archivo:
       type: object
+      description: Representa un archivo subido al sistema.
       properties:
         id:
           type: integer
+          description: ID del archivo.
         nombre:
           type: string
+          description: Nombre original del archivo.
         tipo:
           type: string
+          description: Tipo MIME del archivo.
         url:
           type: string
+          description: URL para acceder al archivo.
         datos:
           type: string
           format: byte
+          description: Datos codificados en base64.
+      example:
+        id: 7
+        nombre: temario.pdf
+        tipo: application/pdf
+        url: /archivos/7/download
+        datos: JVBERi0xLjQKJcTl8uX...
 
     Simulacro:
       type: object
+      description: Representa un simulacro de examen con archivo PDF.
       properties:
         id:
           type: integer
+          description: ID del simulacro.
         descripcion:
           type: string
+          description: Descripción del simulacro.
         archivoId:
           type: integer
-    Novedad:
-      type: object
-      properties:
-        id:
-          type: integer
-        texto:
-          type: string
-        tipoDestinatario:
-          type: string
-          enum: [profesor, alumno]
-        fechaCreacion:
-          type: string
-          format: date-time
+          description: ID del archivo asociado.
+      example:
+        id: 3
+        descripcion: Simulacro 1 - Tema 2
+        archivoId: 7
 
     Noticia:
       type: object
+      description: Representa una noticia publicada en el tablón común.
       properties:
         id:
           type: integer
+          description: ID de la noticia.
         descripcion:
           type: string
+          description: Descripción o título de la noticia.
         archivoId:
           type: integer
+          description: ID del archivo adjunto.
+      example:
+        id: 5
+        descripcion: Nueva guía de estudio disponible
+        archivoId: 9
+
+    Novedad:
+      type: object
+      description: Representa una notificación o novedad generada en la aplicación.
+      properties:
+        id:
+          type: integer
+          description: ID de la novedad.
+        texto:
+          type: string
+          description: Mensaje de la novedad.
+        tipoDestinatario:
+          type: string
+          enum: [ profesor, alumno ]
+          description: Público objetivo de la novedad.
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: Fecha y hora de creación.
+      example:
+        id: 12
+        texto: Juan del Grupo 1 ha subido 1 Temario
+        tipoDestinatario: profesor
+        fechaCreacion: "2025-05-27T10:15:00Z"
 
     Reunion:
       type: object
+      description: Representa una reunión entre alumnos y profesor.
       properties:
         id:
           type: integer
+          description: ID de la reunión.
         titulo:
           type: string
+          description: Título de la reunión.
         descripcion:
           type: string
+          description: Descripción o detalles adicionales.
         fechaHora:
           type: string
           format: date-time
+          description: Fecha y hora programadas.
         enlace:
           type: string
+          description: Enlace de acceso a la reunión.
         grupoId:
           type: integer
+          description: ID del grupo al que está asociada.
+      example:
+        id: 2
+        titulo: Tutoría de repaso
+        descripcion: Repaso general antes del simulacro
+        fechaHora: "2025-06-01T17:00:00Z"
+        enlace: https://meet.google.com/abc-defg-hij
+        grupoId: 1
 
     Mensaje:
       type: object
+      description: Representa un mensaje enviado entre usuarios.
       properties:
         id:
           type: integer
+          description: ID del mensaje.
         remitente:
           type: integer
-          description: ID del usuario remitente
+          description: ID del usuario remitente.
         destinatario:
           type: integer
-          description: ID del usuario destinatario
+          description: ID del usuario destinatario.
         contenido:
           type: string
+          description: Texto del mensaje.
         leido:
           type: boolean
+          description: Indica si el mensaje ha sido leído.
         fechaEnvio:
           type: string
           format: date-time
+          description: Fecha y hora de envío.
+      example:
+        id: 21
+        remitente: 5
+        destinatario: 10
+        contenido: ¿Has podido revisar el temario?
+        leido: false
+        fechaEnvio: "2025-05-27T09:45:00Z"
 
     Conversacion:
       type: object
+      description: Representa una conversación entre dos usuarios.
       properties:
         id:
           type: integer
+          description: ID de la conversación.
         usuarioId:
           type: integer
+          description: ID del usuario actual.
         otroUsuarioId:
           type: integer
+          description: ID del otro participante.
         ultimoMensaje:
           type: string
+          description: Último mensaje enviado.
         fechaUltimoMensaje:
           type: string
           format: date-time
+          description: Fecha del último mensaje.
         noLeidos:
           type: integer
-
-    Error:
-      type: object
-      properties:
-        codigo:
-          type: string
-        mensaje:
-          type: string
-        detalles:
-          type: array
-          items:
-            type: string
+          description: Cantidad de mensajes no leídos.
+      example:
+        id: 4
+        usuarioId: 10
+        otroUsuarioId: 5
+        ultimoMensaje: ¿Has podido revisar el temario?
+        fechaUltimoMensaje: "2025-05-27T09:45:00Z"
+        noLeidos: 1
