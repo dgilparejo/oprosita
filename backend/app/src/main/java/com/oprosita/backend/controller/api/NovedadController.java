@@ -27,12 +27,6 @@ public class NovedadController implements NovedadesApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteNovedadesAlumno() {
-        novedadService.eliminarNovedadesAlumno();
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
     public ResponseEntity<List<Novedad>> getNovedadesAlumno() {
         List<NovedadDto> dtos = novedadService.obtenerNovedadesAlumno();
         List<Novedad> novedades = dtos.stream()
@@ -66,12 +60,5 @@ public class NovedadController implements NovedadesApi {
         NovedadDto dto = mapper.fromGeneratedNovedad(body);
         NovedadDto creado = novedadService.crearNovedadAlumno(dto);
         return ResponseEntity.status(201).body(mapper.toGeneratedNovedad(creado));
-    }
-
-    @Override
-    public ResponseEntity<Novedad> updateNovedadAlumno(Novedad body) {
-        NovedadDto dto = mapper.fromGeneratedNovedad(body);
-        NovedadDto actualizado = novedadService.actualizarNovedadAlumno(dto);
-        return ResponseEntity.ok(mapper.toGeneratedNovedad(actualizado));
     }
 }

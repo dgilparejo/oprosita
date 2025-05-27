@@ -1,6 +1,8 @@
 package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.ArchivosApi;
+import com.oprosita.backend.dto.ArchivoDto;
+import com.oprosita.backend.model.generated.Archivo;
 import com.oprosita.backend.service.ArchivoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -15,11 +17,18 @@ public class ArchivoController implements ArchivosApi {
     private final ArchivoService archivoService;
 
     @Override
-    public ResponseEntity<Void> uploadArchivo(MultipartFile file) {
-        archivoService.subirArchivo(file);
-        return ResponseEntity.status(201).build();
-    }
+    public ResponseEntity<Archivo> uploadArchivo(MultipartFile file) {
+        ArchivoDto dto = archivoService.subirArchivo(file);
 
+        Archivo archivo = new Archivo()
+                .id(dto.getId())
+                .nombre(dto.getNombre())
+                .tipo(dto.getTipo())
+                .url(dto.getUrl())
+                .datos(dto.getDatos());
+
+        return ResponseEntity.status(201).body(archivo);
+    }
     @Override
     public ResponseEntity<Resource> downloadArchivo(Integer id) {
         Resource archivo = archivoService.descargarArchivo(id.longValue());

@@ -23,10 +23,12 @@ public class ChatController implements ChatApi {
     private final ConversacionMapper conversacionMapper;
 
     @Override
-    public ResponseEntity<Void> enviarMensaje(Mensaje mensaje) {
+    public ResponseEntity<Mensaje> enviarMensaje(Mensaje mensaje) {
         MensajeDto mensajeDto = mensajeMapper.fromGeneratedMensaje(mensaje);
-        chatService.enviarMensaje(mensajeDto);
-        return ResponseEntity.status(201).build();
+        MensajeDto creado = chatService.enviarMensaje(mensajeDto);
+        Mensaje respuesta = mensajeMapper.toGeneratedMensaje(creado);
+
+        return ResponseEntity.status(201).body(respuesta);
     }
 
     @Override

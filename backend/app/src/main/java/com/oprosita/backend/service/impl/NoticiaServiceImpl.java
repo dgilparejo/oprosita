@@ -66,13 +66,12 @@ public class NoticiaServiceImpl implements NoticiaService {
     }
 
     @Override
-    public NoticiaDto crearNoticia(String descripcion, Long ignoredGrupoId, MultipartFile file) {
+    public NoticiaDto crearNoticia(String descripcion, MultipartFile file) {
         ArchivoDto archivoDto = archivoService.subirArchivo(file);
         Long archivoId = archivoDto.getId().longValue();
 
         Noticia noticia = Noticia.builder()
                 .descripcion(descripcion)
-                .archivoId(archivoId)
                 .build();
 
         noticia = noticiaRepository.save(noticia);

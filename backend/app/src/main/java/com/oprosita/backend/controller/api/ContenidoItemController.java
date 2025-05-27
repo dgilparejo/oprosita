@@ -3,11 +3,15 @@ package com.oprosita.backend.controller.api;
 import com.oprosita.backend.api.ContenidoApi;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
+import com.oprosita.backend.model.TipoContenido;
 import com.oprosita.backend.model.generated.ContenidoItem;
 import com.oprosita.backend.service.ContenidoItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +27,44 @@ public class ContenidoItemController implements ContenidoApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateContenido(Integer id, ContenidoItem contenidoItem) {
-        ContenidoItemDto dto = mapper.fromGeneratedContenidoItem(contenidoItem);
-        contenidoItemService.actualizar(id.longValue(), dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ContenidoItem> addContenidoPrivadoAlumno(
+            Integer alumnoId, String texto, String tipoContenido, MultipartFile file) {
+
+        ContenidoItemDto dto = contenidoItemService.crearParaAlumno(
+                alumnoId.longValue(), texto, tipoContenido, null, file);
+        return ResponseEntity.status(201).body(mapper.toGeneratedContenidoItem(dto));
+    }
+
+    @Override
+    public ResponseEntity<ContenidoItem> addContenidoToGrupoMes(
+            Integer grupoId, Integer mesId, String texto, String tipoContenido, MultipartFile file) {
+
+        ContenidoItemDto nuevoContenido = ContenidoItemDto.builder()
+                .texto(texto)
+                .tipoContenido(tipoContenido != null ? TipoContenido.valueOf(tipoContenido.toUpperCase()) : null)
+                .build();
+
+        ContenidoItemDto dto = contenidoItemService.crearParaGrupoPorMes(
+                grupoId.longValue(), String.valueOf(mesId), nuevoContenido);
+
+        return ResponseEntity.status(201).body(mapper.toGeneratedContenidoItem(dto));
+    }
+
+    @Override
+    public ResponseEntity<List<ContenidoItem>> getContenidoGrupoMes(Integer grupoId, Integer mesId) {
+        List<ContenidoItemDto> dtos = contenidoItemService.obtenerPorGrupoYMes(
+                grupoId.longValue(), String.valueOf(mesId));
+        return ResponseEntity.ok(dtos.stream()
+                .map(mapper::toGeneratedContenidoItem)
+                .toList());
+    }
+
+    @Override
+    public ResponseEntity<List<ContenidoItem>> getContenidoPrivadoAlumno(Integer alumnoId) {
+        List<ContenidoItemDto> dtos = contenidoItemService.obtenerPorAlumno(alumnoId.longValue());
+        return ResponseEntity.ok(dtos.stream()
+                .map(mapper::toGeneratedContenidoItem)
+                .toList());
     }
 }
+
