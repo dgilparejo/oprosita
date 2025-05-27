@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -22,11 +24,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
-        String errores = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body("Errores de validación: " + errores);
+    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, String> errores = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errores.put(error.getField(), error.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errores);
     }
 
     @ExceptionHandler(UnrecognizedPropertyException.class)

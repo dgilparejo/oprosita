@@ -1,6 +1,7 @@
 package com.oprosita.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -10,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ContenidoItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,17 +19,20 @@ public class ContenidoItem {
     private String texto;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "El tipo de contenido es obligatorio")
     private TipoContenido tipoContenido;
 
-    private String mes;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "mes_id", nullable = false)
+    @NotNull(message = "El contenido debe estar asignado a un mes")
+    private Mes mes;
 
     @ManyToOne
-    @JoinColumn(name = "alumno_id")
-    private Alumno alumno;
+    @JoinColumn(name = "autor_id")
+    @NotNull(message = "El contenido debe tener un autor")
+    private Usuario autor;
 
-    @ManyToOne
-    @JoinColumn(name = "grupo_id")
-    private Grupo grupo;
-
-    private Long archivoId;
+    @OneToOne
+    @JoinColumn(name = "archivo_id")
+    private Archivo archivo;
 }

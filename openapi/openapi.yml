@@ -851,16 +851,19 @@ components:
   schemas:
     Grupo:
       type: object
-      description: Representa un grupo de alumnos con sus meses asociados.
+      required: [ nombre, meses ]
       properties:
         id:
           type: integer
           description: ID único del grupo.
         nombre:
           type: string
+          minLength: 1
+          maxLength: 100
           description: Nombre del grupo.
         meses:
           type: array
+          minItems: 1
           description: Lista de meses del grupo.
           items:
             $ref: '#/components/schemas/Mes'
@@ -877,13 +880,15 @@ components:
 
     Mes:
       type: object
-      description: Representa un mes perteneciente a un grupo.
+      required: [ nombre, grupoId ]
       properties:
         id:
           type: integer
           description: ID del mes.
         nombre:
           type: string
+          minLength: 1
+          maxLength: 100
           description: Nombre del mes.
         grupoId:
           type: integer
@@ -895,6 +900,7 @@ components:
 
     Alumno:
       type: object
+      required: [nombre, grupoId, tipo]
       description: Representa un alumno de la plataforma.
       properties:
         id:
@@ -902,6 +908,8 @@ components:
           description: ID del alumno.
         nombre:
           type: string
+          minLength: 1
+          maxLength: 100
           description: Nombre completo del alumno.
         grupoId:
           type: integer
@@ -918,6 +926,7 @@ components:
 
     Profesor:
       type: object
+      required: [nombre, grupoIds, tipo]
       description: Representa un profesor con uno o varios grupos asignados.
       properties:
         id:
@@ -925,10 +934,13 @@ components:
           description: ID del profesor.
         nombre:
           type: string
+          minLength: 1
+          maxLength: 100
           description: Nombre completo del profesor.
         grupoIds:
           type: array
           description: Lista de IDs de los grupos que gestiona.
+          minItems: 1
           items:
             type: integer
         tipo:
@@ -943,6 +955,7 @@ components:
 
     ContenidoItem:
       type: object
+      required: [texto, tipoContenido, autorId, mesId]
       description: Representa un recurso educativo (tema, programación o práctico).
       properties:
         id:
@@ -950,6 +963,8 @@ components:
           description: ID del contenido.
         texto:
           type: string
+          minLength: 1
+          maxLength: 500
           description: Descripción o contenido textual.
         tipoContenido:
           type: string
@@ -975,6 +990,7 @@ components:
 
     Archivo:
       type: object
+      required: [nombre, tipo]
       description: Representa un archivo subido al sistema.
       properties:
         id:
@@ -982,9 +998,11 @@ components:
           description: ID del archivo.
         nombre:
           type: string
+          minLength: 1
           description: Nombre original del archivo.
         tipo:
           type: string
+          minLength: 1
           description: Tipo MIME del archivo.
         url:
           type: string
@@ -1002,6 +1020,7 @@ components:
 
     Simulacro:
       type: object
+      required: [descripcion, archivoId]
       description: Representa un simulacro de examen con archivo PDF.
       properties:
         id:
@@ -1020,6 +1039,7 @@ components:
 
     Noticia:
       type: object
+      required: [descripcion, archivoId]
       description: Representa una noticia publicada en el tablón común.
       properties:
         id:
@@ -1038,6 +1058,7 @@ components:
 
     Novedad:
       type: object
+      required: [texto, tipoDestinatario, fechaCreacion]
       description: Representa una notificación o novedad generada en la aplicación.
       properties:
         id:
@@ -1045,6 +1066,8 @@ components:
           description: ID de la novedad.
         texto:
           type: string
+          minLength: 1
+          maxLength: 1000
           description: Mensaje de la novedad.
         tipoDestinatario:
           type: string
@@ -1062,6 +1085,7 @@ components:
 
     Reunion:
       type: object
+      required: [titulo, fechaHora, grupoId]
       description: Representa una reunión entre alumnos y profesor.
       properties:
         id:
@@ -1093,6 +1117,7 @@ components:
 
     Mensaje:
       type: object
+      required: [remitente, destinatario, contenido]
       description: Representa un mensaje enviado entre usuarios.
       properties:
         id:
@@ -1100,12 +1125,16 @@ components:
           description: ID del mensaje.
         remitente:
           type: integer
+          minimum: 1
           description: ID del usuario remitente.
         destinatario:
           type: integer
+          minimum: 1
           description: ID del usuario destinatario.
         contenido:
           type: string
+          minLength: 1
+          maxLength: 1000
           description: Texto del mensaje.
         leido:
           type: boolean
@@ -1124,6 +1153,7 @@ components:
 
     Conversacion:
       type: object
+      required: [usuarioId, otroUsuarioId, ultimoMensaje, fechaUltimoMensaje, noLeidos]
       description: Representa una conversación entre dos usuarios.
       properties:
         id:
@@ -1131,12 +1161,16 @@ components:
           description: ID de la conversación.
         usuarioId:
           type: integer
+          minimum: 1
           description: ID del usuario actual.
         otroUsuarioId:
           type: integer
+          minimum: 1
           description: ID del otro participante.
         ultimoMensaje:
           type: string
+          minLength: 1
+          maxLength: 1000
           description: Último mensaje enviado.
         fechaUltimoMensaje:
           type: string
@@ -1144,6 +1178,7 @@ components:
           description: Fecha del último mensaje.
         noLeidos:
           type: integer
+          minimum: 0
           description: Cantidad de mensajes no leídos.
       example:
         id: 4

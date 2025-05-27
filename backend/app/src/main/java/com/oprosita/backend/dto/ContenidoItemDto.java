@@ -6,17 +6,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ContenidoItemDto {
+
     private Integer id;
+
+    @NotBlank(message = "El texto del contenido no puede estar vacío")
     private String texto;
-    private String value;
+
+    @NotNull(message = "El tipo de contenido es obligatorio")
     private TipoContenido tipoContenido;
-    private Integer alumnoId;
-    private Integer grupoId;
-    private String mes;
+
+    @NotNull(message = "El autor del contenido es obligatorio")
+    private Integer autorId;
+
+    @NotNull(message = "El ID del mes es obligatorio")
+    private Integer mesId;
+
     private Integer archivoId;
 }
