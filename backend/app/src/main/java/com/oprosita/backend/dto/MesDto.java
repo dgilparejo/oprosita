@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Null;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class MesDto {
-
+    @Null(message = "El ID debe generarse automáticamente")
     private Integer id;
 
     @NotBlank(message = "El nombre del mes es obligatorio")

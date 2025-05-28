@@ -4,6 +4,7 @@ import com.oprosita.backend.dto.ReunionDto;
 import com.oprosita.backend.model.Reunion;
 import com.oprosita.backend.util.MapperUtil;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface ReunionMapper {
 
     // JPA ↔ DTO
+    @Mapping(source = "grupo.id", target = "grupoId")
     ReunionDto toReunionDto(Reunion reunion);
     Reunion toReunionEntity(ReunionDto reunionDto);
     List<ReunionDto> toReunionDtoList(List<Reunion> reuniones);

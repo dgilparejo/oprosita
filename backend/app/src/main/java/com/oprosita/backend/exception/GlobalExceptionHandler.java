@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
                 .body("Método no permitido: " + ex.getMethod());
     }
 
+    /*
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleAllUncaughtExceptions(Exception ex) {
         Map<String, Object> body = new HashMap<>();
@@ -41,6 +42,7 @@ public class GlobalExceptionHandler {
         body.put("message", "Ha ocurrido un error inesperado. Contacta con soporte.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+    */
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFoundException(NotFoundException ex) {
@@ -104,5 +106,14 @@ public class GlobalExceptionHandler {
                 ))
                 .collect(Collectors.toList()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<?> handleConflict(ConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of(
+                        "error", "Conflicto de datos",
+                        "message", ex.getMessage()
+                ));
     }
 }

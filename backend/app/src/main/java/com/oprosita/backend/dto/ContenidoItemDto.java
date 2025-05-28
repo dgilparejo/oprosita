@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @Builder
 public class ContenidoItemDto {
-
+    @Null(message = "El ID debe generarse automáticamente")
     private Integer id;
 
     @NotBlank(message = "El texto del contenido no puede estar vacío")

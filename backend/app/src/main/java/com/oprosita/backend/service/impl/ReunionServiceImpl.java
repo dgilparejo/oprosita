@@ -1,6 +1,7 @@
 package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.ReunionDto;
+import com.oprosita.backend.exception.ConflictException;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.ReunionMapper;
 import com.oprosita.backend.model.Grupo;
@@ -75,6 +76,10 @@ public class ReunionServiceImpl implements ReunionService {
 
     @Override
     public ReunionDto crearReunionParaGrupo(Long grupoId, ReunionDto reunionDto) {
+        if (reunionRepository.existsByGrupoId(grupoId)) {
+            throw new ConflictException("Ya existe una reunión para el grupo con ID: " + grupoId);
+        }
+
         Reunion reunion = mapper.toReunionEntity(reunionDto);
 
         Grupo grupo = grupoRepository.findById(grupoId)

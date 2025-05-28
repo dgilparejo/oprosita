@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ArchivoDto {
+    @Null(message = "El ID debe generarse automáticamente")
     private Integer id;
 
     @NotBlank(message = "El nombre del archivo no puede estar vacío")

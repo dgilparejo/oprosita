@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Null;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class GrupoDto {
-
+    @Null(message = "El ID debe generarse automáticamente")
     private Integer id;
 
     @NotBlank(message = "El nombre del grupo es obligatorio")

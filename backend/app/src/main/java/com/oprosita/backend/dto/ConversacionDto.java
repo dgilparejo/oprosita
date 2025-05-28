@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Builder
 public class ConversacionDto {
-
+    @Null(message = "El ID debe generarse automáticamente")
     private Integer id;
 
     @NotNull(message = "El ID del usuario es obligatorio")

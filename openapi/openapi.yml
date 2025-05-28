@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.2.2
+  version: 1.2.3
 
 servers:
   - url: http://localhost:8080/api
@@ -65,6 +65,9 @@ paths:
               oneOf:
                 - $ref: '#/components/schemas/Alumno'
                 - $ref: '#/components/schemas/Profesor'
+              example:
+                nombre: Diego
+                tipo: alumno
       responses:
         '201':
           description: Usuario creado
@@ -903,6 +906,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Reunion'
+            example:
+              titulo: "Tutoría de repaso"
+              descripcion: "Repaso general antes del simulacro"
+              fechaHora: "2025-06-01T17:00:00Z"
+              enlace: "https://meet.google.com/abc-defg-hij"
       responses:
         '201':
           description: Reunión creada
@@ -910,6 +918,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Reunion'
+        '409':
+          description: Ya existe una reunión para este grupo
 
   /reuniones/{id}:
     put:

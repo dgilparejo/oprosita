@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Null;
 import java.time.OffsetDateTime;
 
 @Data
@@ -14,6 +15,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Builder
 public class MensajeDto {
+    @Null(message = "El ID debe generarse automáticamente")
     private Long id;
 
     @NotNull(message = "El remitente es obligatorio")

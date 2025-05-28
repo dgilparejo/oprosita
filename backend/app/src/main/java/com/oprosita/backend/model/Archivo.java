@@ -2,7 +2,6 @@ package com.oprosita.backend.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.*;
 
 @Entity
@@ -27,16 +26,4 @@ public class Archivo {
 
     @Lob
     private byte[] datos;
-
-    /**
-     * Reglas:
-     * - Al menos uno (url o datos) debe estar presente
-     * - No pueden estar ambos al mismo tiempo
-     */
-    @AssertTrue(message = "Debe tener una URL o datos binarios, pero no ambos")
-    public boolean isContenidoValido() {
-        boolean tieneUrl = url != null && !url.isBlank();
-        boolean tieneDatos = datos != null && datos.length > 0;
-        return tieneUrl ^ tieneDatos; // XOR: uno u otro, no ambos
-    }
 }
