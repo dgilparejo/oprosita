@@ -72,14 +72,4 @@ public class MesServiceImpl implements MesService {
                 .map(mapper::toMesDto)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public MesDto agregarMesAGrupo(Long grupoId, MesDto mesDto) {
-        Grupo grupo = grupoRepository.findById(grupoId)
-                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        Mes mes = mapper.toMesEntity(mesDto);
-        mes.setGrupo(grupo);
-        mes = mesRepository.save(mes);
-        return mapper.toMesDto(mes);
-    }
 }

@@ -13,5 +13,4 @@ public interface MesService {
 
     // Métodos del OpenAPI
     List<MesDto> obtenerMesesPorGrupo(Long grupoId);
-    MesDto agregarMesAGrupo(Long grupoId, MesDto mesDto);
 }

@@ -57,8 +57,8 @@ public class ChatServiceImpl implements ChatService {
         List<Mensaje> mensajes = mensajeRepository.findConversacionesByUsuarioId(usuarioId);
         return mensajes.stream()
                 .map(m -> ConversacionDto.builder()
-                        .usuarioId(m.getRemitente().equals(usuarioId) ? m.getDestinatario() : m.getRemitente())
-                        .ultimoMensaje(mensajeMapper.toMensajeDto(m))
+                        .usuarioId((m.getRemitente().equals(usuarioId) ? m.getDestinatario() : m.getRemitente()).intValue())
+                        .ultimoMensaje(m.getContenido())
                         .build())
                 .collect(Collectors.toList());
     }

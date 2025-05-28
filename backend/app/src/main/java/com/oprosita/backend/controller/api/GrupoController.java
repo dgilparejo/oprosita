@@ -4,13 +4,17 @@ import com.oprosita.backend.api.GruposApi;
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.dto.MesDto;
+import com.oprosita.backend.dto.ProfesorDto;
 import com.oprosita.backend.mapper.AlumnoMapper;
 import com.oprosita.backend.mapper.GrupoMapper;
 import com.oprosita.backend.mapper.MesMapper;
+import com.oprosita.backend.mapper.ProfesorMapper;
 import com.oprosita.backend.model.generated.Alumno;
 import com.oprosita.backend.model.generated.Grupo;
 import com.oprosita.backend.model.generated.Mes;
+import com.oprosita.backend.model.generated.Profesor;
 import com.oprosita.backend.service.GrupoService;
+import com.oprosita.backend.service.ProfesorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +26,10 @@ import java.util.List;
 public class GrupoController implements GruposApi {
 
     private final GrupoService grupoService;
+    private final ProfesorService profesorService;
     private final GrupoMapper grupoMapper;
     private final AlumnoMapper alumnoMapper;
+    private final ProfesorMapper profesorMapper;
     private final MesMapper mesMapper;
 
     @Override
@@ -90,5 +96,26 @@ public class GrupoController implements GruposApi {
                 .map(mesMapper::toGeneratedMes)
                 .toList();
         return ResponseEntity.ok(meses);
+    }
+
+    @Override
+    public ResponseEntity<Profesor> addProfesorToGrupo(Integer grupoId, Profesor profesor) {
+        ProfesorDto dto = profesorMapper.fromGeneratedProfesor(profesor);
+        // Se llama al método del ProfesorService para asignar grupo
+        ProfesorDto actualizado = profesorService.asignarGrupoAProfesor(dto.getId().longValue(), grupoId.longValue());
+        return ResponseEntity.status(201).body(profesorMapper.toGeneratedProfesor(actualizado));
+    }
+
+    @Override
+    public ResponseEntity<Void> removeProfesorFromGrupo(Integer grupoId, Integer profesorId) {
+        profesorService.desasignarGrupoDeProfesor(profesorId.longValue(), grupoId.longValue());
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<Profesor>> getProfesoresByGrupo(Integer grupoId) {
+        ProfesorDto dto = profesorService.obtenerProfesorPorGrupo(grupoId.longValue());
+        Profesor profesor = profesorMapper.toGeneratedProfesor(dto);
+        return ResponseEntity.ok(List.of(profesor)); // lo envolvemos en una lista para cumplir OpenAPI
     }
 }

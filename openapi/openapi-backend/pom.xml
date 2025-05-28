@@ -6,7 +6,7 @@
 
     <groupId>com.oprosita</groupId>
     <artifactId>openapi-backend</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
     <name>oPROsita OpenAPI</name>
 
@@ -145,6 +145,7 @@
                                 <modelNameSuffix>Dto</modelNameSuffix>
                                 <useTags>true</useTags>
                                 <skipDefaultInterface>true</skipDefaultInterface>
+                                <useOneOfInterfaces>false</useOneOfInterfaces>
                             </configOptions>
                         </configuration>
                     </execution>

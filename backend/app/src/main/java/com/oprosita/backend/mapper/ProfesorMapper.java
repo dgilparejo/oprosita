@@ -9,7 +9,11 @@ import org.mapstruct.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = MapperUtil.class)
+@Mapper(
+        componentModel = "spring",
+        uses = MapperUtil.class,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface ProfesorMapper {
 
     // JPA ↔ DTO

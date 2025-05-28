@@ -28,7 +28,11 @@ public class Grupo {
     private List<Mes> meses;
 
     @OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Usuario> usuarios;
+    private List<Alumno> alumnos;//1 o mas alumnos por grupo
+
+    @ManyToOne
+    @JoinColumn(name = "profesor_id")
+    private Profesor profesor;//1 solo profesor por grupo
 
     @OneToOne(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true)
     private Reunion reunion;

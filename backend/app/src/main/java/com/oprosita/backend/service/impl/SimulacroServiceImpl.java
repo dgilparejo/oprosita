@@ -66,13 +66,12 @@ public class SimulacroServiceImpl implements SimulacroService {
     }
 
     @Override
-    public SimulacroDto crearSimulacro(String descripcion, Long ignoredGrupoId, MultipartFile file) {
+    public SimulacroDto crearSimulacro(String descripcion, MultipartFile file) {
         ArchivoDto archivoDto = archivoService.subirArchivo(file);
         Long archivoId = archivoDto.getId().longValue();
 
         Simulacro simulacro = Simulacro.builder()
                 .descripcion(descripcion)
-                .archivoId(archivoId)
                 .build();
 
         simulacro = simulacroRepository.save(simulacro);

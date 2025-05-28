@@ -1,7 +1,9 @@
 package com.oprosita.backend.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,13 +15,7 @@ import java.util.List;
 @DiscriminatorValue("profesor")
 public class Profesor extends Usuario {
 
-    @ManyToMany
-    @JoinTable(
-            name = "profesor_grupo",
-            joinColumns = @JoinColumn(name = "profesor_id"),
-            inverseJoinColumns = @JoinColumn(name = "grupo_id")
-    )
-    @Size(min = 1, message = "El profesor debe estar asignado a al menos un grupo")
+    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grupo> grupos;
 }
 

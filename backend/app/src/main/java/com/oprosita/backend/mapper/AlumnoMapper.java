@@ -4,7 +4,6 @@ import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.model.Alumno;
 import com.oprosita.backend.util.MapperUtil;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

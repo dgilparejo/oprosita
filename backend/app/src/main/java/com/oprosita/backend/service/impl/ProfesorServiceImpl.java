@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,7 +67,7 @@ public class ProfesorServiceImpl implements ProfesorService {
     public List<GrupoDto> obtenerGruposPorProfesor(Long profesorId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        return List.of(grupoMapper.toGrupoDto(profesor.getGrupo()));
+        return grupoMapper.toGrupoDtoList(profesor.getGrupos());
     }
 
     @Override
@@ -75,8 +76,10 @@ public class ProfesorServiceImpl implements ProfesorService {
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-
-        profesor.setGrupo(grupo);
+        if (profesor.getGrupos() == null) {
+            profesor.setGrupos(new ArrayList<>());
+        }
+        profesor.getGrupos().add(grupo);
         return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
     }
 
@@ -84,9 +87,20 @@ public class ProfesorServiceImpl implements ProfesorService {
     public void desasignarGrupoDeProfesor(Long profesorId, Long grupoId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-        if (profesor.getGrupo() != null && profesor.getGrupo().getId().equals(grupoId)) {
-            profesor.setGrupo(null);
+
+        if (profesor.getGrupos() != null) {
+            profesor.getGrupos().removeIf(g -> g.getId().equals(grupoId));
             profesorRepository.save(profesor);
         }
+    }
+
+    @Override
+    public ProfesorDto obtenerProfesorPorGrupo(Long grupoId) {
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        if (grupo.getProfesor() == null) {
+            throw new NotFoundException("El grupo no tiene un profesor asignado");
+        }
+        return profesorMapper.toProfesorDto(grupo.getProfesor());
     }
 }

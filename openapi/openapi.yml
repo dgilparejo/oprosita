@@ -2,12 +2,14 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.2.0
+  version: 1.2.2
 
 servers:
   - url: http://localhost:8080/api
 
 tags:
+  - name: usuarios
+    description: Gestión genérica de usuarios (alumnos y profesores)
   - name: grupos
     description: Operaciones con grupos de alumnos
   - name: alumnos
@@ -24,6 +26,104 @@ tags:
     description: Gestión de archivos y documentos
 
 paths:
+  /usuarios:
+    get:
+      tags:
+        - usuarios
+      operationId: obtenerUsuarios
+      summary: Obtener todos los usuarios (alumnos y profesores)
+      parameters:
+        - in: query
+          name: tipo
+          required: false
+          schema:
+            type: string
+            enum: [ alumno, profesor ]
+          description: Filtrar por tipo de usuario
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+
+    post:
+      tags:
+        - usuarios
+      operationId: crearUsuario
+      summary: Crear un nuevo usuario (alumno o profesor)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Alumno'
+                - $ref: '#/components/schemas/Profesor'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Alumno'
+                  - $ref: '#/components/schemas/Profesor'
+
+  /usuarios/{id}:
+    put:
+      tags:
+        - usuarios
+      operationId: actualizarUsuario
+      summary: Actualizar un usuario existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Alumno'
+                - $ref: '#/components/schemas/Profesor'
+      responses:
+        '200':
+          description: Usuario actualizado correctamente
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Alumno'
+                  - $ref: '#/components/schemas/Profesor'
+        '404':
+          description: Usuario no encontrado
+
+    delete:
+      tags:
+        - usuarios
+      operationId: eliminarUsuario
+      summary: Eliminar un usuario (alumno o profesor)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Usuario eliminado correctamente
+        '404':
+          description: Usuario no encontrado
+
   /grupos:
     get:
       tags:
@@ -39,6 +139,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Grupo'
+        '404':
+          description: Grupo no encontrado
         '500':
           description: Error interno
     post:
@@ -72,6 +174,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Grupo'
+        '404':
+          description: Grupo no encontrado
 
   /grupos/{id}:
     get:
@@ -133,6 +237,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Alumno'
+        '404':
+          description: Alumnos no encontrados
 
     post:
       tags:
@@ -159,6 +265,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Alumno'
+        '404':
+          description: Alumno no encontrado
 
   /grupos/{grupoId}/alumnos/{alumnoId}:
     delete:
@@ -181,6 +289,85 @@ paths:
       responses:
         '204':
           description: Alumno eliminado correctamente del grupo
+        '404':
+          description: Alumno no encontrado
+
+  /grupos/{grupoId}/profesores:
+    get:
+      tags:
+        - grupos
+        - profesores
+      operationId: getProfesoresByGrupo
+      summary: Obtener profesores de un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de profesores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profesor'
+        '404':
+          description: Profesor no encontrado
+
+    post:
+      tags:
+        - grupos
+        - profesores
+      operationId: addProfesorToGrupo
+      summary: Añadir un profesor a un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profesor'
+      responses:
+        '201':
+          description: Profesor añadido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profesor'
+        '404':
+          description: Profesor no encontrado
+
+  /grupos/{grupoId}/profesores/{profesorId}:
+    delete:
+      tags:
+        - grupos
+        - profesores
+      operationId: removeProfesorFromGrupo
+      summary: Eliminar un profesor de un grupo
+      parameters:
+        - in: path
+          name: grupoId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: profesorId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Profesor eliminado correctamente del grupo
+        '404':
+          description: Profesor no encontrado
 
   /alumnos/{id}:
     delete:
@@ -197,6 +384,8 @@ paths:
       responses:
         '204':
           description: Alumno eliminado correctamente
+        '404':
+          description: Alumno no encontrado
 
   /alumnos/{alumnoId}/contenido:
     get:
@@ -219,6 +408,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ContenidoItem'
+        '404':
+          description: Contenido no encontrado
 
     post:
       tags:
@@ -276,6 +467,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Mes'
+        '404':
+          description: Mes no encontrado
 
     post:
       tags:
@@ -302,6 +495,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Mes'
+        '404':
+          description: Mes no encontrado
 
   /grupos/{grupoId}/meses/{mesId}/contenido:
     get:
@@ -329,6 +524,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ContenidoItem'
+        '404':
+          description: Contenido no encontrado
 
     post:
       tags:
@@ -402,6 +599,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Simulacro'
+        '404':
+          description: Simulacro no encontrado
 
     post:
       tags:
@@ -443,6 +642,8 @@ paths:
       responses:
         '204':
           description: Simulacro eliminado correctamente
+        '404':
+          description: Simulacro no encontrado
 
   /profesores/{profesorId}/grupos:
     get:
@@ -466,6 +667,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Grupo'
+        '404':
+          description: Grupo no encontrado
 
   /alumnos/{alumnoId}/grupos:
     get:
@@ -489,6 +692,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Grupo'
+        '404':
+          description: Grupo no encontrado
 
   /novedades/profesor:
     get:
@@ -518,6 +723,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Novedad'
+        '404':
+          description: Novedad no encontrada
 
 
     post:
@@ -554,6 +761,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Novedad'
+        '404':
+          description: Novedad no encontrada
 
     post:
       tags:
@@ -589,6 +798,8 @@ paths:
       responses:
         '204':
           description: Novedad eliminada correctamente
+        '404':
+          description: Novedad no encontrada
 
   /noticias:
     get:
@@ -605,6 +816,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Noticia'
+        '404':
+          description: Noticia no encontrada
 
     post:
       tags:
@@ -630,6 +843,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Noticia'
+
   /noticias/{id}:
     delete:
       tags:
@@ -645,6 +859,8 @@ paths:
       responses:
         '204':
           description: Noticia eliminada correctamente
+        '404':
+          description: Noticia no encontrada
 
   /grupos/{grupoId}/reuniones:
     get:
@@ -667,6 +883,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Reunion'
+        '404':
+          description: Reunion no encontrada
+
     post:
       tags:
         - reuniones
@@ -717,6 +936,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Reunion'
+        '404':
+          description: Reunion no encontrada
 
     delete:
       tags:
@@ -732,6 +953,8 @@ paths:
       responses:
         '204':
           description: Reunión eliminada correctamente
+        '404':
+          description: Reunion no encontrada
 
   /archivos/upload:
     post:
@@ -806,6 +1029,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Mensaje'
+        '404':
+          description: Mensaje no encontrado
     post:
       tags:
         - chat
@@ -846,6 +1071,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Conversacion'
+        '404':
+          description: Conversación no encontrada
 
 components:
   schemas:
@@ -897,61 +1124,6 @@ components:
         id: 1
         nombre: Septiembre
         grupoId: 1
-
-    Alumno:
-      type: object
-      required: [nombre, grupoId, tipo]
-      description: Representa un alumno de la plataforma.
-      properties:
-        id:
-          type: integer
-          description: ID del alumno.
-        nombre:
-          type: string
-          minLength: 1
-          maxLength: 100
-          description: Nombre completo del alumno.
-        grupoId:
-          type: integer
-          description: ID del grupo al que pertenece.
-        tipo:
-          type: string
-          enum: [ alumno ]
-          description: Tipo de usuario (siempre "alumno").
-      example:
-        id: 10
-        nombre: Juan Pérez
-        grupoId: 1
-        tipo: alumno
-
-    Profesor:
-      type: object
-      required: [nombre, grupoIds, tipo]
-      description: Representa un profesor con uno o varios grupos asignados.
-      properties:
-        id:
-          type: integer
-          description: ID del profesor.
-        nombre:
-          type: string
-          minLength: 1
-          maxLength: 100
-          description: Nombre completo del profesor.
-        grupoIds:
-          type: array
-          description: Lista de IDs de los grupos que gestiona.
-          minItems: 1
-          items:
-            type: integer
-        tipo:
-          type: string
-          enum: [ profesor ]
-          description: Tipo de usuario (siempre "profesor").
-      example:
-        id: 5
-        nombre: María López
-        grupoIds: [1, 2]
-        tipo: profesor
 
     ContenidoItem:
       type: object
@@ -1187,3 +1359,66 @@ components:
         ultimoMensaje: ¿Has podido revisar el temario?
         fechaUltimoMensaje: "2025-05-27T09:45:00Z"
         noLeidos: 1
+
+    UsuarioBase:
+      type: object
+      required: [ tipo ]
+      description: Clase base de usuarios, usada para discriminación de tipo.
+      properties:
+        tipo:
+          type: string
+          enum: [ alumno, profesor ]
+          description: Tipo de usuario (alumno o profesor)
+          readOnly: false  # ⚠️ esto permite que se genere el getter
+
+    Alumno:
+      allOf:
+        - $ref: '#/components/schemas/UsuarioBase'
+        - type: object
+          required: [ nombre, grupoId ]
+          properties:
+            id:
+              type: integer
+            nombre:
+              type: string
+              minLength: 1
+              maxLength: 100
+            grupoId:
+              type: integer
+          description: Representa un alumno de la plataforma.
+          example:
+            id: 10
+            nombre: Juan Pérez
+            grupoId: 1
+            tipo: alumno
+
+    Profesor:
+      allOf:
+        - $ref: '#/components/schemas/UsuarioBase'
+        - type: object
+          required: [ nombre, grupoIds ]
+          properties:
+            id:
+              type: integer
+            nombre:
+              type: string
+              minLength: 1
+              maxLength: 100
+            grupoIds:
+              type: array
+              minItems: 1
+              items:
+                type: integer
+          description: Representa un profesor con uno o varios grupos asignados.
+          example:
+            id: 5
+            nombre: María López
+            grupoIds: [ 1, 2 ]
+            tipo: profesor
+
+    Usuario:
+      oneOf:
+        - $ref: '#/components/schemas/Alumno'
+        - $ref: '#/components/schemas/Profesor'
+      discriminator:
+        propertyName: tipo

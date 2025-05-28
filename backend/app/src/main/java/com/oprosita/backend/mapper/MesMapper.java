@@ -10,8 +10,12 @@ import java.util.List;
 public interface MesMapper {
 
     // JPA ↔ DTO
+    @org.mapstruct.Mapping(source = "grupo.id", target = "grupoId")
     MesDto toMesDto(Mes mes);
+
+    @org.mapstruct.Mapping(source = "grupoId", target = "grupo.id")
     Mes toMesEntity(MesDto mesDto);
+
     List<MesDto> toMesDtoList(List<Mes> meses);
     List<Mes> toMesEntityList(List<MesDto> mesesDto);
 

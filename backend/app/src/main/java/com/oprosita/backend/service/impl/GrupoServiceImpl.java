@@ -1,8 +1,6 @@
 package com.oprosita.backend.service.impl;
 
-import com.oprosita.backend.model.Mes;
 import com.oprosita.backend.dto.AlumnoDto;
-import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.dto.MesDto;
 import com.oprosita.backend.exception.AlreadyExistsException;
@@ -11,7 +9,6 @@ import com.oprosita.backend.mapper.AlumnoMapper;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.mapper.GrupoMapper;
 import com.oprosita.backend.model.Alumno;
-import com.oprosita.backend.model.ContenidoItem;
 import com.oprosita.backend.model.Grupo;
 import com.oprosita.backend.repository.AlumnoRepository;
 import com.oprosita.backend.repository.ContenidoItemRepository;
@@ -106,9 +103,9 @@ public class GrupoServiceImpl implements GrupoService {
     public List<AlumnoDto> obtenerAlumnosPorGrupo(Long grupoId) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        return grupo.getUsuarios().stream()
-                .filter(u -> u instanceof Alumno)
-                .map(u -> alumnoMapper.toAlumnoDto((Alumno) u))
+
+        return grupo.getAlumnos().stream()
+                .map(alumnoMapper::toAlumnoDto)
                 .collect(Collectors.toList());
     }
 
@@ -116,7 +113,15 @@ public class GrupoServiceImpl implements GrupoService {
     public AlumnoDto agregarAlumnoAGrupo(Long grupoId, AlumnoDto alumnoDto) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        Alumno alumno = alumnoMapper.toAlumnoEntity(alumnoDto);
+
+        Alumno alumno;
+        if (alumnoDto.getId() != null) {
+            alumno = alumnoRepository.findById(Long.valueOf(alumnoDto.getId()))
+                    .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+        } else {
+            alumno = alumnoMapper.toAlumnoEntity(alumnoDto);
+        }
+
         alumno.setGrupo(grupo);
         alumno = alumnoRepository.save(alumno);
         return alumnoMapper.toAlumnoDto(alumno);
@@ -130,41 +135,6 @@ public class GrupoServiceImpl implements GrupoService {
             throw new NotFoundException("El alumno no pertenece al grupo indicado");
         }
         alumnoRepository.deleteById(alumnoId);
-    }
-
-    @Override
-    public List<ContenidoItemDto> obtenerContenidoPorGrupoYMes(Long grupoId, String mes) {
-        return contenidoItemRepository.findAll().stream()
-                .filter(c -> c.getGrupo() != null &&
-                        c.getGrupo().getId().equals(grupoId) &&
-                        c.getMes().equalsIgnoreCase(mes))
-                .map(contenidoItemMapper::toContenidoItemDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public ContenidoItemDto agregarContenidoAGrupoPorMes(Long grupoId, String mes, ContenidoItemDto contenidoDto) {
-        ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(contenidoDto);
-
-        Grupo grupo = grupoRepository.findById(grupoId)
-                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        contenido.setGrupo(grupo);
-        contenido.setMes(mes);
-
-        contenido = contenidoItemRepository.save(contenido);
-        return contenidoItemMapper.toContenidoItemDto(contenido);
-    }
-
-    @Override
-    public void eliminarContenidoDeGrupoPorMes(Long grupoId, String mes, Long contenidoId) {
-        ContenidoItem contenido = contenidoItemRepository.findById(contenidoId)
-                .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
-
-        if (contenido.getGrupo() == null || !contenido.getGrupo().getId().equals(grupoId) || !mes.equalsIgnoreCase(contenido.getMes())) {
-            throw new NotFoundException("Contenido no pertenece al grupo o mes indicado");
-        }
-
-        contenidoItemRepository.deleteById(contenidoId);
     }
 
     @Override

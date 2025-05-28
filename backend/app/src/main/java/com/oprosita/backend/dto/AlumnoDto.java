@@ -21,7 +21,6 @@ public class AlumnoDto {
     @Size(max = 100, message = "El nombre no puede tener más de 100 caracteres")
     private String nombre;
 
-    @NotNull(message = "El grupoId es obligatorio")
     @Positive(message = "El grupoId debe ser un número positivo")
     private Integer grupoId;
 
