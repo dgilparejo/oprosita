@@ -17,5 +17,5 @@ public interface ContenidoItemService {
     List<ContenidoItemDto> obtenerPorAlumno(Long alumnoId);
     ContenidoItemDto crearParaAlumno(Long alumnoId, String texto, String tipoContenido, String mes, MultipartFile file);
     List<ContenidoItemDto> obtenerPorGrupoYMes(Long grupoId, String mes);
-    ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto);
+    ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto, MultipartFile file);
 }

@@ -1,7 +1,10 @@
 package com.oprosita.backend.util;
 
 import com.oprosita.backend.dto.MensajeDto;
+import com.oprosita.backend.model.Archivo;
+import com.oprosita.backend.model.Mes;
 import com.oprosita.backend.model.TipoDestinatario;
+import com.oprosita.backend.model.Usuario;
 import com.oprosita.backend.model.generated.Alumno;
 import com.oprosita.backend.model.generated.Profesor;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -71,5 +74,19 @@ public class MapperUtil {
             case PROFESOR -> TipoDestinatario.PROFESOR;
             default -> throw new IllegalArgumentException("TipoEnum no mapeado (Profesor): " + tipoEnum);
         };
+    }
+
+    public Archivo mapToArchivo(Integer id) {
+        if (id == null) return null;
+        Archivo archivo = new Archivo();
+        archivo.setId(id.longValue());
+        return archivo;
+    }
+
+    public Mes mapToMes(Integer id) {
+        if (id == null) return null;
+        Mes mes = new Mes();
+        mes.setId(id.longValue());
+        return mes;
     }
 }

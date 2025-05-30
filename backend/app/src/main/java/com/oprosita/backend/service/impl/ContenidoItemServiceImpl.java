@@ -3,6 +3,7 @@ package com.oprosita.backend.service.impl;
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
 import com.oprosita.backend.exception.NotFoundException;
+import com.oprosita.backend.mapper.ArchivoMapper;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.model.*;
 import com.oprosita.backend.repository.*;
@@ -26,7 +27,9 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     private final AlumnoRepository alumnoRepository;
     private final ArchivoRepository archivoRepository;
     private final MesRepository mesRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ContenidoItemMapper contenidoItemMapper;
+    private final ArchivoMapper archivoMapper;
     private final ArchivoService archivoService;
 
     @Override
@@ -76,9 +79,15 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
 
     @Override
     public void eliminar(Long id) {
-        if (!contenidoItemRepository.existsById(id)) {
-            throw new NotFoundException("Contenido no encontrado");
+        ContenidoItem contenido = contenidoItemRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
+
+        // Eliminar el archivo si existe
+        if (contenido.getArchivo() != null) {
+            archivoRepository.deleteById(contenido.getArchivo().getId());
         }
+
+        // Eliminar el contenido principal
         contenidoItemRepository.deleteById(id);
     }
 
@@ -119,26 +128,41 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
+        Long mesId = Long.valueOf(mes);
+
         return contenidoItemRepository.findAll().stream()
                 .filter(c -> c.getMes() != null &&
                         c.getMes().getGrupo().getId().equals(grupoId) &&
-                        c.getMes().getNombre().equalsIgnoreCase(mes))
+                        c.getMes().getId().equals(mesId))
                 .map(contenidoItemMapper::toContenidoItemDto)
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto) {
+    public ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto, MultipartFile file) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+
+        Usuario autor = usuarioRepository.findById(Long.valueOf(contenidoDto.getAutorId()))
+                .orElseThrow(() -> new NotFoundException("Autor no encontrado"));
 
         Mes mesObj = mesRepository.findById(mesId)
                 .filter(m -> m.getGrupo().getId().equals(grupoId))
                 .orElseThrow(() -> new NotFoundException("Mes no pertenece al grupo"));
 
         ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(contenidoDto);
+        contenido.setAutor(autor);
         contenido.setMes(mesObj);
+
+        if (file != null && !file.isEmpty()) {
+            ArchivoDto archivoDto = archivoService.subirArchivo(file);
+            Archivo archivo = archivoMapper.toArchivoEntity(archivoDto);
+            contenido.setArchivo(archivo);
+        }
 
         return contenidoItemMapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
     }
+
+
 }

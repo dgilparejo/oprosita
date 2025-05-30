@@ -46,7 +46,7 @@ public class ContenidoItemController implements ContenidoApi {
                 .build();
 
         ContenidoItemDto dto = contenidoItemService.crearParaGrupoPorMes(
-                grupoId.longValue(), mesId.longValue(), nuevoContenido);
+                grupoId.longValue(), mesId.longValue(), nuevoContenido,file);
 
         return ResponseEntity.status(201).body(mapper.toGeneratedContenidoItem(dto));
     }

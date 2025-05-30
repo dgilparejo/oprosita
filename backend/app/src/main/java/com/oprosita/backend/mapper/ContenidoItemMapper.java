@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {MapperUtil.class})
+@Mapper(componentModel = "spring", uses = MapperUtil.class)
 public interface ContenidoItemMapper {
 
     // JPA → DTO
@@ -18,7 +18,10 @@ public interface ContenidoItemMapper {
     ContenidoItemDto toContenidoItemDto(ContenidoItem item);
 
     // DTO → JPA
+    @Mapping(source = "mesId", target = "mes")
+    @Mapping(source = "archivoId", target = "archivo")
     ContenidoItem toContenidoItemEntity(ContenidoItemDto dto);
+
     List<ContenidoItemDto> toContenidoItemDtoList(List<ContenidoItem> items);
     List<ContenidoItem> toContenidoItemEntityList(List<ContenidoItemDto> dtos);
 
