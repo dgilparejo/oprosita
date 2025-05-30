@@ -710,7 +710,6 @@ paths:
           required: false
           schema:
             type: string
-            enum: [ chat, contenido, todos ]
         - in: query
           name: fechaDesde
           required: false
@@ -729,7 +728,6 @@ paths:
         '404':
           description: Novedad no encontrada
 
-
     post:
       tags:
         - novedades
@@ -741,6 +739,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Novedad'
+            example:
+              texto: "Juan del Grupo 1 ha subido 1 Temario"
+              fechaCreacion: "2025-05-27T10:15:00Z"
       responses:
         '201':
           description: Novedad creada
@@ -778,6 +779,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Novedad'
+            example:
+              texto: "Teneis que estudiar para el examen, recordatorio"
+              fechaCreacion: "2025-05-27T10:15:00Z"
       responses:
         '201':
           description: Novedad creada
@@ -1240,7 +1244,7 @@ components:
 
     Novedad:
       type: object
-      required: [texto, tipoDestinatario, fechaCreacion]
+      required: [texto, fechaCreacion]
       description: Representa una notificación o novedad generada en la aplicación.
       properties:
         id:

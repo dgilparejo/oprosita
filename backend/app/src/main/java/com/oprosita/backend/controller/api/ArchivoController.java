@@ -5,10 +5,13 @@ import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.model.generated.Archivo;
 import com.oprosita.backend.service.ArchivoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +34,13 @@ public class ArchivoController implements ArchivosApi {
     }
     @Override
     public ResponseEntity<Resource> downloadArchivo(Integer id) {
-        Resource archivo = archivoService.descargarArchivo(id.longValue());
+        com.oprosita.backend.model.Archivo archivo = archivoService.obtenerEntidadPorId(id.longValue());
+        ByteArrayResource resource = new ByteArrayResource(archivo.getDatos());
+
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + archivo.getFilename() + "\"")
-                .body(archivo);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+                .contentType(MediaType.parseMediaType(archivo.getTipo()))
+                .contentLength(archivo.getDatos().length)
+                .body(resource);
     }
 }

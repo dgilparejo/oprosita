@@ -2,12 +2,14 @@ package com.oprosita.backend.mapper;
 
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ProfesorDto;
+import com.oprosita.backend.model.generated.CrearUsuario201Response;
 import com.oprosita.backend.model.generated.CrearUsuarioRequest;
 import com.oprosita.backend.model.generated.Usuario;
 import com.oprosita.backend.wrapper.UsuarioWrapperAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,5 +81,46 @@ public class UsuarioMapper {
                     return new UsuarioWrapperAdapter(obj);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public CrearUsuario201Response mapToCrearUsuario201Response(Object dto) {
+        if (dto instanceof AlumnoDto alumnoDto) {
+            return new CrearUsuario201Response()
+                    .id(alumnoDto.getId())
+                    .nombre(alumnoDto.getNombre())
+                    .grupoId(alumnoDto.getGrupoId())
+                    .tipo(CrearUsuario201Response.TipoEnum.ALUMNO)
+                    .grupoIds(alumnoDto.getGrupoId() != null
+                            ? List.of(alumnoDto.getGrupoId())
+                            : new ArrayList<>());
+        } else if (dto instanceof ProfesorDto profesorDto) {
+            return new CrearUsuario201Response()
+                    .id(profesorDto.getId())
+                    .nombre(profesorDto.getNombre())
+                    .tipo(CrearUsuario201Response.TipoEnum.PROFESOR)
+                    .grupoIds(profesorDto.getGrupoIds());
+        } else {
+            throw new IllegalArgumentException("Tipo de DTO no soportado");
+        }
+    }
+
+    public Object mapToDto(CrearUsuario201Response usuario) {
+        String tipo = String.valueOf(usuario.getTipo());
+
+        if ("alumno".equalsIgnoreCase(tipo)) {
+            return AlumnoDto.builder()
+                    .id(usuario.getId())
+                    .nombre(usuario.getNombre())
+                    .grupoId(usuario.getGrupoId())
+                    .build();
+        } else if ("profesor".equalsIgnoreCase(tipo)) {
+            return ProfesorDto.builder()
+                    .id(usuario.getId())
+                    .nombre(usuario.getNombre())
+                    .grupoIds(usuario.getGrupoIds())
+                    .build();
+        } else {
+            throw new IllegalArgumentException("Tipo de CrearUsuario201Response desconocido");
+        }
     }
 }

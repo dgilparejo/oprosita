@@ -2,6 +2,7 @@ package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.UsuariosApi;
 import com.oprosita.backend.mapper.UsuarioMapper;
+import com.oprosita.backend.model.generated.CrearUsuario201Response;
 import com.oprosita.backend.model.generated.CrearUsuarioRequest;
 import com.oprosita.backend.model.generated.Usuario;
 import com.oprosita.backend.service.UsuarioService;
@@ -26,18 +27,19 @@ public class UsuarioController implements UsuariosApi {
     }
 
     @Override
-    public ResponseEntity<CrearUsuarioRequest> crearUsuario(CrearUsuarioRequest usuario) {
+    public ResponseEntity<CrearUsuario201Response> crearUsuario(CrearUsuarioRequest usuario) {
         Object dto = usuarioMapper.mapToDto(usuario);
         Object creado = usuarioService.crearUsuario(dto);
-        CrearUsuarioRequest response = usuarioMapper.mapToGenerated(creado);
+        CrearUsuario201Response response = usuarioMapper.mapToCrearUsuario201Response(creado);
         return ResponseEntity.status(201).body(response);
     }
 
     @Override
-    public ResponseEntity<CrearUsuarioRequest> actualizarUsuario(Integer id, CrearUsuarioRequest usuario) {
-        Object dto = usuarioMapper.mapToDto(usuario);
+    public ResponseEntity<CrearUsuario201Response> actualizarUsuario(Integer id, CrearUsuario201Response request) {
+        Object dto = usuarioMapper.mapToDto(request);
         Object actualizado = usuarioService.actualizarUsuario(id.longValue(), dto);
-        return ResponseEntity.ok(usuario);
+        CrearUsuario201Response response = usuarioMapper.mapToCrearUsuario201Response(actualizado);
+        return ResponseEntity.ok(response);
     }
 
     @Override

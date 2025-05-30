@@ -15,10 +15,10 @@ public class Noticia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String descripcion;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "archivo_id", nullable = false)
+    @OneToOne(optional = true)
+    @JoinColumn(name = "archivo_id", nullable = true)
     private Archivo archivo;
 }
