@@ -9,10 +9,7 @@ import com.oprosita.backend.mapper.AlumnoMapper;
 import com.oprosita.backend.mapper.GrupoMapper;
 import com.oprosita.backend.mapper.MesMapper;
 import com.oprosita.backend.mapper.ProfesorMapper;
-import com.oprosita.backend.model.generated.Alumno;
-import com.oprosita.backend.model.generated.Grupo;
-import com.oprosita.backend.model.generated.Mes;
-import com.oprosita.backend.model.generated.Profesor;
+import com.oprosita.backend.model.generated.*;
 import com.oprosita.backend.service.GrupoService;
 import com.oprosita.backend.service.ProfesorService;
 import lombok.RequiredArgsConstructor;
@@ -48,8 +45,8 @@ public class GrupoController implements GruposApi {
     }
 
     @Override
-    public ResponseEntity<Alumno> addAlumnoToGrupo(Integer grupoId, Alumno alumno) {
-        AlumnoDto dto = alumnoMapper.fromGeneratedAlumno(alumno);
+    public ResponseEntity<Alumno> addAlumnoToGrupo(Integer grupoId, AddAlumnoToGrupoRequest addAlumnoToGrupoRequest) {
+        AlumnoDto dto = alumnoMapper.fromGeneratedAlumno(addAlumnoToGrupoRequest);
         AlumnoDto creado = grupoService.agregarAlumnoAGrupo(grupoId.longValue(), dto);
         return ResponseEntity.status(201).body(alumnoMapper.toGeneratedAlumno(creado));
     }

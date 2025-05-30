@@ -37,15 +37,16 @@ public class ContenidoItemController implements ContenidoApi {
 
     @Override
     public ResponseEntity<ContenidoItem> addContenidoToGrupoMes(
-            Integer grupoId, Integer mesId, String texto, String tipoContenido, MultipartFile file) {
+            Integer grupoId, Integer mesId, String texto, String tipoContenido, Integer autorId, MultipartFile file) {
 
         ContenidoItemDto nuevoContenido = ContenidoItemDto.builder()
                 .texto(texto)
-                .tipoContenido(tipoContenido != null ? TipoContenido.valueOf(tipoContenido.toUpperCase()) : null)
+                .tipoContenido(TipoContenido.valueOf(tipoContenido.toUpperCase()))
+                .autorId((int) autorId.longValue())
                 .build();
 
         ContenidoItemDto dto = contenidoItemService.crearParaGrupoPorMes(
-                grupoId.longValue(), String.valueOf(mesId), nuevoContenido);
+                grupoId.longValue(), mesId.longValue(), nuevoContenido);
 
         return ResponseEntity.status(201).body(mapper.toGeneratedContenidoItem(dto));
     }

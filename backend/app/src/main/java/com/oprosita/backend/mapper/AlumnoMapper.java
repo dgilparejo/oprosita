@@ -23,4 +23,6 @@ public interface AlumnoMapper {
     // OpenAPI ↔ DTO
     com.oprosita.backend.model.generated.Alumno toGeneratedAlumno(AlumnoDto dto);
     AlumnoDto fromGeneratedAlumno(com.oprosita.backend.model.generated.Alumno generated);
+
+    AlumnoDto fromGeneratedAlumno(com.oprosita.backend.model.generated.AddAlumnoToGrupoRequest request);
 }

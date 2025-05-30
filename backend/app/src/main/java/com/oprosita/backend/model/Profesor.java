@@ -15,7 +15,7 @@ import java.util.List;
 @DiscriminatorValue("profesor")
 public class Profesor extends Usuario {
 
-    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL)
     private List<Grupo> grupos;
 }
 

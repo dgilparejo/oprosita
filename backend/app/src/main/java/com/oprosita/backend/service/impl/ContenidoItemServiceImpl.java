@@ -96,7 +96,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         Alumno alumno = alumnoRepository.findById(alumnoId)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
 
-        Mes mesObj = mesRepository.findByNombreAndGrupoId(mes, alumno.getGrupo().getId())
+        Mes mesObj = mesRepository.findByNombreIgnoreCaseAndGrupoIdCustom(mes, alumno.getGrupo().getId())
                 .orElseThrow(() -> new NotFoundException("Mes no encontrado en el grupo del alumno"));
 
         ArchivoDto archivoDto = archivoService.subirArchivo(file);
@@ -128,12 +128,13 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     }
 
     @Override
-    public ContenidoItemDto crearParaGrupoPorMes(Long grupoId, String mes, ContenidoItemDto contenidoDto) {
+    public ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto) {
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
 
-        Mes mesObj = mesRepository.findByNombreAndGrupoId(mes, grupo.getId())
-                .orElseThrow(() -> new NotFoundException("Mes no encontrado en el grupo"));
+        Mes mesObj = mesRepository.findById(mesId)
+                .filter(m -> m.getGrupo().getId().equals(grupoId))
+                .orElseThrow(() -> new NotFoundException("Mes no pertenece al grupo"));
 
         ContenidoItem contenido = contenidoItemMapper.toContenidoItemEntity(contenidoDto);
         contenido.setMes(mesObj);

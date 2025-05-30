@@ -74,24 +74,50 @@ public class ProfesorServiceImpl implements ProfesorService {
     public ProfesorDto asignarGrupoAProfesor(Long profesorId, Long grupoId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
+
         Grupo grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+
         if (profesor.getGrupos() == null) {
             profesor.setGrupos(new ArrayList<>());
         }
+
+        // Verifica si el grupo ya está asignado
+        boolean yaAsignado = profesor.getGrupos().stream()
+                .anyMatch(g -> g.getId().equals(grupoId));
+
+        if (yaAsignado) {
+            throw new IllegalArgumentException("El profesor '" + profesor.getNombre() +
+                    "' ya pertenece al grupo con id " + grupoId);
+        }
+
         profesor.getGrupos().add(grupo);
-        return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
+        grupo.setProfesor(profesor);
+
+        grupoRepository.save(grupo);
+        Profesor actualizado = profesorRepository.save(profesor);
+
+        return profesorMapper.toProfesorDto(actualizado);
     }
+
 
     @Override
     public void desasignarGrupoDeProfesor(Long profesorId, Long grupoId) {
         Profesor profesor = profesorRepository.findById(profesorId)
                 .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
 
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+
+        // Romper la relación bidireccional
         if (profesor.getGrupos() != null) {
-            profesor.getGrupos().removeIf(g -> g.getId().equals(grupoId));
-            profesorRepository.save(profesor);
+            profesor.getGrupos().remove(grupo);
         }
+        grupo.setProfesor(null); // Quitar referencia inversa
+
+        // Guardar ambos lados
+        grupoRepository.save(grupo);
+        profesorRepository.save(profesor);
     }
 
     @Override
