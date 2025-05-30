@@ -15,7 +15,7 @@ public interface ContenidoItemService {
 
     // Métodos del OpenAPI
     List<ContenidoItemDto> obtenerPorAlumno(Long alumnoId);
-    ContenidoItemDto crearParaAlumno(Long alumnoId, String texto, String tipoContenido, String mes, MultipartFile file);
+    ContenidoItemDto crearParaAlumno(Long alumnoId, String texto, String tipoContenido, MultipartFile file);
     List<ContenidoItemDto> obtenerPorGrupoYMes(Long grupoId, String mes);
     ContenidoItemDto crearParaGrupoPorMes(Long grupoId, Long mesId, ContenidoItemDto contenidoDto, MultipartFile file);
 }

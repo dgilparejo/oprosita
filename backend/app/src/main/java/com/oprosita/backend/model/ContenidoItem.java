@@ -22,9 +22,8 @@ public class ContenidoItem {
     @NotNull(message = "El tipo de contenido es obligatorio")
     private TipoContenido tipoContenido;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "mes_id", nullable = false)
-    @NotNull(message = "El contenido debe estar asignado a un mes")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "mes_id", nullable = true)
     private Mes mes;
 
     @ManyToOne

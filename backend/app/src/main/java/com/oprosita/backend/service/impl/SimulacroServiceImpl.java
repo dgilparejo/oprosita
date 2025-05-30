@@ -4,7 +4,9 @@ import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.SimulacroDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.SimulacroMapper;
+import com.oprosita.backend.model.Archivo;
 import com.oprosita.backend.model.Simulacro;
+import com.oprosita.backend.repository.ArchivoRepository;
 import com.oprosita.backend.repository.SimulacroRepository;
 import com.oprosita.backend.service.ArchivoService;
 import com.oprosita.backend.service.SimulacroService;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class SimulacroServiceImpl implements SimulacroService {
 
     private final SimulacroRepository simulacroRepository;
+    private final ArchivoRepository archivoRepository;
     private final SimulacroMapper mapper;
     private final ArchivoService archivoService;
 
@@ -67,11 +70,17 @@ public class SimulacroServiceImpl implements SimulacroService {
 
     @Override
     public SimulacroDto crearSimulacro(String descripcion, MultipartFile file) {
-        ArchivoDto archivoDto = archivoService.subirArchivo(file);
-        Long archivoId = archivoDto.getId().longValue();
+        Archivo archivo = null;
+
+        if (file != null && !file.isEmpty()) {
+            ArchivoDto archivoDto = archivoService.subirArchivo(file);
+            archivo = archivoRepository.findById(archivoDto.getId().longValue())
+                    .orElseThrow(() -> new NotFoundException("Archivo subido no encontrado"));
+        }
 
         Simulacro simulacro = Simulacro.builder()
                 .descripcion(descripcion)
+                .archivo(archivo)
                 .build();
 
         simulacro = simulacroRepository.save(simulacro);

@@ -25,7 +25,6 @@ public class ContenidoItemDto {
     @NotNull(message = "El autor del contenido es obligatorio")
     private Integer autorId;
 
-    @NotNull(message = "El ID del mes es obligatorio")
     private Integer mesId;
 
     private Integer archivoId;

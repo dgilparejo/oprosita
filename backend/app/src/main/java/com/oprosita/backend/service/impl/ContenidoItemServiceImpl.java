@@ -101,21 +101,21 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     }
 
     @Override
-    public ContenidoItemDto crearParaAlumno(Long alumnoId, String texto, String tipoContenido, String mes, MultipartFile file) {
+    public ContenidoItemDto crearParaAlumno(Long alumnoId, String texto, String tipoContenido, MultipartFile file) {
         Alumno alumno = alumnoRepository.findById(alumnoId)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
 
-        Mes mesObj = mesRepository.findByNombreIgnoreCaseAndGrupoIdCustom(mes, alumno.getGrupo().getId())
-                .orElseThrow(() -> new NotFoundException("Mes no encontrado en el grupo del alumno"));
+        Archivo archivo = null;
 
-        ArchivoDto archivoDto = archivoService.subirArchivo(file);
-        Archivo archivo = archivoRepository.findById(archivoDto.getId().longValue())
-                .orElseThrow(() -> new NotFoundException("Archivo no encontrado"));
+        if (file != null && !file.isEmpty()) {
+            ArchivoDto archivoDto = archivoService.subirArchivo(file);
+            archivo = archivoRepository.findById(archivoDto.getId().longValue())
+                    .orElseThrow(() -> new NotFoundException("Archivo subido no encontrado"));
+        }
 
         ContenidoItem contenido = ContenidoItem.builder()
                 .texto(texto)
                 .tipoContenido(TipoContenido.valueOf(tipoContenido))
-                .mes(mesObj)
                 .autor(alumno)
                 .archivo(archivo)
                 .build();

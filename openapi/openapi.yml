@@ -447,10 +447,17 @@ paths:
                   type: string
                 tipoContenido:
                   type: string
-                  enum: [temas, programacion, practico]
+                  enum: [ PROGRAMACION, PRACTICO, TEMAS ]
                 file:
                   type: string
                   format: binary
+              required:
+                - texto
+                - tipoContenido
+              example:
+                texto: "esse dolore in sint"
+                tipoContenido: "PROGRAMACION"
+                file: "0000009062.pdf"
       responses:
         '201':
           description: Contenido añadido a lista privada

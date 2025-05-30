@@ -31,7 +31,7 @@ public class ContenidoItemController implements ContenidoApi {
             Integer alumnoId, String texto, String tipoContenido, MultipartFile file) {
 
         ContenidoItemDto dto = contenidoItemService.crearParaAlumno(
-                alumnoId.longValue(), texto, tipoContenido, null, file);
+                alumnoId.longValue(), texto, tipoContenido, file);
         return ResponseEntity.status(201).body(mapper.toGeneratedContenidoItem(dto));
     }
 
