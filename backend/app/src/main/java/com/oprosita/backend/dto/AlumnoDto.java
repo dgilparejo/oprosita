@@ -6,11 +6,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class AlumnoDto {
-    private String value;
+
+    @Null(message = "El ID debe generarse automáticamente")
+    private Integer id;
+
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Size(max = 100, message = "El nombre no puede tener más de 100 caracteres")
+    private String nombre;
+
+    @Positive(message = "El grupoId debe ser un número positivo")
+    private Integer grupoId;
+
+    @NotNull(message = "El tipo es obligatorio")
     private TipoDestinatario tipo;
 }

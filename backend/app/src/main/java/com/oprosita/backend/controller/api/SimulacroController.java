@@ -24,15 +24,15 @@ public class SimulacroController implements SimulacrosApi {
     public ResponseEntity<List<Simulacro>> getSimulacros() {
         List<SimulacroDto> dtos = simulacroService.obtenerTodos();
         List<Simulacro> simulacros = dtos.stream()
-                .map(mapper::toSimulacroGenerated)
+                .map(mapper::toGeneratedSimulacro)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(simulacros);
     }
 
     @Override
-    public ResponseEntity<Simulacro> createSimulacro(String descripcion, Integer grupoId, MultipartFile file) {
-        SimulacroDto dto = simulacroService.crearSimulacro(descripcion, grupoId != null ? grupoId.longValue() : null, file);
-        return ResponseEntity.status(201).body(mapper.toSimulacroGenerated(dto));
+    public ResponseEntity<Simulacro> createSimulacro(String descripcion, MultipartFile file) {
+        SimulacroDto dto = simulacroService.crearSimulacro(descripcion, file);
+        return ResponseEntity.status(201).body(mapper.toGeneratedSimulacro(dto));
     }
 
     @Override

@@ -67,6 +67,10 @@ public class ArchivoServiceImpl implements ArchivoService {
 
     @Override
     public ArchivoDto subirArchivo(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("El archivo no puede ser nulo o vacío");
+        }
+
         try {
             Archivo archivo = Archivo.builder()
                     .nombre(file.getOriginalFilename())
@@ -88,5 +92,11 @@ public class ArchivoServiceImpl implements ArchivoService {
         Archivo archivo = archivoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Archivo no encontrado"));
         return new ByteArrayResource(archivo.getDatos());
+    }
+
+    @Override
+    public Archivo obtenerEntidadPorId(Long id) {
+        return archivoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Archivo no encontrado"));
     }
 }

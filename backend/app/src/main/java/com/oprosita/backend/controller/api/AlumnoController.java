@@ -1,17 +1,23 @@
 package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.AlumnosApi;
+import com.oprosita.backend.dto.GrupoDto;
+import com.oprosita.backend.mapper.GrupoMapper;
+import com.oprosita.backend.model.generated.Grupo;
 import com.oprosita.backend.service.AlumnoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class AlumnoController implements AlumnosApi {
 
     private final AlumnoService alumnoService;
+    private final GrupoMapper grupoMapper;
 
     @Override
     public ResponseEntity<Void> deleteAlumno(Integer id) {
@@ -20,19 +26,14 @@ public class AlumnoController implements AlumnosApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteContenidoFromAlumno(Integer alumnoId, Integer contenidoId) {
-        alumnoService.eliminarContenidoDeAlumno(alumnoId.longValue(), contenidoId.longValue());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<List<Grupo>> getGruposByAlumno(Integer alumnoId) {
+        List<GrupoDto> gruposDto = alumnoService.obtenerGrupoPorAlumno(alumnoId.longValue());
+
+        List<Grupo> grupos = gruposDto.stream()
+                .map(grupoMapper::toGeneratedGrupo)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(grupos);
     }
 
-    @Override
-    public ResponseEntity<Void> addContenidoToAlumno(
-            Integer alumnoId,
-            String texto,
-            String tipoContenido,
-            String mes,
-            MultipartFile file) {
-        alumnoService.agregarContenidoAAlumno(alumnoId.longValue(), texto, tipoContenido, mes, file);
-        return ResponseEntity.status(201).build();
-    }
 }

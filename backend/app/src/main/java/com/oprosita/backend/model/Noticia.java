@@ -10,14 +10,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Noticia {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = true)
     private String descripcion;
-    private Long archivoId;
 
-    @ManyToOne
-    @JoinColumn(name = "grupo_id")
-    private Grupo grupo;
+    @OneToOne(optional = true)
+    @JoinColumn(name = "archivo_id", nullable = true)
+    private Archivo archivo;
 }
