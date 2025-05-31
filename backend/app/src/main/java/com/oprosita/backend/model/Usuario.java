@@ -18,4 +18,7 @@ public abstract class Usuario {
 
     @jakarta.validation.constraints.NotBlank(message = "El nombre del usuario es obligatorio")
     private String nombre;
+
+    @Column(unique = true, nullable = false)
+    private String idKeycloak;
 }
