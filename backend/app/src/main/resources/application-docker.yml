@@ -4,3 +4,9 @@ spring:
       on-profile: docker
   datasource:
     url: jdbc:mysql://mysql:3306/mydatabase
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/oprosita
+          jws-algorithms: RS256

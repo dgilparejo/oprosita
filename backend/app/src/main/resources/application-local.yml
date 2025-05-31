@@ -4,3 +4,8 @@ spring:
       on-profile: local
   datasource:
     url: jdbc:mysql://localhost:3306/mydatabase
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/oprosita
