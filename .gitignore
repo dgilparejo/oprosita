@@ -4,3 +4,4 @@ openapi.yaml
 ./openapi/openapi-backend/target
 
 .idea/workspace.xml
+.idea/misc.xml
