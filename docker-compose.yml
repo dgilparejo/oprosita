@@ -1,12 +1,46 @@
 services:
 
-  mysql:
+  frontend:
     build:
-      context: ./backend/docker/mysql
+      context: ./frontend
       dockerfile: Dockerfile
-    container_name: mysql-container
+    container_name: frontend-container
     ports:
-      - "3306:3306"
+      - "4200:80"
+    networks:
+      - my-network
+    depends_on:
+      - backend
+
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - ./keycloak/postgres:/var/lib/postgresql/data
+    networks:
+      - my-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-container
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8081:8080"
+    depends_on:
+      - keycloak-db
     networks:
       - my-network
 
@@ -26,19 +60,17 @@ services:
       - my-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    entrypoint: ["sh", "-c", "until nc -z mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done; java -jar /app/myapp.jar"]
+    entrypoint: [ "sh", "-c", "until nc -z mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done; java -jar /app/myapp.jar" ]
 
-  frontend:
+  mysql:
     build:
-      context: ./frontend
+      context: ./backend/docker/mysql
       dockerfile: Dockerfile
-    container_name: frontend-container
+    container_name: mysql-container
     ports:
-      - "4200:80"
+      - "3306:3306"
     networks:
       - my-network
-    depends_on:
-      - backend
 
 networks:
   my-network:
