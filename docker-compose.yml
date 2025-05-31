@@ -13,15 +13,19 @@ services:
   backend:
     depends_on:
       - mysql
-      - openapi-builder
     build:
       context: ./backend
       dockerfile: ./docker/backend/Dockerfile
+      args:
+        DOCKERHUB_USERNAME: ${DOCKERHUB_USERNAME}
+        OPENAPI_BACKEND_VERSION: ${OPENAPI_BACKEND_VERSION}
     container_name: backend-container
     ports:
       - "8080:8080"
     networks:
       - my-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     entrypoint: ["sh", "-c", "until nc -z mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done; java -jar /app/myapp.jar"]
 
   frontend:
@@ -35,15 +39,6 @@ services:
       - my-network
     depends_on:
       - backend
-
-  openapi-builder:
-    build:
-      context: ./openapi
-      dockerfile: Dockerfile
-    volumes:
-      - C:/Users/dgp8/.m2:/root/.m2  # Caché Maven
-    networks:
-      - my-network
 
 networks:
   my-network:

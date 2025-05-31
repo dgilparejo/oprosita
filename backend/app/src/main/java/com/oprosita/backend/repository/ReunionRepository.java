@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReunionRepository extends JpaRepository<Reunion, Long> {
+    boolean existsByGrupoId(Long grupoId);
 }

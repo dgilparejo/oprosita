@@ -1,20 +1,21 @@
 package com.oprosita.backend.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Entity
-@DiscriminatorValue("alumno")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@DiscriminatorValue("alumno")
 public class Alumno extends Usuario {
-    @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "grupo_id", nullable = true)
+    private Grupo grupo;
+
+    @OneToMany(mappedBy = "autor")
     private List<ContenidoItem> contenidos;
 }

@@ -14,5 +14,5 @@ public interface SimulacroService {
     void eliminar(Long id);
 
     // Métodos del OpenAPI
-    SimulacroDto crearSimulacro(String descripcion, Long grupoId, MultipartFile file);
+    SimulacroDto crearSimulacro(String descripcion, MultipartFile file);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
-    List<Mensaje> findByRemitenteIdAndDestinatarioId(Long remitenteId, Long destinatarioId);
+    List<Mensaje> findByRemitenteAndDestinatario(Long remitente, Long destinatario);
 
     @Query("SELECT m FROM Mensaje m WHERE m.remitente = :usuarioId OR m.destinatario = :usuarioId ORDER BY m.fechaEnvio DESC")
     List<Mensaje> findConversacionesByUsuarioId(@Param("usuarioId") Long usuarioId);

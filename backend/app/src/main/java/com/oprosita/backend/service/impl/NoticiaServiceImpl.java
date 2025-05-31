@@ -4,9 +4,9 @@ import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.NoticiaDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.NoticiaMapper;
-import com.oprosita.backend.model.Grupo;
+import com.oprosita.backend.model.Archivo;
 import com.oprosita.backend.model.Noticia;
-import com.oprosita.backend.repository.GrupoRepository;
+import com.oprosita.backend.repository.ArchivoRepository;
 import com.oprosita.backend.repository.NoticiaRepository;
 import com.oprosita.backend.service.ArchivoService;
 import com.oprosita.backend.service.NoticiaService;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 public class NoticiaServiceImpl implements NoticiaService {
 
     private final NoticiaRepository noticiaRepository;
-    private final GrupoRepository grupoRepository;
     private final ArchivoService archivoService;
+    private final ArchivoRepository archivoRepository;
     private final NoticiaMapper mapper;
 
     @Override
@@ -45,11 +45,6 @@ public class NoticiaServiceImpl implements NoticiaService {
     @Override
     public NoticiaDto crear(NoticiaDto dto) {
         Noticia noticia = mapper.toNoticiaEntity(dto);
-        if (dto.getGrupoId() != null) {
-            Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            noticia.setGrupo(grupo);
-        }
         noticia = noticiaRepository.save(noticia);
         return mapper.toNoticiaDto(noticia);
     }
@@ -61,11 +56,6 @@ public class NoticiaServiceImpl implements NoticiaService {
         }
         Noticia noticia = mapper.toNoticiaEntity(dto);
         noticia.setId(id);
-        if (dto.getGrupoId() != null) {
-            Grupo grupo = grupoRepository.findById(dto.getGrupoId().longValue())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            noticia.setGrupo(grupo);
-        }
         noticia = noticiaRepository.save(noticia);
         return mapper.toNoticiaDto(noticia);
     }
@@ -79,20 +69,21 @@ public class NoticiaServiceImpl implements NoticiaService {
     }
 
     @Override
-    public NoticiaDto crearNoticia(String descripcion, Long grupoId, MultipartFile file) {
-        Grupo grupo = grupoRepository.findById(grupoId)
-                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+    public NoticiaDto crearNoticia(String descripcion, MultipartFile file) {
+        Archivo archivo = null;
 
-        ArchivoDto archivoDto = archivoService.subirArchivo(file);
-        Long archivoId = archivoDto.getId().longValue();
+        if (file != null && !file.isEmpty()) {
+            ArchivoDto archivoDto = archivoService.subirArchivo(file);
+            archivo = archivoRepository.findById(archivoDto.getId().longValue())
+                    .orElseThrow(() -> new NotFoundException("Archivo subido no encontrado"));
+        }
 
-        Noticia noticia = Noticia.builder()
-                .descripcion(descripcion)
-                .archivoId(archivoId)
-                .grupo(grupo)
-                .build();
+        Noticia.NoticiaBuilder builder = Noticia.builder();
 
-        noticia = noticiaRepository.save(noticia);
+        builder.descripcion((descripcion != null && !descripcion.isBlank()) ? descripcion : "");
+        builder.archivo(archivo);
+
+        Noticia noticia = noticiaRepository.save(builder.build());
         return mapper.toNoticiaDto(noticia);
     }
 }

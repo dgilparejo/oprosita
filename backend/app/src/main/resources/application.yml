@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: docker
+    active: local
   datasource:
     username: myuser
     password: mypassword
@@ -12,3 +12,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+server:
+  servlet:
+    context-path: /api

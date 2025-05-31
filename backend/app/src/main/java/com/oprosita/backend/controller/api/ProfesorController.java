@@ -23,7 +23,7 @@ public class ProfesorController implements ProfesoresApi {
     public ResponseEntity<List<Grupo>> getGruposByProfesor(Integer profesorId) {
         List<GrupoDto> dtos = profesorService.obtenerGruposPorProfesor(profesorId.longValue());
         List<Grupo> grupos = dtos.stream()
-                .map(mapper::toGrupoGenerated)
+                .map(mapper::toGeneratedGrupo)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(grupos);
     }

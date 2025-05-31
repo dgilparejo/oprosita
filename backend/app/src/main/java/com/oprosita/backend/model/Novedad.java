@@ -22,4 +22,10 @@ public class Novedad {
     private TipoDestinatario tipoDestinatario;
 
     private OffsetDateTime fechaCreacion;
+
+    @PrePersist
+    public void prePersist() {
+        this.fechaCreacion = OffsetDateTime.now();
+    }
 }
+

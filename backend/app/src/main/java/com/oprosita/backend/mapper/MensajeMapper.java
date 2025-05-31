@@ -9,10 +9,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MensajeMapper {
 
+    // JPA ↔ DTO
     MensajeDto toMensajeDto(Mensaje mensaje);
     Mensaje toMensajeEntity(MensajeDto dto);
     List<MensajeDto> toMensajeDtoList(List<Mensaje> mensajes);
     List<Mensaje> toMensajeEntityList(List<MensajeDto> dtos);
-    com.oprosita.backend.model.generated.Mensaje toMensajeGenerated(MensajeDto dto);
-    MensajeDto toMensajeDto(com.oprosita.backend.model.generated.Mensaje generated);
+
+    // OpenAPI ↔ DTO
+    com.oprosita.backend.model.generated.Mensaje toGeneratedMensaje(MensajeDto dto);
+    MensajeDto fromGeneratedMensaje(com.oprosita.backend.model.generated.Mensaje generated);
 }

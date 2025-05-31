@@ -18,8 +18,6 @@ public interface NovedadService {
     NovedadDto crearNovedadProfesor(NovedadDto novedadDto);
     List<NovedadDto> obtenerNovedadesAlumno();
     NovedadDto crearNovedadAlumno(NovedadDto novedadDto);
-    NovedadDto actualizarNovedadAlumno(NovedadDto novedadDto);
-    void eliminarNovedadesAlumno();
     List<NovedadDto> obtenerNovedadesProfesorPorTipo(String tipo, OffsetDateTime fechaDesde);
     void registrarNovedadAutomatica(Long alumnoId, String accion, String detalle);
 }

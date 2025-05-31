@@ -14,5 +14,5 @@ public interface NoticiaService {
     void eliminar(Long id);
 
     // Métodos del OpenAPI
-    NoticiaDto crearNoticia(String descripcion, Long grupoId, MultipartFile file);
+    NoticiaDto crearNoticia(String descripcion, MultipartFile file);
 }

@@ -95,23 +95,6 @@ public class NovedadServiceImpl implements NovedadService {
     }
 
     @Override
-    public NovedadDto actualizarNovedadAlumno(NovedadDto novedadDto) {
-        if (novedadDto.getId() == null || !novedadRepository.existsById(novedadDto.getId().longValue())) {
-            throw new NotFoundException("Novedad no encontrada");
-        }
-        Novedad novedad = mapper.toNovedadEntity(novedadDto);
-        return mapper.toNovedadDto(novedadRepository.save(novedad));
-    }
-
-    @Override
-    public void eliminarNovedadesAlumno() {
-        List<Novedad> novedadesAlumno = novedadRepository.findAll().stream()
-                .filter(n -> n.getTipoDestinatario() == TipoDestinatario.ALUMNO)
-                .collect(Collectors.toList());
-        novedadRepository.deleteAll(novedadesAlumno);
-    }
-
-    @Override
     public List<NovedadDto> obtenerNovedadesProfesorPorTipo(String tipo, OffsetDateTime fechaDesde) {
         TipoDestinatario destinatario = TipoDestinatario.valueOf(tipo.toUpperCase());
         return novedadRepository.findAll().stream()
