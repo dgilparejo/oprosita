@@ -8,5 +8,5 @@ spring:
     oauth2:
       resource server:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/oprosita
-          jws-algorithms: RS256
+          # issuer-uri: http://keycloak:8080/realms/oprosita
+          jwk-set-uri: http://keycloak:8080/realms/oprosita/protocol/openid-connect/certs
