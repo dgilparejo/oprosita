@@ -1,34 +1,19 @@
-# Usar una imagen base de Node.js 20
+# Etapa 1: Build
 FROM node:20-alpine as build
-
-# Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar los archivos de configuración del proyecto
-COPY package.json package-lock.json ./
-
-# Instalar las dependencias del proyecto
+COPY package*.json ./
 RUN npm install --force
-RUN npm install keycloak-angular keycloak-js --force
-
-# Copiar el resto de los archivos del proyecto
 COPY . .
 
-# Compilar la aplicación Angular
-RUN npm i --force
 RUN npm run build --prod
 
-RUN ls -alt
+RUN ls -al /app/dist/frontend
 
-# Usar una imagen base de Nginx para servir la aplicación
+# Etapa 2: Servir con nginx
 FROM nginx:alpine
-
-# Copiar los archivos compilados de Angular al servidor Nginx
-COPY --from=build /app/dist/shell---frontend/browser /usr/share/nginx/html
-COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Exponer el puerto 80
+COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-
-# Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
+

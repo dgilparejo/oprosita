@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class RepositoryGenerator {
     public static void main(String[] args) throws IOException {
+        /*
         String modelPath = "target/generated-sources/openapi/src/main/java/com/oprosita/backend/model/generated";
         String repoPath = "src/main/java/com/oprosita/backend/repository";
 
@@ -36,5 +37,6 @@ public class RepositoryGenerator {
                 System.out.println("Generated: " + repoFile.getPath());
             }
         }
-    }
+        */
+}
 }

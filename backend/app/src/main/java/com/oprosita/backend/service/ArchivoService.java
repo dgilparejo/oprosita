@@ -1,6 +1,7 @@
 package com.oprosita.backend.service;
 
 import com.oprosita.backend.dto.ArchivoDto;
+import com.oprosita.backend.model.Archivo;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,4 +18,5 @@ public interface ArchivoService {
     // Métodos del OpenAPI
     ArchivoDto subirArchivo(MultipartFile file);
     Resource descargarArchivo(Long id);
+    Archivo obtenerEntidadPorId(Long id);
 }

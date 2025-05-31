@@ -1,14 +1,21 @@
 package com.oprosita.backend.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@DiscriminatorValue("profesor")
 @Entity
+@DiscriminatorValue("profesor")
 public class Profesor extends Usuario {
+
+    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL)
+    private List<Grupo> grupos;
 }
 

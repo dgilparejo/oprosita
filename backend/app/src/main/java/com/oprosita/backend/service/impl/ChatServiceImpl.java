@@ -31,7 +31,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<MensajeDto> obtenerMensajes(Long remitente, Long destinatario) {
-        List<Mensaje> mensajes = mensajeRepository.findByRemitenteIdAndDestinatarioId(remitente, destinatario);
+        List<Mensaje> mensajes = mensajeRepository.findByRemitenteAndDestinatario(remitente, destinatario);
         return mensajes.stream()
                 .map(mensajeMapper::toMensajeDto)
                 .collect(Collectors.toList());
@@ -57,8 +57,8 @@ public class ChatServiceImpl implements ChatService {
         List<Mensaje> mensajes = mensajeRepository.findConversacionesByUsuarioId(usuarioId);
         return mensajes.stream()
                 .map(m -> ConversacionDto.builder()
-                        .usuarioId(m.getRemitente().equals(usuarioId) ? m.getDestinatario() : m.getRemitente())
-                        .ultimoMensaje(mensajeMapper.toMensajeDto(m))
+                        .usuarioId((m.getRemitente().equals(usuarioId) ? m.getDestinatario() : m.getRemitente()).intValue())
+                        .ultimoMensaje(m.getContenido())
                         .build())
                 .collect(Collectors.toList());
     }

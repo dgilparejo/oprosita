@@ -16,4 +16,5 @@ public interface ProfesorService {
     List<GrupoDto> obtenerGruposPorProfesor(Long profesorId);
     ProfesorDto asignarGrupoAProfesor(Long profesorId, Long grupoId);
     void desasignarGrupoDeProfesor(Long profesorId, Long grupoId);
+    ProfesorDto obtenerProfesorPorGrupo(Long grupoId);
 }

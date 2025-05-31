@@ -23,16 +23,16 @@ public class ReunionController implements ReunionesApi {
     public ResponseEntity<List<Reunion>> getReunionesByGrupo(Integer grupoId) {
         List<ReunionDto> dtos = reunionService.obtenerReunionesPorGrupo(grupoId.longValue());
         List<Reunion> reuniones = dtos.stream()
-                .map(mapper::toReunionGenerated)
+                .map(mapper::toGeneratedReunion)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(reuniones);
     }
 
     @Override
     public ResponseEntity<Reunion> createReunion(Integer grupoId, Reunion body) {
-        ReunionDto dto = mapper.toReunionDto(body);
+        ReunionDto dto = mapper.fromGeneratedReunion(body);
         ReunionDto creado = reunionService.crearReunionParaGrupo(grupoId.longValue(), dto);
-        return ResponseEntity.status(201).body(mapper.toReunionGenerated(creado));
+        return ResponseEntity.status(201).body(mapper.toGeneratedReunion(creado));
     }
 
     @Override
@@ -43,8 +43,8 @@ public class ReunionController implements ReunionesApi {
 
     @Override
     public ResponseEntity<Reunion> updateReunion(Integer id, Reunion body) {
-        ReunionDto dto = mapper.toReunionDto(body);
+        ReunionDto dto = mapper.fromGeneratedReunion(body);
         ReunionDto actualizado = reunionService.actualizar(id.longValue(), dto);
-        return ResponseEntity.ok(mapper.toReunionGenerated(actualizado));
+        return ResponseEntity.ok(mapper.toGeneratedReunion(actualizado));
     }
 }
