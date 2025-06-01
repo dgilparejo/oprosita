@@ -4,8 +4,10 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class KeycloakService {
   private keycloak!: Keycloak;
-
   async init(): Promise<void> {
+    const storedToken = localStorage.getItem('kc_token');
+    const storedRefreshToken = localStorage.getItem('kc_refreshToken');
+
     this.keycloak = new Keycloak({
       url: 'http://localhost:8081',
       realm: 'oprosita',
@@ -13,26 +15,42 @@ export class KeycloakService {
     });
 
     await this.keycloak.init({
-      onLoad: 'login-required',
-      checkLoginIframe: false,
+      onLoad: 'check-sso',
       pkceMethod: 'S256',
-      scope: 'openid offline_access'
+      checkLoginIframe: false,
+      scope: 'openid offline_access',
+      token: storedToken || undefined,
+      refreshToken: storedRefreshToken || undefined
     });
 
-    // Token refresh automático
+    if (!this.keycloak.authenticated) {
+      try {
+        await this.keycloak.login({ redirectUri: window.location.origin });
+      } catch (err) {
+        console.error('Login failed', err);
+      }
+    } else {
+      localStorage.setItem('kc_token', this.keycloak.token!);
+      localStorage.setItem('kc_refreshToken', this.keycloak.refreshToken!);
+    }
+
+    this.keycloak.onTokenExpired = () => {
+      this.keycloak.updateToken(30).then(() => {
+        localStorage.setItem('kc_token', this.keycloak.token!);
+        localStorage.setItem('kc_refreshToken', this.keycloak.refreshToken!);
+      }).catch(() => this.logout());
+    };
+
     setInterval(() => {
-      this.keycloak.updateToken(120).then(refreshed => {
+      this.keycloak.updateToken(60).then(refreshed => {
         if (refreshed) {
-          console.log('Token refreshed');
-        } else {
-          console.log('Token still valid');
+          localStorage.setItem('kc_token', this.keycloak.token!);
+          localStorage.setItem('kc_refreshToken', this.keycloak.refreshToken!);
         }
-      }).catch(() => {
-        console.error('Failed to refresh token');
-        this.logout();
-      });
-    }, 300000); // cada 5 minutos
+      }).catch(() => this.logout());
+    }, 300000);
   }
+
 
   get token(): string {
     return this.keycloak.token!;
@@ -43,6 +61,8 @@ export class KeycloakService {
   }
 
   logout(): void {
+    localStorage.removeItem('kc_token');
+    localStorage.removeItem('kc_refreshToken');
     this.keycloak.logout({ redirectUri: window.location.origin });
   }
 }
