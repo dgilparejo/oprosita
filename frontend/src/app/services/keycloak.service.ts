@@ -56,6 +56,10 @@ export class KeycloakService {
     return this.keycloak.token!;
   }
 
+  get tokenParsed(): Keycloak.KeycloakTokenParsed | undefined {
+    return this.keycloak?.tokenParsed;
+  }
+
   hasRole(role: string): boolean {
     return this.keycloak.tokenParsed?.realm_access?.roles.includes(role) || false;
   }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { UiButtonComponent } from '../ui-button/ui-button.component';
+import {Novedad} from '../../api';
 
 @Component({
   selector: 'app-plank',
@@ -12,12 +13,13 @@ import { UiButtonComponent } from '../ui-button/ui-button.component';
   styleUrl: './plank.component.css'
 })
 export class PlankComponent {
-  @Input() lines: string[] = [];
+  @Input() lines: Novedad[] = [];
   @Input() title = '';
   @Input() editable = false;
   @Input() allowDeleteOnly = false;
 
   @Output() add = new EventEmitter<string>();
+  @Output() remove = new EventEmitter<number>();
 
   newLine = '';
 
@@ -29,6 +31,9 @@ export class PlankComponent {
   }
 
   delete(index: number) {
-    this.lines.splice(index, 1);
+    const id = this.lines[index]?.id;
+    if (id != null) {
+      this.remove.emit(id);
+    }
   }
 }

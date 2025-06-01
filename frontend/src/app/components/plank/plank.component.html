@@ -4,7 +4,7 @@
   <div class="scrollable-content">
     <ul>
       <li *ngFor="let line of lines; let i = index">
-        {{ line }}
+        {{ line.texto }}
         <button class="delete-button" *ngIf="editable || allowDeleteOnly" (click)="delete(i)">✖</button>
       </li>
     </ul>

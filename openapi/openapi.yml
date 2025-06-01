@@ -730,27 +730,33 @@ paths:
       summary: Obtener novedades para profesores
       parameters:
         - in: query
-          name: tipo
-          required: false
-          schema:
-            type: string
-        - in: query
           name: fechaDesde
           required: false
           schema:
             type: string
             format: date-time
+          example: "1983-07-22T02:10:54.131Z"
+          description: Fecha a partir de la cual se desean obtener novedades
       responses:
         '200':
-          description: Lista de novedades
+          description: Lista de novedades dirigidas a profesores
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Novedad'
+              example:
+                - id: 1
+                  texto: "Juan del Grupo 1 ha subido 1 Temario"
+                  tipoDestinatario: profesor
+                  fechaCreacion: "2025-06-01T10:20:26.767Z"
+                - id: 2
+                  texto: "Ignacio del Grupo 1 ha subido 1 Temario"
+                  tipoDestinatario: profesor
+                  fechaCreacion: "2025-06-01T10:22:13.842Z"
         '404':
-          description: Novedad no encontrada
+          description: Novedades no encontradas
 
     post:
       tags:

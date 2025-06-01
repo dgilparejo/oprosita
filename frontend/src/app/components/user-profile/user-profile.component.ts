@@ -15,13 +15,12 @@ import { KeycloakService } from '../../services/keycloak.service'; // ajusta la 
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
-  fullName = 'Alberto Muñoz';
 
   constructor(private keycloakService: KeycloakService) {}
 
   get initials(): string {
-    const names = this.fullName.split(' ');
-    return names.map(n => n[0]).join('').toUpperCase();
+    const username = this.keycloakService.tokenParsed?.['preferred_username'];
+    return username ? username.substring(0, 2).toUpperCase() : '??';
   }
 
   logout(): void {

@@ -1,15 +1,18 @@
 <div class="home-container">
   <div class="content-left">
     <app-plank
+      *ngIf="esProfesor"
       [title]="'Novedades para profesor'"
       [lines]="novedadesProfesor">
     </app-plank>
 
     <app-plank
       [title]="'Novedades para alumnos'"
-      [editable]=true
+      [editable]="esProfesor"
+      [allowDeleteOnly]="esProfesor"
       [lines]="novedadesAlumno"
-      (add)="addNuevaNovedad($event)">
+      (add)="addNuevaNovedad($event)"
+      (remove)="removeNovedadAlumno($event)">
     </app-plank>
   </div>
 
