@@ -28,6 +28,7 @@ export class AddContentDialogComponent {
   data = {
     tipo: '',
     descripcion: '',
+    url: '',
     documentFile: null as File | null
   };
 

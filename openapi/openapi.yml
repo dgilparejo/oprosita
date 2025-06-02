@@ -848,7 +848,7 @@ paths:
       tags:
         - noticias
       operationId: createNoticia
-      summary: Crear una nueva noticia (PDF + descripción)
+      summary: Crear una nueva noticia (Descripción + url + pdf)
       requestBody:
         required: true
         content:
@@ -858,6 +858,9 @@ paths:
               properties:
                 descripcion:
                   type: string
+                url:
+                    type: string
+                    format: uri
                 file:
                   type: string
                   format: binary
@@ -1058,7 +1061,6 @@ paths:
           description: ID de archivo inválido
         '404':
           description: Archivo no encontrado
-
 
   /chat/mensajes:
     get:
@@ -1268,7 +1270,7 @@ components:
 
     Noticia:
       type: object
-      required: [descripcion, archivoId]
+      required: [descripcion]
       description: Representa una noticia publicada en el tablón común.
       properties:
         id:
@@ -1277,6 +1279,9 @@ components:
         descripcion:
           type: string
           description: Descripción o título de la noticia.
+        url:
+          type: string
+          description: URL para acceder a la noticia.
         archivoId:
           type: integer
           description: ID del archivo adjunto.

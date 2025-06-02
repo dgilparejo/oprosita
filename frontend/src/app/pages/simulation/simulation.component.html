@@ -3,11 +3,12 @@
 
   <div class="plank-wrapper">
     <app-plank
-      title="Simulacros"
       [editable]="false"
       [lines]="simulacrosAsNovedades"
       [allowDeleteOnly]="isProfesor"
-      (remove)="removeSimulacro($event)">
+      (remove)="removeSimulacro($event)"
+      (clicked)="descargarSimulacro($event)"
+      (abrirArchivo)="abrirSimulacro($event)">
     </app-plank>
   </div>
 

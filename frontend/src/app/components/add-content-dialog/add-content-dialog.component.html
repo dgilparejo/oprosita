@@ -21,6 +21,11 @@
     <input matInput [(ngModel)]="data.descripcion" placeholder="Ej: {{ fixedTipo }} 1">
   </mat-form-field>
 
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>URL</mat-label>
+    <input matInput [(ngModel)]="data.url" placeholder="https://...">
+  </mat-form-field>
+
   <div class="pdf-upload-container">
     <label for="document-upload" class="pdf-upload-label">
       <mat-icon>upload_file</mat-icon>

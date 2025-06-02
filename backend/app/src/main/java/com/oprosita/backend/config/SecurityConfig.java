@@ -26,22 +26,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/novedades/profesor").hasRole("profesor")
                         .requestMatchers(HttpMethod.POST, "/novedades/profesor").hasRole("alumno")
                         .requestMatchers(HttpMethod.DELETE, "/novedades/**").hasRole("profesor")
-                        .requestMatchers(HttpMethod.GET, "/novedades/alumno").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/novedades/alumno").authenticated()
                         .requestMatchers(HttpMethod.POST, "/novedades/alumno").hasRole("profesor")
 
                         // Reuniones
-                        .requestMatchers(HttpMethod.GET, "/grupos/*/reuniones").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/grupos/*/reuniones").authenticated()
                         .requestMatchers(HttpMethod.POST, "/grupos/*/reuniones").hasRole("profesor")
                         .requestMatchers(HttpMethod.PUT, "/reuniones/**").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/reuniones/**").hasRole("profesor")
 
                         // Simulacros
-                        .requestMatchers(HttpMethod.GET, "/simulacros").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/simulacros").authenticated()
                         .requestMatchers(HttpMethod.POST, "/simulacros").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/simulacros/**").hasRole("profesor")
 
                         //Noticias
-                        .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/noticias").authenticated()
                         .requestMatchers(HttpMethod.POST, "/noticias").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/noticias/**").hasRole("profesor")
 

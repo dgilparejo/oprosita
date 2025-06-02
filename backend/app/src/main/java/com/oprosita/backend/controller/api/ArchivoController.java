@@ -38,7 +38,7 @@ public class ArchivoController implements ArchivosApi {
         ByteArrayResource resource = new ByteArrayResource(archivo.getDatos());
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + archivo.getNombre() + "\"")
                 .contentType(MediaType.parseMediaType(archivo.getTipo()))
                 .contentLength(archivo.getDatos().length)
                 .body(resource);

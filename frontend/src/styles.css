@@ -7,3 +7,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --forest-green: #00664f;
   --hover-green: #004d3f
 }
+
+a {
+  text-decoration: underline;
+  color: var(--forest-green);
+  cursor: pointer;
+}

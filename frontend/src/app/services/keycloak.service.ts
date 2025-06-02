@@ -79,6 +79,10 @@ export class KeycloakService {
     );
   }
 
+  getToken(): string {
+    return <string>this.keycloak.token;
+  }
+
   logout(): void {
     localStorage.removeItem('kc_token');
     localStorage.removeItem('kc_refreshToken');
