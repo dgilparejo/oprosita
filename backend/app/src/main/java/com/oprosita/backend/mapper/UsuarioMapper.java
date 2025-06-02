@@ -123,4 +123,10 @@ public class UsuarioMapper {
             throw new IllegalArgumentException("Tipo de CrearUsuario201Response desconocido");
         }
     }
+
+    public CrearUsuario201Response fromUsuario(com.oprosita.backend.model.Usuario usuario) {
+        return new CrearUsuario201Response()
+                .id(Math.toIntExact(usuario.getId()));
+    }
+
 }

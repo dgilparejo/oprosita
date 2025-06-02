@@ -6,7 +6,8 @@
   <div class="calendar-grid">
     <div class="day-label" *ngFor="let day of daysOfWeek">{{ day }}</div>
     <div class="day-cell" *ngFor="let day of days">
-      <span [class.today]="day === 16">{{ day }}</span>
+      <span [class.today]="day === 1">{{ day }}</span>
+      <div class="meeting-dot" *ngIf="getReunionesByDay(day).length > 0"></div>
     </div>
   </div>
 </div>

@@ -5,7 +5,7 @@
     <app-plank
       title="Temas"
       [editable]="false"
-      [lines]="contenido.temas"
+      [lines]="temasAsNovedades"
       [allowDeleteOnly]="true">
       (add)="addNuevoTema($event)">
     </app-plank>
@@ -15,7 +15,7 @@
     <app-plank
       title="Programación"
       [editable]="false"
-      [lines]="contenido.programacion"
+      [lines]="programacionAsNovedades"
       [allowDeleteOnly]="true">
       (add)="addNuevaProgramacion($event)">
     </app-plank>
@@ -25,7 +25,7 @@
     <app-plank
       title="Práctico"
       [editable]="false"
-      [lines]="contenido.practico"
+      [lines]="practicoAsNovedades"
       [allowDeleteOnly]="true">
       (add)="addNuevoPractico($event)">
     </app-plank>

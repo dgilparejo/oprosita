@@ -43,4 +43,15 @@ public class ArchivoController implements ArchivosApi {
                 .contentLength(archivo.getDatos().length)
                 .body(resource);
     }
+
+    @Override
+    public ResponseEntity<Archivo> getArchivoInfo(Integer id) {
+        ArchivoDto dto = archivoService.obtenerPorId(id.longValue());
+        Archivo archivo = new Archivo()
+                .id(dto.getId())
+                .nombre(dto.getNombre())
+                .tipo(dto.getTipo())
+                .url(dto.getUrl());
+        return ResponseEntity.ok(archivo);
+    }
 }

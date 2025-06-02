@@ -17,7 +17,7 @@
   </div>
 
   <div class="content-right">
-    <app-calendar></app-calendar>
-    <app-ui-button text="Reunirse"></app-ui-button>
+    <app-calendar [reuniones]="reuniones"></app-calendar>
+    <app-ui-button *ngIf="esProfesor" text="Reunirse" (click)="onCrearReunion()"></app-ui-button>
   </div>
 </div>

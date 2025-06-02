@@ -95,10 +95,9 @@ public class NovedadServiceImpl implements NovedadService {
     }
 
     @Override
-    public List<NovedadDto> obtenerNovedadesProfesorPorTipo(String tipo, OffsetDateTime fechaDesde) {
-        TipoDestinatario destinatario = TipoDestinatario.valueOf(tipo.toUpperCase());
+    public List<NovedadDto> obtenerNovedadesProfesorDesde(OffsetDateTime fechaDesde) {
         return novedadRepository.findAll().stream()
-                .filter(n -> n.getTipoDestinatario() == destinatario &&
+                .filter(n -> n.getTipoDestinatario() == TipoDestinatario.PROFESOR &&
                         n.getFechaCreacion().isAfter(fechaDesde))
                 .map(mapper::toNovedadDto)
                 .collect(Collectors.toList());

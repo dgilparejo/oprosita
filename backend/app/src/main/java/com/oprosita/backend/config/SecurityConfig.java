@@ -22,9 +22,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //Todos pueden acceder a estas rutas
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/archivos/{id}/download").permitAll()
-
                         // Novedades
                         .requestMatchers(HttpMethod.GET, "/novedades/profesor").hasRole("profesor")
                         .requestMatchers(HttpMethod.POST, "/novedades/profesor").hasRole("alumno")
@@ -33,12 +30,28 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/novedades/alumno").hasRole("profesor")
 
                         // Reuniones
+                        .requestMatchers(HttpMethod.GET, "/grupos/*/reuniones").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/grupos/*/reuniones").hasRole("profesor")
+                        .requestMatchers(HttpMethod.PUT, "/reuniones/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE, "/reuniones/**").hasRole("profesor")
 
+                        // Simulacros
+                        .requestMatchers(HttpMethod.GET, "/simulacros").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/simulacros").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE, "/simulacros/**").hasRole("profesor")
+
+                        //Noticias
+                        .requestMatchers(HttpMethod.GET, "/noticias").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/noticias").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE, "/noticias/**").hasRole("profesor")
+
+                        // Archivos
+                        .requestMatchers("/archivos/**").authenticated()
 
                         // Control por rutas
-                        .requestMatchers("/grupos/**", "/simulacros/**").hasRole("profesor")
+                        .requestMatchers("/grupos/**").hasRole("profesor")
                         .requestMatchers("/alumnos/**").hasRole("alumno")
-                        .requestMatchers("/usuarios/**", "/contenido/**", "/chat/**", "/reuniones/**").authenticated()
+                        .requestMatchers("/usuarios/**", "/contenido/**", "/chat/**").authenticated()
                         .anyRequest().authenticated()
                 )
 

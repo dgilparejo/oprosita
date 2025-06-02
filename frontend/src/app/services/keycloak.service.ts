@@ -1,8 +1,12 @@
 import Keycloak from 'keycloak-js';
 import { Injectable } from '@angular/core';
+import {map, Observable} from 'rxjs';
+import {Usuario} from '../api';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class KeycloakService {
+  constructor(private http: HttpClient) {}
   private keycloak!: Keycloak;
   async init(): Promise<void> {
     const storedToken = localStorage.getItem('kc_token');
@@ -62,6 +66,17 @@ export class KeycloakService {
 
   hasRole(role: string): boolean {
     return this.keycloak.tokenParsed?.realm_access?.roles.includes(role) || false;
+  }
+
+  getUserId(): string | undefined {
+    return this.tokenParsed?.sub;
+  }
+
+  getGrupoIdFromToken(): Observable<number> {
+    const userId = this.getUserId();
+    return this.http.get<Usuario>(`/api/usuarios/${userId}`).pipe(
+      map(usuario => (usuario as any).grupoId)
+    );
   }
 
   logout(): void {

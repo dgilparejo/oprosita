@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatIcon} from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
+import { Reunion } from '../../api/model/reunion';
 
 @Component({
   selector: 'app-calendar',
@@ -10,7 +11,13 @@ import {MatIcon} from '@angular/material/icon';
   styleUrl: './calendar.component.css'
 })
 export class CalendarComponent {
-  currentMonth = 'MAYO, 2025';
+  @Input() reuniones: Reunion[] = [];
+
+  currentMonth = 'JUNIO, 2025';
   daysOfWeek = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-  days = Array.from({ length: 35 }, (_, i) => i + 1); // Simula un mes visualmente
+  days = Array.from({ length: 30 }, (_, i) => i + 1);
+
+  getReunionesByDay(day: number): Reunion[] {
+    return this.reuniones.filter(r => new Date(r.fechaHora).getDate() === day);
+  }
 }

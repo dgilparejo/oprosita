@@ -6,6 +6,8 @@ import { UiButtonComponent } from '../../components/ui-button/ui-button.componen
 import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {Novedad} from '../../api';
+import TipoDestinatarioEnum = Novedad.TipoDestinatarioEnum;
 
 @Component({
   selector: 'app-month-detail',
@@ -47,6 +49,33 @@ export class MonthDetailComponent implements OnInit {
         // También puedes guardar el archivo PDF en backend cuando lo tengas.
       }
     });
+  }
+
+  get temasAsNovedades(): Novedad[] {
+    return this.contenido.temas.map((t, index) => ({
+      id: index,
+      texto: t,
+      fechaCreacion: new Date().toISOString(),
+      tipoDestinatario: TipoDestinatarioEnum.Alumno
+    }));
+  }
+
+  get programacionAsNovedades(): Novedad[] {
+    return this.contenido.programacion.map((p, index) => ({
+      id: index,
+      texto: p,
+      fechaCreacion: new Date().toISOString(),
+      tipoDestinatario: TipoDestinatarioEnum.Alumno
+    }));
+  }
+
+  get practicoAsNovedades(): Novedad[] {
+    return this.contenido.practico.map((p, index) => ({
+      id: index,
+      texto: p,
+      fechaCreacion: new Date().toISOString(),
+      tipoDestinatario: TipoDestinatarioEnum.Alumno
+    }));
   }
 
   ngOnInit(): void {
