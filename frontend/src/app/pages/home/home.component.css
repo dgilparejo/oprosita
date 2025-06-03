@@ -18,4 +18,5 @@
   align-items: flex-end;
   gap: 1.5rem;
   min-width: 260px;
+  margin-right: 1rem;
 }

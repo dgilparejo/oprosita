@@ -1,13 +1,37 @@
 <div class="calendar-container">
   <div class="calendar-header">
-    <mat-icon class="calendar-icon">calendar_month</mat-icon>
-    <span class="month-label">{{ currentMonth }}</span>
+    <button (click)="previousMonth()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <span class="month-label">{{ currentMonthLabel }}</span>
+    <button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
   </div>
+
   <div class="calendar-grid">
     <div class="day-label" *ngFor="let day of daysOfWeek">{{ day }}</div>
-    <div class="day-cell" *ngFor="let day of days">
-      <span [class.today]="day === 1">{{ day }}</span>
-      <div class="meeting-dot" *ngIf="getReunionesByDay(day).length > 0"></div>
+    <div class="day-cell" *ngFor="let day of daysInMonth">
+      <span [class.today]="isToday(day)">
+        {{ day }}
+      </span>
+      <div
+        class="meeting-dot"
+        *ngFor="let reunion of getReunionesByDay(day)"
+        (click)="onReunionClick(reunion)"
+        title="{{ reunion.titulo }}">
+      </div>
     </div>
+  </div>
+
+  <div *ngIf="selectedReunion" class="reunion-detail">
+    <h3>{{ selectedReunion.titulo }}</h3>
+    <p><strong>Fecha:</strong> {{ selectedReunion.fechaHora | date:'medium' }}</p>
+    <p><strong>Descripción:</strong> {{ selectedReunion.descripcion || 'Sin descripción' }}</p>
+    <p><strong>Grupo:</strong> {{ selectedReunion.grupoId }}</p>
+    <p *ngIf="selectedReunion.enlace"><strong>Enlace:</strong>
+      <a [href]="selectedReunion.enlace" target="_blank">{{ selectedReunion.enlace }}</a>
+    </p>
+    <app-ui-button text="Cerrar" (click)="selectedReunion"></app-ui-button>
   </div>
 </div>

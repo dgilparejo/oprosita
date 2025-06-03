@@ -1,10 +1,6 @@
 package com.oprosita.backend.controller.api;
 
 import com.oprosita.backend.api.UsuariosApi;
-import com.oprosita.backend.dto.AlumnoDto;
-import com.oprosita.backend.dto.ProfesorDto;
-import com.oprosita.backend.mapper.AlumnoMapper;
-import com.oprosita.backend.mapper.ProfesorMapper;
 import com.oprosita.backend.mapper.UsuarioMapper;
 import com.oprosita.backend.model.generated.*;
 import com.oprosita.backend.service.UsuarioService;
@@ -22,8 +18,6 @@ public class UsuarioController implements UsuariosApi {
 
     private final UsuarioService usuarioService;
     private final UsuarioMapper usuarioMapper;
-    private final AlumnoMapper alumnoMapper;
-    private final ProfesorMapper profesorMapper;
 
     @Override
     public ResponseEntity<List<Usuario>> obtenerUsuarios(String tipo) {

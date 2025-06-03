@@ -1,4 +1,4 @@
-import { forkJoin } from 'rxjs';
+import {forkJoin, of} from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -6,8 +6,9 @@ import { PlankComponent } from '../../components/plank/plank.component';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';
 import { NovedadesService } from '../../api/api/novedades.service';
-import {GruposService, Novedad, Reunion, ReunionesService} from '../../api';
+import {GruposService, Novedad, Reunion, ReunionesService, UsuariosService} from '../../api';
 import { KeycloakService } from '../../services/keycloak.service';
+import {UsuarioHelperService} from '../../services/usuario-helper.service';
 
 @Component({
   selector: 'app-home',
@@ -31,45 +32,63 @@ export class HomeComponent implements OnInit {
     private novedadesService: NovedadesService,
     private keycloakService: KeycloakService,
     private reunionesService: ReunionesService,
-    private gruposService: GruposService
+    private gruposService: GruposService,
+    private usuariosService: UsuariosService,
+    private usuarioHelper: UsuarioHelperService
   ) {}
 
   ngOnInit(): void {
     this.esProfesor = this.keycloakService.hasRole('profesor');
-    const userId = this.keycloakService.getUserId();
 
-    if (this.esProfesor && userId) {
-      const profesorId = Number(userId);
+    this.usuariosService.getMiUsuario().subscribe({
+      next: usuario => {
+        console.log('Usuario recibido:', usuario);
 
-      this.gruposService.getGruposByProfesor(profesorId).pipe(
-        switchMap((grupos: any[]) => {
-          const grupoIds = grupos.map(g => g.id);
-          const requests = grupoIds.map(id => this.reunionesService.getReunionesByGrupo(id));
-          return forkJoin(requests);
-        }),
-        map((resArrays: Reunion[][]) => resArrays.flat())
-      ).subscribe({
-        next: (res: Reunion[]) => this.reuniones = res,
-        error: (err: any) => console.error('Error cargando reuniones de profesor', err)
-      });
-    } else {
-      this.keycloakService.getGrupoIdFromToken().subscribe((grupoId: number) => {
-        this.reunionesService.getReunionesByGrupo(grupoId).subscribe({
-          next: (res) => this.reuniones = res,
-          error: (err) => console.error('Error cargando reuniones del grupo del alumno', err)
-        });
-      });
-    }
+        if (this.usuarioHelper.isProfesor(usuario)) {
+          const profesorId = this.usuarioHelper.getIdIfProfesor(usuario);
+          if (!profesorId) return;
 
+          this.gruposService.getGruposByProfesor(profesorId).pipe(
+            switchMap(grupos => {
+              console.log('Grupos del profesor:', grupos);
+              const requests = grupos.map(g => this.reunionesService.getReunionesByGrupo(g.id!));
+              return forkJoin(requests);
+            }),
+            map(resArrays => resArrays.flat())
+          ).subscribe({
+            next: reuniones => {
+              console.log('Reuniones profesor:', reuniones);
+              this.reuniones = reuniones;
+            },
+            error: err => console.error('Error cargando reuniones profesor', err)
+          });
+
+        } else if (this.usuarioHelper.isAlumno(usuario)) {
+          const grupoId = this.usuarioHelper.getGrupoIdIfAlumno(usuario);
+          if (!grupoId) return;
+
+          this.reunionesService.getReunionesByGrupo(grupoId).subscribe({
+            next: reuniones => {
+              console.log('Reuniones alumno:', reuniones);
+              this.reuniones = reuniones;
+            },
+            error: err => console.error('Error cargando reuniones alumno', err)
+          });
+        }
+      },
+      error: err => console.error('Error obteniendo el usuario', err)
+    });
+
+    // Novedades
     this.novedadesService.getNovedadesAlumno().subscribe({
-      next: (res: Novedad[]) => this.novedadesAlumno = res,
-      error: (err) => console.error('Error cargando novedades alumno', err)
+      next: res => this.novedadesAlumno = res,
+      error: err => console.error('Error cargando novedades alumno', err)
     });
 
     if (this.esProfesor) {
       this.novedadesService.getNovedadesProfesor().subscribe({
-        next: (res: Novedad[]) => this.novedadesProfesor = res,
-        error: (err) => console.error('Error cargando novedades profesor', err)
+        next: res => this.novedadesProfesor = res,
+        error: err => console.error('Error cargando novedades profesor', err)
       });
     }
   }
