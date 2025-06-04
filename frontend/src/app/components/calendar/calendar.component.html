@@ -32,6 +32,11 @@
     <p *ngIf="selectedReunion.enlace"><strong>Enlace:</strong>
       <a [href]="selectedReunion.enlace" target="_blank">{{ selectedReunion.enlace }}</a>
     </p>
-    <app-ui-button text="Cerrar" (click)="selectedReunion"></app-ui-button>
+    <app-ui-button
+      *ngIf="esProfesor"
+      text="Eliminar Reunión"
+      (click)="eliminarReunion()"
+      [customClass]="'danger-button'">
+    </app-ui-button>
   </div>
 </div>

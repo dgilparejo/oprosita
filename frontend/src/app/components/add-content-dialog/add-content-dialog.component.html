@@ -21,12 +21,33 @@
     <input matInput [(ngModel)]="data.descripcion" placeholder="Ej: {{ fixedTipo }} 1">
   </mat-form-field>
 
+  <mat-form-field *ngIf="gruposDisponibles.length > 0" appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>Grupo</mat-label>
+    <mat-select [(ngModel)]="grupoIdSeleccionado">
+      <mat-option *ngFor="let grupo of gruposDisponibles" [value]="grupo.id">
+        {{ grupo.nombre }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>Fecha y hora</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="data.fechaHora" [min]="minDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
+    <mat-label>Hora</mat-label>
+    <input matInput [(ngModel)]="data.hora" placeholder="HH:mm" type="time">
+  </mat-form-field>
+
   <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 15px;">
     <mat-label>URL</mat-label>
     <input matInput [(ngModel)]="data.url" placeholder="https://...">
   </mat-form-field>
 
-  <div class="pdf-upload-container">
+  <div class="pdf-upload-container" *ngIf="!hideFileUpload">
     <label for="document-upload" class="pdf-upload-label">
       <mat-icon>upload_file</mat-icon>
       <span>{{ data.documentFile?.name || 'Añadir documento' }}</span>
@@ -37,6 +58,7 @@
            style="display: none;">
     <small class="supported-formats">Formatos: PDF, Word, PowerPoint, Excel</small>
   </div>
+
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>

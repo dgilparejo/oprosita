@@ -35,5 +35,4 @@ public class AlumnoController implements AlumnosApi {
 
         return ResponseEntity.ok(grupos);
     }
-
 }

@@ -74,7 +74,7 @@ export class KeycloakService {
 
   getGrupoIdFromToken(): Observable<number> {
     const userId = this.getUserId();
-    return this.http.get<Usuario>(`/api/usuarios/${userId}`).pipe(
+    return this.http.get<Usuario>(`/api/v1/usuarios/${userId}`).pipe(
       map(usuario => (usuario as any).grupoId)
     );
   }

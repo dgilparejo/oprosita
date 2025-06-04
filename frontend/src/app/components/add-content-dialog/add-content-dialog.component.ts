@@ -7,6 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import {Grupo} from '../../api';
 
 @Component({
   selector: 'app-add-content-dialog',
@@ -19,7 +22,9 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   templateUrl: './add-content-dialog.component.html',
   styleUrls: ['./add-content-dialog.component.css']
@@ -29,18 +34,39 @@ export class AddContentDialogComponent {
     tipo: '',
     descripcion: '',
     url: '',
-    documentFile: null as File | null
+    documentFile: null as File | null,
+    fechaHora: null as Date | null,
+    hora: ''
   };
 
   fixedTipo: string | null = null;
+  minDate: Date = new Date();
+  hideFileUpload = false;
+  gruposDisponibles: Grupo[] = [];
+  grupoIdSeleccionado: number | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<AddContentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public injectedData: { fixedTipo?: string } // <-- nuevo
+    @Inject(MAT_DIALOG_DATA) public injectedData: {
+      fixedTipo?: string,
+      hideFileUpload?: boolean,
+      gruposDisponibles?: Grupo[]
+    }
   ) {
     if (injectedData?.fixedTipo) {
       this.fixedTipo = injectedData.fixedTipo;
       this.data.tipo = this.fixedTipo;
+    }
+
+    if (injectedData?.hideFileUpload) {
+      this.hideFileUpload = true;
+    }
+
+    if (injectedData?.gruposDisponibles) {
+      this.gruposDisponibles = injectedData.gruposDisponibles;
+      if (this.gruposDisponibles.length === 1) {
+        this.grupoIdSeleccionado = this.gruposDisponibles[0].id ?? null;
+      }
     }
   }
 
@@ -57,7 +83,19 @@ export class AddContentDialogComponent {
 
   onSubmit(): void {
     if (this.isValid()) {
-      this.dialogRef.close(this.data);
+      if (this.data.fechaHora && this.data.hora) {
+        const [hours, minutes] = this.data.hora.split(':').map(Number);
+        this.data.fechaHora.setHours(hours, minutes, 0, 0);
+      }
+
+      const payload = {
+        ...this.data,
+        grupoId: this.grupoIdSeleccionado
+      };
+
+      console.log('🟢 Datos enviados desde el diálogo:', payload);
+
+      this.dialogRef.close(payload);
     }
   }
 

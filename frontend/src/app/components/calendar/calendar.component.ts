@@ -1,21 +1,20 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { Reunion } from '../../api/model/reunion';
+import { ReunionesService } from '../../api';
+import { inject } from '@angular/core';
 import {
   format,
-  startOfMonth,
-  endOfMonth,
   getDate,
   getDaysInMonth,
   addMonths,
   subMonths,
-  isSameMonth,
-  isSameDay,
-  parseISO
+  isSameMonth
 } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {UiButtonComponent} from '../ui-button/ui-button.component';
+import {KeycloakService} from '../../services/keycloak.service';
 
 @Component({
   selector: 'app-calendar',
@@ -24,13 +23,26 @@ import {UiButtonComponent} from '../ui-button/ui-button.component';
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnChanges {
   @Input() reuniones: Reunion[] = [];
 
   currentDate: Date = new Date();
   today: Date = new Date();
   daysOfWeek = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
   selectedReunion: Reunion | null = null;
+  readonly keycloakService = inject(KeycloakService);
+
+  readonly reunionesService = inject(ReunionesService);
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['reuniones']) {
+      console.log('Reuniones actualizadas:', this.reuniones);
+    }
+  }
+
+  get esProfesor(): boolean {
+    return this.keycloakService.hasRole('profesor');
+  }
 
   get currentMonthLabel(): string {
     return format(this.currentDate, 'LLLL, yyyy', { locale: es }).toUpperCase();
@@ -43,7 +55,7 @@ export class CalendarComponent {
 
   getReunionesByDay(day: number): Reunion[] {
     return this.reuniones.filter(r => {
-      const fecha = new Date(Number(r.fechaHora) * 1000);
+      const fecha = new Date(r.fechaHora)
       return isSameMonth(fecha, this.currentDate) && getDate(fecha) === day;
     });
   }
@@ -57,7 +69,11 @@ export class CalendarComponent {
   }
 
   onReunionClick(reunion: Reunion) {
-    this.selectedReunion = reunion;
+    if (this.selectedReunion?.id === reunion.id) {
+      this.selectedReunion = null;
+    } else {
+      this.selectedReunion = reunion;
+    }
   }
 
   isToday(day: number): boolean {
@@ -66,4 +82,17 @@ export class CalendarComponent {
       isSameMonth(this.currentDate, this.today)
     );
   }
+
+  eliminarReunion(): void {
+    if (!this.selectedReunion?.id) return;
+
+    this.reunionesService.deleteReunion(this.selectedReunion.id).subscribe({
+      next: () => {
+        this.reuniones = this.reuniones.filter(r => r.id !== this.selectedReunion?.id);
+        this.selectedReunion = null;
+      },
+      error: err => console.error('Error al eliminar la reunión', err)
+    });
+  }
+
 }

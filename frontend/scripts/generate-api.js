@@ -3,7 +3,7 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const username = process.env.DOCKERHUB_USERNAME || 'lnuclear';
-const version = process.env.OPENAPI_BACKEND_VERSION || '1.3.3';
+const version = process.env.OPENAPI_BACKEND_VERSION || '1.3.4';
 
 // Ruta raíz del proyecto
 const rootPath = path.resolve(__dirname, '../..'); // C:/.../oprosita
