@@ -42,6 +42,7 @@ export class AddContentDialogComponent {
   fixedTipo: string | null = null;
   minDate: Date = new Date();
   hideFileUpload = false;
+  hideUrl = false;
   gruposDisponibles: Grupo[] = [];
   grupoIdSeleccionado: number | null = null;
 
@@ -50,6 +51,8 @@ export class AddContentDialogComponent {
     @Inject(MAT_DIALOG_DATA) public injectedData: {
       fixedTipo?: string,
       hideFileUpload?: boolean,
+      hideFechaHora?: boolean,
+      hideUrl?: boolean,
       gruposDisponibles?: Grupo[]
     }
   ) {
@@ -62,13 +65,22 @@ export class AddContentDialogComponent {
       this.hideFileUpload = true;
     }
 
+    if (injectedData?.hideFechaHora) {
+      this.hideFechaHora = true;
+    }
+
     if (injectedData?.gruposDisponibles) {
       this.gruposDisponibles = injectedData.gruposDisponibles;
       if (this.gruposDisponibles.length === 1) {
         this.grupoIdSeleccionado = this.gruposDisponibles[0].id ?? null;
       }
     }
+
+    if (injectedData?.hideUrl) {
+      this.hideUrl = true;
+    }
   }
+  hideFechaHora = false;
 
   isValid(): boolean {
     return this.data.tipo !== '' && this.data.descripcion.trim() !== '';
@@ -93,7 +105,7 @@ export class AddContentDialogComponent {
         grupoId: this.grupoIdSeleccionado
       };
 
-      console.log('🟢 Datos enviados desde el diálogo:', payload);
+      console.log('Datos enviados desde el diálogo:', payload);
 
       this.dialogRef.close(payload);
     }

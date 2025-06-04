@@ -90,7 +90,10 @@ export class NewsComponent implements OnInit {
 
   addNoticia(): void {
     const dialogRef = this.dialog.open(AddContentDialogComponent, {
-      data: { fixedTipo: 'Noticia' }
+      data: {
+        fixedTipo: 'Noticia',
+        hideFechaHora: true
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

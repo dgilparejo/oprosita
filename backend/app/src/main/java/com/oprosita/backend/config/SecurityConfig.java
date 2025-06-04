@@ -22,6 +22,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         //Todos pueden acceder a estas rutas
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        //Grupos
+                        .requestMatchers(HttpMethod.GET,"/grupos/**").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/grupos/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE,"/grupos/**").hasRole("profesor")
+
                         // Novedades
                         .requestMatchers(HttpMethod.GET, "/novedades/profesor").hasRole("profesor")
                         .requestMatchers(HttpMethod.POST, "/novedades/profesor").hasRole("alumno")
@@ -30,8 +36,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/novedades/alumno").hasRole("profesor")
 
                         // Reuniones
-                        .requestMatchers(HttpMethod.GET, "/grupos/*/reuniones").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/grupos/*/reuniones").hasRole("profesor")
                         .requestMatchers(HttpMethod.PUT, "/reuniones/**").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/reuniones/**").hasRole("profesor")
 
@@ -49,7 +53,6 @@ public class SecurityConfig {
                         .requestMatchers("/archivos/**").authenticated()
 
                         // Control por rutas
-                        .requestMatchers("/grupos/**").hasRole("profesor")
                         .requestMatchers("/alumnos/**").hasRole("alumno")
                         .requestMatchers("/usuarios/**", "/contenido/**", "/chat/**").authenticated()
                         .anyRequest().authenticated()

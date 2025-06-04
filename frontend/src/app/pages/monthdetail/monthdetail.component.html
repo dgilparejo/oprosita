@@ -1,13 +1,14 @@
 <div class="monthdetail-container">
-  <app-ui-item [label]="mes | titlecase"></app-ui-item>
+  <app-ui-item [label]="mesNombre | titlecase"></app-ui-item>
 
   <div class="plank-wrapper">
     <app-plank
       title="Temas"
       [editable]="false"
       [lines]="temasAsNovedades"
-      [allowDeleteOnly]="true">
-      (add)="addNuevoTema($event)">
+      [allowDeleteOnly]="isProfesor"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
     </app-plank>
   </div>
 
@@ -16,8 +17,9 @@
       title="Programación"
       [editable]="false"
       [lines]="programacionAsNovedades"
-      [allowDeleteOnly]="true">
-      (add)="addNuevaProgramacion($event)">
+      [allowDeleteOnly]="isProfesor"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
     </app-plank>
   </div>
 
@@ -26,12 +28,13 @@
       title="Práctico"
       [editable]="false"
       [lines]="practicoAsNovedades"
-      [allowDeleteOnly]="true">
-      (add)="addNuevoPractico($event)">
+      [allowDeleteOnly]="isProfesor"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
     </app-plank>
   </div>
 
-  <div class="boton-contenido">
+  <div class="boton-contenido" *ngIf="isProfesor">
     <app-ui-button text="Añadir contenido" (click)="addContent()"></app-ui-button>
   </div>
 </div>

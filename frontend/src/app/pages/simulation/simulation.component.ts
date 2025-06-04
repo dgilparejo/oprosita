@@ -72,7 +72,10 @@ export class SimulationComponent implements OnInit {
 
   addSimulation(): void {
     const dialogRef = this.dialog.open(AddContentDialogComponent, {
-      data: { fixedTipo: 'Simulacro' }
+      data: {
+        fixedTipo: 'Simulacro',
+        hideFechaHora: true
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -113,7 +116,7 @@ export class SimulationComponent implements OnInit {
       return {
         id: s.id,
         archivoId: s.archivoId ?? undefined,
-        texto: this.sanitizer.bypassSecurityTrustHtml(texto) as unknown as string, // 👈 CLAVE
+        texto: this.sanitizer.bypassSecurityTrustHtml(texto) as unknown as string,
         fechaCreacion: new Date().toISOString(),
         tipoDestinatario: 'alumno'
       };
