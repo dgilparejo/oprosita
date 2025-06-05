@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -8,8 +8,9 @@ import {
 import { filter } from 'rxjs/operators';
 import { MatIcon } from '@angular/material/icon';
 import { UserProfileComponent } from '../user-profile/user-profile.component';
-import { MatAnchor } from '@angular/material/button';
+import {MatAnchor, MatButton} from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import {SendbirdWidgetComponent} from '../sendbird-widget/sendbird-widget.component';
 
 interface Breadcrumb {
   label: string;
@@ -24,7 +25,9 @@ interface Breadcrumb {
     MatIcon,
     UserProfileComponent,
     RouterLink,
-    MatAnchor
+    MatAnchor,
+    SendbirdWidgetComponent,
+    MatButton
   ],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.css'
@@ -33,6 +36,11 @@ export class BreadcrumbComponent implements OnInit {
   breadcrumbs: Breadcrumb[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute) {}
+  chatVisible = signal(false);
+
+  toggleChat(): void {
+    this.chatVisible.set(!this.chatVisible());
+  }
 
   ngOnInit(): void {
     this.router.events

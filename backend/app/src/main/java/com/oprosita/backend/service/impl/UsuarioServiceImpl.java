@@ -7,8 +7,10 @@ import com.oprosita.backend.mapper.AlumnoMapper;
 import com.oprosita.backend.mapper.ProfesorMapper;
 import com.oprosita.backend.model.Alumno;
 import com.oprosita.backend.model.Profesor;
+import com.oprosita.backend.model.Usuario;
 import com.oprosita.backend.repository.AlumnoRepository;
 import com.oprosita.backend.repository.ProfesorRepository;
+import com.oprosita.backend.repository.UsuarioRepository;
 import com.oprosita.backend.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final ProfesorRepository profesorRepository;
     private final AlumnoMapper alumnoMapper;
     private final ProfesorMapper profesorMapper;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public List<Object> obtenerUsuarios(String tipo) {
@@ -54,24 +57,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Object actualizarUsuario(Long id, Object usuarioDto) {
-        if (usuarioDto instanceof AlumnoDto alumnoDto) {
-            Alumno alumno = alumnoRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
-            alumno.setNombre(alumnoDto.getNombre());
-            alumno.setGrupo(alumnoDto.getGrupoId() != null ?
-                    alumno.getGrupo() : null); // Puedes mejorar esto según lógica completa
-            return alumnoMapper.toAlumnoDto(alumnoRepository.save(alumno));
-        } else if (usuarioDto instanceof ProfesorDto profesorDto) {
-            Profesor profesor = profesorRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
-            profesor.setNombre(profesorDto.getNombre());
-            return profesorMapper.toProfesorDto(profesorRepository.save(profesor));
-        }
-        throw new IllegalArgumentException("Tipo de usuario no soportado");
-    }
-
-    @Override
     public void eliminarUsuario(Long id) {
         if (alumnoRepository.existsById(id)) {
             alumnoRepository.deleteById(id);
@@ -80,5 +65,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         } else {
             throw new NotFoundException("Usuario no encontrado");
         }
+    }
+
+    @Override
+    public Usuario getUsuarioByKeycloakId(String idKeycloak) {
+        return usuarioRepository.findByIdKeycloak(idKeycloak)
+                .orElseThrow(() -> new NotFoundException("Usuario con idKeycloak " + idKeycloak + " no encontrado"));
     }
 }

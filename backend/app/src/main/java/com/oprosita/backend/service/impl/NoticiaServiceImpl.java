@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public class NoticiaServiceImpl implements NoticiaService {
     }
 
     @Override
-    public NoticiaDto crearNoticia(String descripcion, MultipartFile file) {
+    public NoticiaDto crearNoticia(String descripcion, URI url, MultipartFile file) {
         Archivo archivo = null;
 
         if (file != null && !file.isEmpty()) {
@@ -81,6 +82,7 @@ public class NoticiaServiceImpl implements NoticiaService {
         Noticia.NoticiaBuilder builder = Noticia.builder();
 
         builder.descripcion((descripcion != null && !descripcion.isBlank()) ? descripcion : "");
+        builder.url(url);
         builder.archivo(archivo);
 
         Noticia noticia = noticiaRepository.save(builder.build());

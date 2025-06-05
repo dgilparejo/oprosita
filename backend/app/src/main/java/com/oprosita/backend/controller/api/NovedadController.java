@@ -36,9 +36,9 @@ public class NovedadController implements NovedadesApi {
     }
 
     @Override
-    public ResponseEntity<List<Novedad>> getNovedadesProfesor(String tipo, OffsetDateTime fechaDesde) {
-        List<NovedadDto> dtos = (tipo != null && fechaDesde != null)
-                ? novedadService.obtenerNovedadesProfesorPorTipo(tipo, fechaDesde)
+    public ResponseEntity<List<Novedad>> getNovedadesProfesor(OffsetDateTime fechaDesde) {
+        List<NovedadDto> dtos = (fechaDesde != null)
+                ? novedadService.obtenerNovedadesProfesorDesde(fechaDesde)
                 : novedadService.obtenerNovedadesProfesor();
 
         List<Novedad> novedades = dtos.stream()

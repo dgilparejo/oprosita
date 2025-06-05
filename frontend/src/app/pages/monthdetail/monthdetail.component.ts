@@ -6,6 +6,11 @@ import { UiButtonComponent } from '../../components/ui-button/ui-button.componen
 import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ContenidoService, GruposService, Novedad, UsuariosService, ArchivosService } from '../../api';
+import TipoDestinatarioEnum = Novedad.TipoDestinatarioEnum;
+import { DomSanitizer } from '@angular/platform-browser';
+import { NovedadConArchivo } from '../../model/NovedadConArchivo';
+import {KeycloakService} from '../../services/keycloak.service';
 
 @Component({
   selector: 'app-month-detail',
@@ -22,36 +27,163 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 })
 export class MonthDetailComponent implements OnInit {
   grupoId = '';
-  mes = '';
-  private route = inject(ActivatedRoute);
+  mesId = '';
+  mesNombre = '';
 
-  // Datos simulados
-  contenido = {
-    temas: ['Tema 1', 'Tema 2'],
-    programacion: ['Programación 1', 'Programación 2'],
-    practico: ['Práctico 1', 'Práctico 2']
+  contenido: Record<'temas' | 'programacion' | 'practico', { id: number; texto: string; archivoId?: number }[]> = {
+    temas: [],
+    programacion: [],
+    practico: []
   };
 
-  constructor(private dialog: MatDialog) {}
+  archivoInfo: Map<number, { nombre: string; tipo: string }> = new Map();
 
-  addContent() {
-    const dialogRef = this.dialog.open(AddContentDialogComponent);
+  private route = inject(ActivatedRoute);
+  private contenidoService = inject(ContenidoService);
+  private gruposService = inject(GruposService);
+  private usuariosService = inject(UsuariosService);
+  private archivosService = inject(ArchivosService);
+  private keycloakService = inject(KeycloakService);
+  private dialog = inject(MatDialog);
+  private sanitizer = inject(DomSanitizer);
+  isProfesor = false;
+
+  ngOnInit(): void {
+    this.isProfesor = this.keycloakService.hasRole('profesor');
+    const nombreGrupo = this.route.snapshot.paramMap.get('id') || '';
+    const nombreMes = this.route.snapshot.paramMap.get('mes') || '';
+    this.mesNombre = nombreMes;
+
+    this.gruposService.getGrupos().subscribe(grupos => {
+      const grupo = grupos.find(g => g.nombre.toLowerCase().replace(/\s/g, '-') === nombreGrupo);
+      if (!grupo) return;
+
+      this.grupoId = grupo.id!.toString();
+
+      this.gruposService.getMesesByGrupo(grupo.id!).subscribe(meses => {
+        const mes = meses.find(m => m.nombre === nombreMes);
+        if (!mes) return;
+
+        this.mesId = mes.id!.toString();
+
+        this.contenidoService.getContenidoGrupoMes(+this.grupoId, +this.mesId).subscribe(data => {
+          data.forEach(item => {
+            const tipo = item.tipoContenido as keyof typeof this.contenido;
+            if (this.contenido[tipo]) {
+              this.contenido[tipo].push({
+                id: item.id!,
+                texto: item.texto,
+                archivoId: item.archivoId ?? undefined
+              });
+            }
+
+            if (item.archivoId) {
+              this.archivosService.getArchivoInfo(item.archivoId).subscribe(archivo => {
+                this.archivoInfo.set(item.id!, {
+                  nombre: archivo.nombre!,
+                  tipo: archivo.tipo!
+                });
+              });
+            }
+          });
+        });
+      });
+    });
+  }
+
+  addContent(): void {
+    const dialogRef = this.dialog.open(AddContentDialogComponent, {
+      data: {
+        hideUrl: true,
+        hideFechaHora: true
+      }
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Contenido añadido:', result);
-        // Aquí puedes hacer push a la lista correcta, según el tipo:
-        if (this.contenido[result.tipo as keyof typeof this.contenido]) {
-          this.contenido[result.tipo as keyof typeof this.contenido].push(result.descripcion);
-        }
-        // También puedes guardar el archivo PDF en backend cuando lo tengas.
+        this.usuariosService.getMiUsuario().subscribe(usuario => {
+          if (!usuario.id) return;
+
+          this.contenidoService
+            .addContenidoToGrupoMes(
+              +this.grupoId,
+              +this.mesId,
+              result.descripcion,
+              result.tipo,
+              usuario.id,
+              result.documentFile || undefined
+            )
+            .subscribe({
+              next: () => {
+                const nuevoItem = {
+                  id: Date.now(), // temporal hasta refrescar con ID real
+                  texto: result.descripcion,
+                  archivoId: undefined // si quieres mostrarlo tras refrescar, llama a `ngOnInit()`
+                };
+                this.contenido[result.tipo as keyof typeof this.contenido].push(nuevoItem);
+              },
+              error: err => console.error('Error al enviar contenido:', err)
+            });
+        });
       }
     });
   }
 
-  ngOnInit(): void {
-    this.grupoId = this.route.snapshot.paramMap.get('id') || '';
-    this.mes = this.route.snapshot.paramMap.get('mes') || '';
-    console.log('Contenido simulado:', this.contenido);
+  abrirArchivo(id: number): void {
+    const item = [...this.contenido.temas, ...this.contenido.programacion, ...this.contenido.practico].find(c => c.id === id);
+    if (!item?.archivoId) return;
+
+    this.archivosService.downloadArchivo(item.archivoId, 'body').subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
   }
+
+  private mapContenidoToNovedades(arr: { id: number; texto: string; archivoId?: number }[]): NovedadConArchivo[] {
+    return arr.map((item) => {
+      let texto = item.texto;
+      const archivo = item.archivoId ? this.archivoInfo.get(item.id) : undefined;
+
+      if (archivo?.nombre) {
+        const enlace = `<a class="archivo-link" data-id="${item.id}" style="text-decoration: underline; color: var(--forest-green); cursor: pointer">${archivo.nombre}</a>`;
+        texto += ` (${enlace})`;
+      }
+
+      return {
+        id: item.id,
+        archivoId: item.archivoId,
+        texto: this.sanitizer.bypassSecurityTrustHtml(texto) as unknown as string,
+        fechaCreacion: new Date().toISOString(),
+        tipoDestinatario: TipoDestinatarioEnum.Alumno
+      };
+    });
+  }
+
+  get temasAsNovedades(): NovedadConArchivo[] {
+    return this.mapContenidoToNovedades(this.contenido.temas);
+  }
+
+  get programacionAsNovedades(): NovedadConArchivo[] {
+    return this.mapContenidoToNovedades(this.contenido.programacion);
+  }
+
+  get practicoAsNovedades(): NovedadConArchivo[] {
+    return this.mapContenidoToNovedades(this.contenido.practico);
+  }
+
+  removeContenido(id: number): void {
+    this.contenidoService.deleteContenido(id).subscribe({
+      next: () => {
+        // Eliminar el contenido de todos los arrays si está
+        (['temas', 'programacion', 'practico'] as const).forEach(tipo => {
+          this.contenido[tipo] = this.contenido[tipo].filter(c => c.id !== id);
+        });
+        this.archivoInfo.delete(id);
+      },
+      error: (err) => {
+        console.error('Error al eliminar contenido', err);
+      }
+    });
+  }
+
 }

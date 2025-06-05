@@ -12,11 +12,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8081/realms/oprosita
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
 
 management:
   endpoints:
@@ -26,4 +29,4 @@ management:
 
 server:
   servlet:
-    context-path: /api
+    context-path: /api/v1

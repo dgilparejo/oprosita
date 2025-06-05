@@ -16,14 +16,10 @@ public class AuthUtils {
                 .anyMatch(granted -> granted.getAuthority().equals("ROLE_" + role));
     }
 
-    public static Long getUsuarioId() {
+    public static String getUsuarioId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof Jwt jwt) {
-            try {
-                return Long.valueOf(jwt.getSubject());
-            } catch (NumberFormatException e) {
-                return null;
-            }
+            return jwt.getSubject();
         }
         return null;
     }
