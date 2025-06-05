@@ -21,5 +21,5 @@ RUN mvn clean package -DskipTests -Dopenapi.version.override=${OPENAPI_BACKEND_V
 # Etapa 2: Ejecución
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
-COPY --from=build /app/target/*-SNAPSHOT.jar /app/myapp.jar
+COPY --from=build /app/target/*.jar /app/myapp.jar
 CMD ["java", "-jar", "/app/myapp.jar"]

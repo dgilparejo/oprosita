@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = UriMapper.class)
 public interface NoticiaMapper {
     // JPA ↔ DTO
     @Mapping(source = "archivo.id", target = "archivoId")

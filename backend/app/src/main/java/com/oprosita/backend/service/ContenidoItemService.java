@@ -11,7 +11,7 @@ public interface ContenidoItemService {
     List<ContenidoItemDto> obtenerTodos();
     ContenidoItemDto crear(ContenidoItemDto dto);
     ContenidoItemDto actualizar(Long id, ContenidoItemDto dto);
-    void eliminar(Long id);
+    void eliminar(Long id, Long usuarioAutenticadoId);
 
     // Métodos del OpenAPI
     List<ContenidoItemDto> obtenerPorAlumno(Long alumnoId);

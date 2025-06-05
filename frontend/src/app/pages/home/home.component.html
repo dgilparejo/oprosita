@@ -1,20 +1,27 @@
 <div class="home-container">
   <div class="content-left">
     <app-plank
+      *ngIf="esProfesor"
       [title]="'Novedades para profesor'"
-      [lines]="novedadesProfesor">
+      [lines]="novedadesProfesor"
+      [editable]="false"
+      [allowDeleteOnly]="true"
+      (add)="addNuevaNovedadProfesor($event)"
+      (remove)="removeNovedadProfesor($event)">
     </app-plank>
 
     <app-plank
       [title]="'Novedades para alumnos'"
-      [editable]=true
+      [editable]="esProfesor"
+      [allowDeleteOnly]="esProfesor"
       [lines]="novedadesAlumno"
-      (add)="addNuevaNovedad($event)">
+      (add)="addNuevaNovedad($event)"
+      (remove)="removeNovedadAlumno($event)">
     </app-plank>
   </div>
 
   <div class="content-right">
-    <app-calendar></app-calendar>
-    <app-ui-button text="Reunirse"></app-ui-button>
+    <app-calendar [reuniones]="reuniones"></app-calendar>
+    <app-ui-button *ngIf="esProfesor" text="Crear Reunión" (click)="onCrearReunion()"></app-ui-button>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
-import {MatIcon} from '@angular/material/icon';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { KeycloakService } from '../../services/keycloak.service'; // ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-user-profile',
@@ -14,15 +15,15 @@ import {MatIcon} from '@angular/material/icon';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
-  fullName = 'Alberto Muñoz';
+
+  constructor(private keycloakService: KeycloakService) {}
 
   get initials(): string {
-    const names = this.fullName.split(' ');
-    return names.map(n => n[0]).join('').toUpperCase();
+    const username = this.keycloakService.tokenParsed?.['preferred_username'];
+    return username ? username.substring(0, 2).toUpperCase() : '??';
   }
 
-  logout() {
-    // Simulación de logout
-    alert('Sesión cerrada');
+  logout(): void {
+    this.keycloakService.logout();
   }
 }

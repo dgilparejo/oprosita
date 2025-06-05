@@ -2,6 +2,8 @@ package com.oprosita.backend.mapper;
 
 import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.ProfesorDto;
+import com.oprosita.backend.model.Alumno;
+import com.oprosita.backend.model.Profesor;
 import com.oprosita.backend.model.generated.CrearUsuario201Response;
 import com.oprosita.backend.model.generated.CrearUsuarioRequest;
 import com.oprosita.backend.model.generated.Usuario;
@@ -123,4 +125,26 @@ public class UsuarioMapper {
             throw new IllegalArgumentException("Tipo de CrearUsuario201Response desconocido");
         }
     }
+
+    public CrearUsuario201Response fromUsuario(com.oprosita.backend.model.Usuario usuario) {
+        CrearUsuario201Response response = new CrearUsuario201Response()
+                .id(Math.toIntExact(usuario.getId()))
+                .nombre(usuario.getNombre());
+
+        if (usuario instanceof Alumno alumno) {
+            response.setTipo(CrearUsuario201Response.TipoEnum.valueOf("ALUMNO"));
+            if (alumno.getGrupo() != null) {
+                response.setGrupoId(Math.toIntExact(alumno.getGrupo().getId()));
+            }
+        } else if (usuario instanceof Profesor profesor) {
+            response.setTipo(CrearUsuario201Response.TipoEnum.valueOf("PROFESOR"));
+            List<Integer> grupoIds = profesor.getGrupos().stream()
+                    .map(g -> Math.toIntExact(g.getId()))
+                    .collect(Collectors.toList());
+            response.setGrupoIds(grupoIds);
+        }
+
+        return response;
+    }
+
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Null;
+import java.net.URI;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,8 @@ public class NoticiaDto {
     private Integer id;
 
     private String descripcion;
+
+    private URI url;
 
     private Integer archivoId;
 }
