@@ -3,7 +3,11 @@
     <app-plank
       *ngIf="esProfesor"
       [title]="'Novedades para profesor'"
-      [lines]="novedadesProfesor">
+      [lines]="novedadesProfesor"
+      [editable]="false"
+      [allowDeleteOnly]="true"
+      (add)="addNuevaNovedadProfesor($event)"
+      (remove)="removeNovedadProfesor($event)">
     </app-plank>
 
     <app-plank

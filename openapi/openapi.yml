@@ -585,7 +585,8 @@ paths:
     delete:
       tags:
         - contenido
-      summary: Eliminar contenido por ID
+      summary: Eliminar contenido por ID (solo el autor puede hacerlo)
+      description: Permite eliminar un contenido si el usuario autenticado es el autor del mismo.
       operationId: deleteContenido
       parameters:
         - name: id
@@ -596,6 +597,8 @@ paths:
       responses:
         '204':
           description: Contenido eliminado correctamente
+        '403':
+          description: No tienes permiso para eliminar este contenido
         '404':
           description: Contenido no encontrado
 

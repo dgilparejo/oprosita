@@ -128,7 +128,8 @@ public class UsuarioMapper {
 
     public CrearUsuario201Response fromUsuario(com.oprosita.backend.model.Usuario usuario) {
         CrearUsuario201Response response = new CrearUsuario201Response()
-                .id(Math.toIntExact(usuario.getId()));
+                .id(Math.toIntExact(usuario.getId()))
+                .nombre(usuario.getNombre());
 
         if (usuario instanceof Alumno alumno) {
             response.setTipo(CrearUsuario201Response.TipoEnum.valueOf("ALUMNO"));

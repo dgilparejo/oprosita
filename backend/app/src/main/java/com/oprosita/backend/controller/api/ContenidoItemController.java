@@ -6,7 +6,10 @@ import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.model.TipoContenido;
 import com.oprosita.backend.model.generated.ContenidoItem;
 import com.oprosita.backend.service.ContenidoItemService;
+import com.oprosita.backend.service.UsuarioService;
+import com.oprosita.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +22,25 @@ public class ContenidoItemController implements ContenidoApi {
 
     private final ContenidoItemService contenidoItemService;
     private final ContenidoItemMapper mapper;
+    private final UsuarioService usuarioService;
 
     @Override
     public ResponseEntity<Void> deleteContenido(Integer id) {
-        contenidoItemService.eliminar(id.longValue());
+        // Obtener el ID de Keycloak
+        String keycloakId = AuthUtils.getUsuarioId();
+        if (keycloakId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Obtener el usuario desde la base de datos usando el ID de Keycloak
+        com.oprosita.backend.model.Usuario usuario = usuarioService.getUsuarioByKeycloakId(keycloakId);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Llamar al servicio pasando el ID del usuario autenticado
+        contenidoItemService.eliminar(id.longValue(), usuario.getId());
+
         return ResponseEntity.noContent().build();
     }
 

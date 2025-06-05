@@ -2,6 +2,7 @@ package com.oprosita.backend.service.impl;
 
 import com.oprosita.backend.dto.ArchivoDto;
 import com.oprosita.backend.dto.ContenidoItemDto;
+import com.oprosita.backend.dto.NovedadDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.ArchivoMapper;
 import com.oprosita.backend.mapper.ContenidoItemMapper;
@@ -9,11 +10,15 @@ import com.oprosita.backend.model.*;
 import com.oprosita.backend.repository.*;
 import com.oprosita.backend.service.ArchivoService;
 import com.oprosita.backend.service.ContenidoItemService;
+import com.oprosita.backend.service.NovedadService;
+import com.oprosita.backend.util.Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +36,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     private final ContenidoItemMapper contenidoItemMapper;
     private final ArchivoMapper archivoMapper;
     private final ArchivoService archivoService;
+    private final NovedadService novedadService;
 
     @Override
     public ContenidoItemDto obtenerPorId(Long id) {
@@ -78,9 +84,14 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
     }
 
     @Override
-    public void eliminar(Long id) {
+    public void eliminar(Long id, Long usuarioAutenticadoId) {
         ContenidoItem contenido = contenidoItemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Contenido no encontrado"));
+
+        // Verificar que el autor sea el usuario autenticado
+        if (!contenido.getAutor().getId().equals(usuarioAutenticadoId)) {
+            throw new AccessDeniedException("No tienes permiso para eliminar este contenido");
+        }
 
         // Eliminar el archivo si existe
         if (contenido.getArchivo() != null) {
@@ -90,6 +101,7 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
         // Eliminar el contenido principal
         contenidoItemRepository.deleteById(id);
     }
+
 
     @Override
     public List<ContenidoItemDto> obtenerPorAlumno(Long alumnoId) {
@@ -120,7 +132,18 @@ public class ContenidoItemServiceImpl implements ContenidoItemService {
                 .archivo(archivo)
                 .build();
 
-        return contenidoItemMapper.toContenidoItemDto(contenidoItemRepository.save(contenido));
+        ContenidoItem saved = contenidoItemRepository.save(contenido);
+
+        // Crear novedad para profesores
+        String mensaje = alumno.getNombre() + " ha subido " + Util.capitalizar(tipoContenido.toLowerCase());
+        NovedadDto novedadDto = NovedadDto.builder()
+                .texto(mensaje)
+                .tipoDestinatario(TipoDestinatario.PROFESOR)
+                .fechaCreacion(OffsetDateTime.now())
+                .build();
+        novedadService.crearNovedadProfesor(novedadDto);
+
+        return contenidoItemMapper.toContenidoItemDto(saved);
     }
 
     @Override

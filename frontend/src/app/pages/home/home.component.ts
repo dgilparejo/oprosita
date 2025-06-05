@@ -45,7 +45,6 @@ export class HomeComponent implements OnInit {
     private reunionesService: ReunionesService,
     private gruposService: GruposService,
     private usuariosService: UsuariosService,
-    private usuarioHelper: UsuarioHelperService,
     private dialog: MatDialog
   ) {}
 
@@ -131,6 +130,27 @@ export class HomeComponent implements OnInit {
       next: () =>
         (this.novedadesAlumno = this.novedadesAlumno.filter(n => n.id !== id)),
       error: err => console.error('Error al eliminar novedad', err)
+    });
+  }
+
+  addNuevaNovedadProfesor(nueva: string): void {
+    const novedad: Novedad = {
+      texto: nueva,
+      tipoDestinatario: 'profesor',
+      fechaCreacion: new Date().toISOString()
+    };
+
+    this.novedadesService.createNovedadProfesor(novedad).subscribe({
+      next: res => this.novedadesProfesor.push(res),
+      error: err => console.error('Error al crear novedad de profesor', err)
+    });
+  }
+
+  removeNovedadProfesor(id: number): void {
+    this.novedadesService.deleteNovedad(id).subscribe({
+      next: () =>
+        (this.novedadesProfesor = this.novedadesProfesor.filter(n => n.id !== id)),
+      error: err => console.error('Error al eliminar novedad del profesor', err)
     });
   }
 

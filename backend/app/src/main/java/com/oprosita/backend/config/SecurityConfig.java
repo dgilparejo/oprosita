@@ -20,10 +20,24 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterAfter(syncUsuarioFilter, org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        //Todos pueden acceder a estas rutas
+                        // Todos pueden acceder a estas rutas
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        //Grupos
+                        // Usuarios
+                        .requestMatchers(HttpMethod.GET,"/usuarios/me").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/usuarios/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.POST,"/usuarios/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE,"/usuarios/**").hasRole("profesor")
+
+                        // Alumnado
+                        .requestMatchers(HttpMethod.GET,"/alumnos/**").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/alumnos/**").hasRole("alumno")
+                        .requestMatchers(HttpMethod.DELETE,"/alumnos/**").hasRole("profesor")
+
+                        // Contenido
+                        .requestMatchers("/contenido/**").authenticated()
+
+                        // Grupos
                         .requestMatchers(HttpMethod.GET,"/grupos/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/grupos/**").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE,"/grupos/**").hasRole("profesor")
@@ -44,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/simulacros").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/simulacros/**").hasRole("profesor")
 
-                        //Noticias
+                        // Noticias
                         .requestMatchers(HttpMethod.GET, "/noticias").authenticated()
                         .requestMatchers(HttpMethod.POST, "/noticias").hasRole("profesor")
                         .requestMatchers(HttpMethod.DELETE, "/noticias/**").hasRole("profesor")
@@ -52,9 +66,10 @@ public class SecurityConfig {
                         // Archivos
                         .requestMatchers("/archivos/**").authenticated()
 
-                        // Control por rutas
-                        .requestMatchers("/alumnos/**").hasRole("alumno")
-                        .requestMatchers("/usuarios/**", "/contenido/**", "/chat/**").authenticated()
+                        // Chat
+                        .requestMatchers( "/chat/**").authenticated()
+
+                        // Resto de rutas
                         .anyRequest().authenticated()
                 )
 

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
 import {GroupsComponent} from './pages/groups/groups.component';
 import {MonthDetailComponent} from './pages/monthdetail/monthdetail.component';
+import {StudentBodyComponent} from './pages/student-body/student-body.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'inicio', pathMatch: 'full' },
@@ -17,7 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'alumnado',
-    component: GroupsComponent,
+    component: StudentBodyComponent,
     title: 'Alumnado'
   },
   {
