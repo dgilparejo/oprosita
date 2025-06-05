@@ -4,12 +4,10 @@ import com.oprosita.backend.dto.AlumnoDto;
 import com.oprosita.backend.dto.GrupoDto;
 import com.oprosita.backend.exception.NotFoundException;
 import com.oprosita.backend.mapper.AlumnoMapper;
-import com.oprosita.backend.mapper.ContenidoItemMapper;
 import com.oprosita.backend.mapper.GrupoMapper;
 import com.oprosita.backend.model.Alumno;
 import com.oprosita.backend.repository.*;
 import com.oprosita.backend.service.AlumnoService;
-import com.oprosita.backend.service.ArchivoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +21,8 @@ import java.util.stream.Collectors;
 public class AlumnoServiceImpl implements AlumnoService {
 
     private final AlumnoRepository alumnoRepository;
-    private final GrupoRepository grupoRepository;
-    private final MesRepository mesRepository;
-    private final ArchivoRepository archivoRepository;
-    private final ContenidoItemRepository contenidoItemRepository;
     private final AlumnoMapper alumnoMapper;
     private final GrupoMapper grupoMapper;
-    private final ContenidoItemMapper contenidoItemMapper;
-    private final ArchivoService archivoService;
 
     @Override
     public AlumnoDto obtenerPorId(Long id) {

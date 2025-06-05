@@ -1,0 +1,49 @@
+<!-- Vista para alumno -->
+<div *ngIf="isAlumno" class="monthdetail-container">
+  <app-ui-item [label]="alumnoNombre | titlecase"></app-ui-item>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Temas"
+      [editable]="false"
+      [lines]="temasAsNovedades"
+      [allowDeleteOnly]="true"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
+    </app-plank>
+  </div>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Programación"
+      [editable]="false"
+      [lines]="programacionAsNovedades"
+      [allowDeleteOnly]="true"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
+    </app-plank>
+  </div>
+
+  <div class="plank-wrapper">
+    <app-plank
+      title="Práctico"
+      [editable]="false"
+      [lines]="practicoAsNovedades"
+      [allowDeleteOnly]="true"
+      (abrirArchivo)="abrirArchivo($event)"
+      (remove)="removeContenido($event)">
+    </app-plank>
+  </div>
+
+  <div class="boton-contenido">
+    <app-ui-button text="Añadir contenido" (click)="addContent()"></app-ui-button>
+  </div>
+</div>
+
+<!-- Vista para profesor -->
+<div *ngIf="isProfesor" class="groups-container">
+  <app-list
+    [items]="nombresGrupos"
+    (itemClicked)="irAMeses($event)">
+  </app-list>
+</div>

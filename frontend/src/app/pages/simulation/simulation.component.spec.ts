@@ -21,3 +21,4 @@ describe('SimulationComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+//generame el test de este componente, que es un componente de angular, y que se llama simulation.component.ts

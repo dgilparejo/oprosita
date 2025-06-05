@@ -1,0 +1,40 @@
+<div class="chat-widget">
+  <div class="chat-header">
+    <ng-container *ngIf="!selectedUser; else activeChat">
+      <strong class="header-title">Chat</strong>
+    </ng-container>
+
+    <ng-template #activeChat>
+      <span class="back-button" (click)="selectedUser = null">← Volver</span>
+      <strong class="header-title">{{ selectedUser?.nombre }}</strong>
+    </ng-template>
+  </div>
+
+  <!-- Lista de usuarios disponibles -->
+  <div *ngIf="!selectedUser" class="user-list">
+    <div
+      class="user-button"
+      *ngFor="let user of usersToChat"
+      (click)="selectUser(user)"
+    >
+      {{ user.nombre }}
+    </div>
+  </div>
+
+  <!-- Conversación activa -->
+  <div *ngIf="selectedUser" class="messages">
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [ngClass]="{ 'sent': msg.isOwn, 'received': !msg.isOwn }"
+    >
+      <div class="sender">{{ msg.sender }}</div>
+      <div class="content">{{ msg.content }}</div>
+    </div>
+  </div>
+
+  <div class="input-bar" *ngIf="selectedUser">
+    <input [(ngModel)]="messageInput" (keydown.enter)="sendMessage()" placeholder="Escribe un mensaje..." />
+    <button (click)="sendMessage()">📤</button>
+  </div>
+</div>

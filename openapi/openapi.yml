@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.3.3
+  version: 1.3.5
 
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080/api/v1
 
 tags:
   - name: usuarios
@@ -78,38 +78,6 @@ paths:
                   - $ref: '#/components/schemas/Alumno'
                   - $ref: '#/components/schemas/Profesor'
 
-  /usuarios/{id}:
-    put:
-      tags:
-        - usuarios
-      operationId: actualizarUsuario
-      summary: Actualizar un usuario existente
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/Alumno'
-                - $ref: '#/components/schemas/Profesor'
-      responses:
-        '200':
-          description: Usuario actualizado correctamente
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Alumno'
-                  - $ref: '#/components/schemas/Profesor'
-        '404':
-          description: Usuario no encontrado
-
     delete:
       tags:
         - usuarios
@@ -124,6 +92,26 @@ paths:
       responses:
         '204':
           description: Usuario eliminado correctamente
+        '404':
+          description: Usuario no encontrado
+
+  /usuarios/me:
+    get:
+      tags:
+        - usuarios
+      summary: Obtener información del usuario autenticado
+      operationId: getMiUsuario
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Alumno'
+                  - $ref: '#/components/schemas/Profesor'
+        '401':
+          description: No autenticado
         '404':
           description: Usuario no encontrado
 
@@ -597,7 +585,8 @@ paths:
     delete:
       tags:
         - contenido
-      summary: Eliminar contenido por ID
+      summary: Eliminar contenido por ID (solo el autor puede hacerlo)
+      description: Permite eliminar un contenido si el usuario autenticado es el autor del mismo.
       operationId: deleteContenido
       parameters:
         - name: id
@@ -608,6 +597,8 @@ paths:
       responses:
         '204':
           description: Contenido eliminado correctamente
+        '403':
+          description: No tienes permiso para eliminar este contenido
         '404':
           description: Contenido no encontrado
 
@@ -730,27 +721,33 @@ paths:
       summary: Obtener novedades para profesores
       parameters:
         - in: query
-          name: tipo
-          required: false
-          schema:
-            type: string
-        - in: query
           name: fechaDesde
           required: false
           schema:
             type: string
             format: date-time
+          example: "1983-07-22T02:10:54.131Z"
+          description: Fecha a partir de la cual se desean obtener novedades
       responses:
         '200':
-          description: Lista de novedades
+          description: Lista de novedades dirigidas a profesores
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Novedad'
+              example:
+                - id: 1
+                  texto: "Juan del Grupo 1 ha subido 1 Temario"
+                  tipoDestinatario: profesor
+                  fechaCreacion: "2025-06-01T10:20:26.767Z"
+                - id: 2
+                  texto: "Ignacio del Grupo 1 ha subido 1 Temario"
+                  tipoDestinatario: profesor
+                  fechaCreacion: "2025-06-01T10:22:13.842Z"
         '404':
-          description: Novedad no encontrada
+          description: Novedades no encontradas
 
     post:
       tags:
@@ -854,7 +851,7 @@ paths:
       tags:
         - noticias
       operationId: createNoticia
-      summary: Crear una nueva noticia (PDF + descripción)
+      summary: Crear una nueva noticia (Descripción + url + pdf)
       requestBody:
         required: true
         content:
@@ -864,6 +861,9 @@ paths:
               properties:
                 descripcion:
                   type: string
+                url:
+                    type: string
+                    format: uri
                 file:
                   type: string
                   format: binary
@@ -1038,6 +1038,30 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          description: Archivo no encontrado
+
+  /archivos/{id}/info:
+    get:
+      tags:
+        - archivos
+      operationId: getArchivoInfo
+      summary: Obtener metadatos de un archivo por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Metadatos del archivo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Archivo'
+        '400':
+          description: ID de archivo inválido
         '404':
           description: Archivo no encontrado
 
@@ -1249,7 +1273,7 @@ components:
 
     Noticia:
       type: object
-      required: [descripcion, archivoId]
+      required: [descripcion]
       description: Representa una noticia publicada en el tablón común.
       properties:
         id:
@@ -1258,6 +1282,9 @@ components:
         descripcion:
           type: string
           description: Descripción o título de la noticia.
+        url:
+          type: string
+          description: URL para acceder a la noticia.
         archivoId:
           type: integer
           description: ID del archivo adjunto.

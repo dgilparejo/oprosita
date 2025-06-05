@@ -3,14 +3,16 @@
 
   <div class="plank-wrapper">
     <app-plank
-      title="Simulacro"
       [editable]="false"
-      [lines]="simulacros"
-      [allowDeleteOnly]="true">
+      [lines]="simulacrosAsNovedades"
+      [allowDeleteOnly]="isProfesor"
+      (remove)="removeSimulacro($event)"
+      (clicked)="descargarSimulacro($event)"
+      (abrirArchivo)="abrirSimulacro($event)">
     </app-plank>
   </div>
 
-  <div class="boton-contenido">
+  <div *ngIf="isProfesor" class="boton-contenido">
     <app-ui-button text="Subir simulacro" (click)="addSimulation()"></app-ui-button>
   </div>
 </div>

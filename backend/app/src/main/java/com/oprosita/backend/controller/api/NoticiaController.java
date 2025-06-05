@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +37,8 @@ public class NoticiaController implements NoticiasApi {
     }
 
     @Override
-    public ResponseEntity<Noticia> createNoticia(String descripcion, MultipartFile file) {
-        NoticiaDto dto = noticiaService.crearNoticia(descripcion, file);
+    public ResponseEntity<Noticia> createNoticia(String descripcion, URI url, MultipartFile file) {
+        NoticiaDto dto = noticiaService.crearNoticia(descripcion,url, file);
         return ResponseEntity.status(201).body(mapper.toGeneratedNoticia(dto));
     }
 }

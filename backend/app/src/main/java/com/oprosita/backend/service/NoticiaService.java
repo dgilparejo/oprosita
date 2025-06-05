@@ -3,6 +3,7 @@ package com.oprosita.backend.service;
 import com.oprosita.backend.dto.NoticiaDto;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 
 public interface NoticiaService {
@@ -14,5 +15,5 @@ public interface NoticiaService {
     void eliminar(Long id);
 
     // Métodos del OpenAPI
-    NoticiaDto crearNoticia(String descripcion, MultipartFile file);
+    NoticiaDto crearNoticia(String descripcion, URI url, MultipartFile file);
 }

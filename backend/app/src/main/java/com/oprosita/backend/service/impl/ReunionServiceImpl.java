@@ -60,10 +60,16 @@ public class ReunionServiceImpl implements ReunionService {
 
     @Override
     public void eliminar(Long id) {
-        if (!reunionRepository.existsById(id)) {
-            throw new NotFoundException("Reunión no encontrada");
+        Reunion reunion = reunionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Reunión no encontrada"));
+
+        // Eliminar la referencia al grupo asociado, si existe
+        Grupo grupo = reunion.getGrupo();
+        if (grupo != null) {
+            grupo.setReunion(null);
         }
-        reunionRepository.deleteById(id);
+
+        reunionRepository.delete(reunion);
     }
 
     @Override

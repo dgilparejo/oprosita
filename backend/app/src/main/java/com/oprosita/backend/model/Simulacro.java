@@ -15,7 +15,7 @@ public class Simulacro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String descripcion;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL, orphanRemoval = true)

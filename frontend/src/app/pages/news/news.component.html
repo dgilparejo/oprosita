@@ -2,12 +2,16 @@
   <app-ui-item label="Últimas noticias"></app-ui-item>
 
   <div class="plank-wrapper">
-    <div class="contenido-item" *ngFor="let noticia of noticias">
-      {{ noticia }}
-    </div>
+    <app-plank
+      [editable]="false"
+      [lines]="noticiasAsLineas"
+      [allowDeleteOnly]="isProfesor"
+      (remove)="removeNoticia($event)"
+      (abrirArchivo)="abrirArchivo($event)">
+    </app-plank>
   </div>
 
-  <div class="boton-contenido">
-    <app-ui-button text="Añadir contenido" (click)="addNoticia()"></app-ui-button>
+  <div *ngIf="isProfesor" class="boton-contenido">
+    <app-ui-button text="Añadir noticia" (click)="addNoticia()"></app-ui-button>
   </div>
 </div>

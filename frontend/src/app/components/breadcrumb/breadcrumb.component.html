@@ -7,10 +7,10 @@
   </div>
 
   <div class="breadcrumb-right">
-    <a mat-stroked-button routerLink="/chat" class="chat-button">
-      <mat-icon>chat</mat-icon>
-      Chat
-    </a>
+    <button mat-stroked-button (click)="toggleChat()" class="chat-button">
+    <mat-icon>chat</mat-icon> Chat
+    </button>
+    <app-sendbird-widget *ngIf="chatVisible()" />
     <app-user-profile></app-user-profile>
   </div>
 </div>
