@@ -83,6 +83,11 @@ export class KeycloakService {
     return <string>this.keycloak.token;
   }
 
+  getProfesorPorGrupo(grupoId: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`/api/v1/grupos/${grupoId}/profesor`);
+  }
+
+
   logout(): void {
     localStorage.removeItem('kc_token');
     localStorage.removeItem('kc_refreshToken');

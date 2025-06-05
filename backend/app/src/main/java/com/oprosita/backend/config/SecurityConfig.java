@@ -24,10 +24,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Usuarios
-                        .requestMatchers(HttpMethod.GET,"/usuarios/me").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/usuarios/**").hasRole("profesor")
-                        .requestMatchers(HttpMethod.POST,"/usuarios/**").hasRole("profesor")
-                        .requestMatchers(HttpMethod.DELETE,"/usuarios/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/me").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("profesor", "alumno")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.POST, "/usuarios/**").hasRole("profesor")
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("profesor")
 
                         // Alumnado
                         .requestMatchers(HttpMethod.GET,"/alumnos/**").authenticated()

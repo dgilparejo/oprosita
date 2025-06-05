@@ -7,7 +7,7 @@ import { CalendarComponent } from '../../components/calendar/calendar.component'
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';
 import { NovedadesService } from '../../api/api/novedades.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component'; // ajusta si cambia
+import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 
 import {
   Grupo,
