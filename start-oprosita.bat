@@ -10,9 +10,15 @@ echo.
 echo [1/4] Levantando base de datos Keycloak...
 docker-compose up -d keycloak-db
 
-echo [2/4] Esperando 10 segundos para que keycloak-db arranque...
-timeout /t 10 >nul
-echo OK: tiempo de espera completado.
+echo [2/4] Esperando a que keycloak-db esté saludable...
+:WAIT_FOR_DB
+docker inspect --format "{{.State.Health.Status}}" keycloak-db | findstr "healthy" >nul
+if errorlevel 1 (
+    echo Esperando keycloak-db...
+    timeout /t 3 >nul
+    goto WAIT_FOR_DB
+)
+echo OK: keycloak-db está listo.
 
 echo [3/4] Arrancando el resto de servicios (keycloak, mysql, backend, frontend)...
 docker-compose up -d keycloak mysql backend frontend
