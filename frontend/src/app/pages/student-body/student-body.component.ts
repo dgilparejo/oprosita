@@ -1,6 +1,13 @@
 import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsuariosService, ContenidoService, ArchivosService, Grupo, GruposService, Novedad } from '../../api';
+import {
+  UsuariosService,
+  ContenidoService,
+  ArchivosService,
+  Grupo,
+  GruposService,
+  Novedad,
+} from 'opro-angular-client';
 import { KeycloakService } from '../../services/keycloak.service';
 import { PlankComponent } from '../../components/plank/plank.component';
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';

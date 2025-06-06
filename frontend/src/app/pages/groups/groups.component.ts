@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListComponent } from '../../components/list/list.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GruposService } from '../../api/api/grupos.service';
-import { UsuariosService } from '../../api/api/usuarios.service';
-import { Grupo } from '../../api/model/grupo';
+import { GruposService } from 'opro-angular-client';
+import { UsuariosService } from 'opro-angular-client';
+import { Grupo } from 'opro-angular-client';
 import { KeycloakService } from '../../services/keycloak.service';
 
 @Component({

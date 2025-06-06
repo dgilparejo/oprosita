@@ -4,13 +4,13 @@ import { PlankComponent } from '../../components/plank/plank.component';
 import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { NoticiasService } from '../../api/api/noticias.service';
-import { Noticia } from '../../api/model/noticia';
+import { NoticiasService } from 'opro-angular-client';
+import { Noticia } from 'opro-angular-client';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 import { KeycloakService } from '../../services/keycloak.service';
 import { NoticiaConPlank } from '../../model/NoticiaConPlank';
 import { DomSanitizer } from '@angular/platform-browser';
-import {ArchivosService} from '../../api';
+import { ArchivosService } from 'opro-angular-client';
 
 @Component({
   selector: 'app-news',

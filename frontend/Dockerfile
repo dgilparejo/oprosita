@@ -1,36 +1,42 @@
-# Etapa 0: Generar cliente OpenAPI con la imagen lnuclear/openapi-frontend
+# Etapa 0: Generar cliente OpenAPI
 FROM lnuclear/openapi-frontend:1.3.3 as openapi
 WORKDIR /openapi
-# Copiamos el archivo openapi.yml desde el proyecto
 COPY ../openapi/openapi.yml /openapi/openapi.yml
-
-# Ejecutamos la generación del cliente Angular
 RUN openapi-generator generate \
   -i /openapi/openapi.yml \
   -g typescript-angular \
   -o /openapi/generated \
-  --additional-properties=providedIn=root \
-  --skip-validate-spec
+  --additional-properties=npmName=opro-angular-client,npmVersion=1.3.5,modelPropertyNaming=camelCase,supportsES6=true,withInterfaces=true
 
-# Etapa build
+# Etapa 0.5: Empaquetar el cliente en .tgz con Node
+FROM node:20-alpine as pack-client
+WORKDIR /client
+COPY --from=openapi /openapi/generated /client
+RUN npm install && npm pack
+
+# Etapa 1: Build de Angular
 FROM node:20-alpine as build
 WORKDIR /app
 
-# Copia solo package.json y lock para instalar deps
+# Copia package.json y lock
 COPY frontend/package*.json ./
-RUN npm install --force
 
-# Copia el proyecto completo
+# Copiar paquete .tgz generado
+COPY --from=pack-client /client/opro-angular-client-1.3.5.tgz ./opro-angular-client-1.3.5.tgz
+
+# Instalar incluyendo el paquete local
+RUN npm install ./opro-angular-client-1.3.5.tgz --force
+
+# Copiar el proyecto completo
 COPY frontend/ ./
 
-# Copiar el cliente generado por openapi
-COPY --from=openapi /openapi/generated /app/src/app/api
+# Copiar el código generado por OpenAPI dentro de src/app/api si quieres
+COPY --from=pack-client /client /app/src/app/api
 
 # Compilar Angular
 RUN npm run build --prod
 
-
-# Etapa 2: Servir con nginx
+# Etapa 2: NGINX
 FROM nginx:alpine
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf

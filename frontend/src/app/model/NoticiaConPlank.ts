@@ -1,4 +1,4 @@
-import { Noticia } from '../api';
+import { Noticia } from 'opro-angular-client';
 
 export interface NoticiaConPlank extends Noticia {
   texto: string;

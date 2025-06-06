@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Usuario, Alumno, Profesor, GruposService, ReunionesService } from '../api';
+import {
+  Usuario,
+  Alumno,
+  Profesor,
+  GruposService,
+  ReunionesService,
+} from 'opro-angular-client';
 
 @Injectable({
   providedIn: 'root'

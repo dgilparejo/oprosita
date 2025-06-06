@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PlankComponent } from '../../components/plank/plank.component';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';
-import { NovedadesService } from '../../api/api/novedades.service';
+import { NovedadesService } from 'opro-angular-client';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 
@@ -15,8 +15,8 @@ import {
   Novedad,
   Reunion,
   ReunionesService,
-  UsuariosService
-} from '../../api';
+  UsuariosService,
+} from 'opro-angular-client';
 import { KeycloakService } from '../../services/keycloak.service';
 import { UsuarioHelperService } from '../../services/usuario-helper.service';
 

@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { Reunion } from '../../api/model/reunion';
-import { ReunionesService } from '../../api';
+import { Reunion } from 'opro-angular-client';
+import { ReunionesService } from 'opro-angular-client';
 import { inject } from '@angular/core';
 import {
   format,

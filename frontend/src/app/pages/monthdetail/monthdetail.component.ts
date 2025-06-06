@@ -6,7 +6,13 @@ import { UiButtonComponent } from '../../components/ui-button/ui-button.componen
 import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ContenidoService, GruposService, Novedad, UsuariosService, ArchivosService } from '../../api';
+import {
+  ContenidoService,
+  GruposService,
+  Novedad,
+  UsuariosService,
+  ArchivosService,
+} from 'opro-angular-client';
 import TipoDestinatarioEnum = Novedad.TipoDestinatarioEnum;
 import { DomSanitizer } from '@angular/platform-browser';
 import { NovedadConArchivo } from '../../model/NovedadConArchivo';

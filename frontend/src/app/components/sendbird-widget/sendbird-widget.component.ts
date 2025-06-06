@@ -10,8 +10,8 @@ import {
 } from '@sendbird/chat/groupChannel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UsuariosService } from '../../api/api/usuarios.service';
-import { Usuario } from '../../api/model/usuario';
+import { UsuariosService } from 'opro-angular-client';
+import { Usuario } from 'opro-angular-client';
 
 @Component({
   selector: 'app-sendbird-widget',

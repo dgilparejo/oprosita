@@ -1,7 +1,7 @@
 import Keycloak from 'keycloak-js';
 import { Injectable } from '@angular/core';
 import {map, Observable} from 'rxjs';
-import {Usuario} from '../api';
+import {Usuario} from 'opro-angular-client';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })

@@ -5,9 +5,9 @@ import { UiButtonComponent } from '../../components/ui-button/ui-button.componen
 import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { AddContentDialogComponent } from '../../components/add-content-dialog/add-content-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { SimulacrosService } from '../../api/api/simulacros.service';
-import { ArchivosService } from '../../api/api/archivos.service';
-import { Simulacro } from '../../api/model/simulacro';
+import { SimulacrosService } from 'opro-angular-client';
+import { ArchivosService } from 'opro-angular-client';
+import { Simulacro } from 'opro-angular-client';
 import { KeycloakService } from '../../services/keycloak.service';
 import { NovedadConArchivo } from '../../model/NovedadConArchivo';
 import {DomSanitizer} from '@angular/platform-browser';

@@ -5,7 +5,13 @@ import { UiItemComponent } from '../../components/ui-item/ui-item.component';
 import { UiButtonComponent } from '../../components/ui-button/ui-button.component';
 import { PlankComponent } from '../../components/plank/plank.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { AlumnosService, ContenidoService, ArchivosService, Alumno, Novedad } from '../../api';
+import {
+  AlumnosService,
+  ContenidoService,
+  ArchivosService,
+  Alumno,
+  Novedad,
+} from 'opro-angular-client';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NovedadConArchivo } from '../../model/NovedadConArchivo';
 

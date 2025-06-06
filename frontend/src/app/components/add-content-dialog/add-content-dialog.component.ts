@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {Grupo} from '../../api';
+import { Grupo } from 'opro-angular-client';
 
 @Component({
   selector: 'app-add-content-dialog',

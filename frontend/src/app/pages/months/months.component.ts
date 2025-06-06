@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import { ListComponent } from '../../components/list/list.component';
-import {GruposService, Mes} from '../../api';
+import {GruposService, Mes} from 'opro-angular-client';
 
 @Component({
   selector: 'app-months',
