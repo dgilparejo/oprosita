@@ -60,5 +60,5 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
-          docker build -t ${DOCKERHUB_USERNAME}/oprosita-backend:1.0.0 -f ./backend/docker/springboot/Dockerfile ./backend/app
+          docker build -t ${DOCKERHUB_USERNAME}/oprosita-backend:1.0.0 -f ./backend/docker/backend/Dockerfile ./backend/app
           docker push ${DOCKERHUB_USERNAME}/oprosita-backend:1.0.0
