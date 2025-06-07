@@ -45,6 +45,16 @@ export class StudentsComponent implements OnInit {
 
     const idNumerico = Number(this.grupoId.replace(/[^\d]/g, ''));
 
+    window.addEventListener('click', (event: any) => {
+      const target = event.target as HTMLElement;
+      if (target.classList.contains('archivo-link')) {
+        const id = Number(target.getAttribute('data-id'));
+        if (id) {
+          this.abrirArchivo(id);
+        }
+      }
+    });
+
     this.alumnosService.getAlumnosByGrupo(idNumerico).subscribe({
       next: alumnos => {
         alumnos.forEach(alumno => {
@@ -68,7 +78,7 @@ export class StudentsComponent implements OnInit {
 
                 if (item.archivoId) {
                   this.archivosService.getArchivoInfo(item.archivoId).subscribe(archivo => {
-                    const enlace = `<a class="archivo-link" style="text-decoration: underline; color: var(--forest-green); cursor: pointer">${archivo.nombre}</a>`;
+                    const enlace = `<a class="archivo-link" data-id="${item.id}" style="text-decoration: underline; color: var(--forest-green); cursor: pointer">${archivo.nombre}</a>`;
                     novedad.texto = this.sanitizer.bypassSecurityTrustHtml(`${item.texto} (${enlace})`) as unknown as string;
                     organizado[tipo].push(novedad);
                   });
@@ -88,6 +98,19 @@ export class StudentsComponent implements OnInit {
         });
       },
       error: err => console.error('Error cargando alumnos', err)
+    });
+  }
+
+  abrirArchivo(id: number): void {
+    const alumno = this.alumnos.find(a => Object.values(a.contenido).some(lista => lista.find(c => c.id === id)));
+    if (!alumno) return;
+
+    const contenido = Object.values(alumno.contenido).flat().find(c => c.id === id);
+    if (!contenido?.archivoId) return;
+
+    this.archivosService.downloadArchivo(contenido.archivoId, 'body').subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
     });
   }
 

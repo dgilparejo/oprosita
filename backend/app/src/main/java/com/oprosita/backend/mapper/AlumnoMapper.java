@@ -13,8 +13,10 @@ public interface AlumnoMapper {
 
     // JPA ↔ DTO
     @Mapping(source = "grupo.id", target = "grupoId")
+    @Mapping(source = "idKeycloak", target = "idKeycloak")
     AlumnoDto toAlumnoDto(Alumno alumno);
 
+    @Mapping(source = "idKeycloak", target = "idKeycloak")
     Alumno toAlumnoEntity(AlumnoDto alumnoDto);
 
     List<AlumnoDto> toAlumnoDtoList(List<Alumno> alumnos);
