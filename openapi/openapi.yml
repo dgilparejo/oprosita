@@ -335,8 +335,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Profesor'
             example:
-              id: 3
-              grupoIds: [ 1 ]
+              id: 1
       responses:
         '201':
           description: Profesor añadido

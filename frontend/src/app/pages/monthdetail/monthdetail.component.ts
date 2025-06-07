@@ -114,13 +114,26 @@ export class MonthDetailComponent implements OnInit {
               result.documentFile || undefined
             )
             .subscribe({
-              next: () => {
+              next: (contenidoCreado) => {
                 const nuevoItem = {
-                  id: Date.now(), // temporal hasta refrescar con ID real
-                  texto: result.descripcion,
-                  archivoId: undefined // si quieres mostrarlo tras refrescar, llama a `ngOnInit()`
+                  id: contenidoCreado.id!,
+                  texto: contenidoCreado.texto!,
+                  archivoId: contenidoCreado.archivoId ?? undefined
                 };
-                this.contenido[result.tipo as keyof typeof this.contenido].push(nuevoItem);
+
+                this.contenido[contenidoCreado.tipoContenido as keyof typeof this.contenido].push(nuevoItem);
+
+                if (contenidoCreado.archivoId) {
+                  this.archivosService.getArchivoInfo(contenidoCreado.archivoId).subscribe({
+                    next: archivo => {
+                      this.archivoInfo.set(contenidoCreado.id!, {
+                        nombre: archivo.nombre!,
+                        tipo: archivo.tipo!
+                      });
+                    },
+                    error: err => console.error('Error cargando archivo tras creación:', err)
+                  });
+                }
               },
               error: err => console.error('Error al enviar contenido:', err)
             });

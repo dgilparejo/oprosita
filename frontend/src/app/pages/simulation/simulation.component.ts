@@ -74,7 +74,8 @@ export class SimulationComponent implements OnInit {
     const dialogRef = this.dialog.open(AddContentDialogComponent, {
       data: {
         fixedTipo: 'Simulacro',
-        hideFechaHora: true
+        hideFechaHora: true,
+        hideUrl: true
       }
     });
 
