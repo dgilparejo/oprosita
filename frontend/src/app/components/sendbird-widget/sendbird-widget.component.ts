@@ -114,16 +114,21 @@ export class SendbirdWidgetComponent implements OnInit, OnDestroy {
       userIdsFilter: {
         userIds: [this.userId, otherId],
         includeMode: true,
-        queryType: QueryType.AND
+        queryType: QueryType.OR // cambia a OR para obtener todos los canales compartidos
       }
     });
 
     const channels = await query.next();
 
-    if (channels.length > 0) {
-      return channels[0];
+    // Buscar un canal 1:1 existente entre estos dos
+    for (const ch of channels) {
+      const members = ch.members.map((m: any) => m.userId);
+      if (members.length === 2 && members.includes(this.userId) && members.includes(otherId)) {
+        return ch;
+      }
     }
 
+    // Si no existe, créalo
     const params: GroupChannelCreateParams = {
       invitedUserIds: [otherId],
       isDistinct: true

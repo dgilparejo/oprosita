@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: API oPROsita
   description: API REST para gestión de grupos, usuarios, contenido y simulacros
-  version: 1.3.5
+  version: 1.3.6
 
 servers:
   - url: http://localhost:8080/api/v1
@@ -1449,6 +1449,9 @@ components:
               maxLength: 100
             grupoId:
               type: integer
+            idKeycloak:
+              type: string
+              description: ID de Keycloak del alumno
           description: Representa un alumno de la plataforma.
           example:
             id: 10
@@ -1473,6 +1476,9 @@ components:
               minItems: 1
               items:
                 type: integer
+            idKeycloak:
+              type: string
+              description: ID de Keycloak del profesor
           description: Representa un profesor con uno o varios grupos asignados.
           example:
             id: 5

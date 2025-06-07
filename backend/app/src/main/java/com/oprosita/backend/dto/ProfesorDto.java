@@ -26,4 +26,6 @@ public class ProfesorDto {
 
     @NotNull(message = "El tipo es obligatorio")
     private TipoDestinatario tipo;
+
+    private String idKeycloak;
 }
