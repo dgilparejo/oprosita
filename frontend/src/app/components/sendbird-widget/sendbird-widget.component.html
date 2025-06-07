@@ -22,8 +22,8 @@
   </div>
 
   <!-- Conversación activa -->
-  <div *ngIf="selectedUser" class="messages">
-    <div
+  <div *ngIf="selectedUser" class="messages" #messagesContainer>
+  <div
       *ngFor="let msg of messages"
       class="message"
       [ngClass]="{ 'sent': msg.isOwn, 'received': !msg.isOwn }"

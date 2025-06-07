@@ -10,7 +10,8 @@
     <button mat-stroked-button (click)="toggleChat()" class="chat-button">
     <mat-icon>chat</mat-icon> Chat
     </button>
-    <app-sendbird-widget *ngIf="chatVisible()" />
     <app-user-profile></app-user-profile>
   </div>
 </div>
+
+<app-sendbird-widget *ngIf="chatVisible()" />
