@@ -1433,7 +1433,7 @@ components:
           type: string
           enum: [ alumno, profesor ]
           description: Tipo de usuario (alumno o profesor)
-          readOnly: false  # ⚠️ esto permite que se genere el getter
+          readOnly: false
 
     Alumno:
       allOf:
@@ -1458,6 +1458,7 @@ components:
             nombre: Juan Pérez
             grupoId: 1
             tipo: alumno
+            idKeycloak: 2aaf40a2-2dda-48d4-98dc-c018f3eff2f6
 
     Profesor:
       allOf:
@@ -1485,6 +1486,7 @@ components:
             nombre: María López
             grupoIds: [ 1, 2 ]
             tipo: profesor
+            idKeycloak: 2aaf40a2-2dda-48d4-98dc-c018f3eff2f6
 
     Usuario:
       oneOf:

@@ -18,9 +18,11 @@ public interface ProfesorMapper {
 
     // JPA ↔ DTO
     @Mapping(source = "grupos", target = "grupoIds")
+    @Mapping(source = "idKeycloak", target = "idKeycloak")
     ProfesorDto toProfesorDto(Profesor profesor);
 
     @Mapping(source = "grupoIds", target = "grupos")
+    @Mapping(source = "idKeycloak", target = "idKeycloak")
     Profesor toProfesorEntity(ProfesorDto profesorDto);
 
     List<ProfesorDto> toProfesorDtoList(List<Profesor> profesores);

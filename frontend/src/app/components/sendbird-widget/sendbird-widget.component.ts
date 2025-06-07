@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import {Component, OnInit, OnDestroy, inject, NgZone} from '@angular/core';
 import { KeycloakService } from '../../services/keycloak.service';
 import SendbirdChat from '@sendbird/chat';
+import { ViewChild, ElementRef } from '@angular/core';
 import {
   GroupChannelModule,
   GroupChannel,
@@ -11,7 +12,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UsuariosService } from '../../api/api/usuarios.service';
-import { Usuario } from '../../api/model/usuario';
+import { Usuario } from '../../api';
 
 @Component({
   selector: 'app-sendbird-widget',
@@ -23,6 +24,17 @@ import { Usuario } from '../../api/model/usuario';
 export class SendbirdWidgetComponent implements OnInit, OnDestroy {
   private keycloakService = inject(KeycloakService);
   private usuariosService = inject(UsuariosService);
+  private zone = inject(NgZone);
+  @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+
+  private scrollToBottom(): void {
+    this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.messagesContainer.nativeElement.scrollTop =
+          this.messagesContainer.nativeElement.scrollHeight;
+      });
+    });
+  }
 
   public usersToChat: Array<Usuario> | undefined = [];
   public selectedUser: Usuario | null = null;
@@ -56,7 +68,7 @@ export class SendbirdWidgetComponent implements OnInit, OnDestroy {
 
   async selectUser(user: Usuario): Promise<void> {
     this.selectedUser = user;
-    this.channel = await this.ensure1to1Channel(String(user.id));
+    this.channel = await this.ensure1to1Channel(user.idKeycloak!);
 
     const messages = await this.channel.getMessagesByTimestamp(Date.now(), {
       prevResultSize: 20,
@@ -73,16 +85,18 @@ export class SendbirdWidgetComponent implements OnInit, OnDestroy {
           isOwn: msg.sender?.userId === this.userId
         };
       });
+    this.scrollToBottom();
 
     const handler = new GroupChannelHandler();
     handler.onMessageReceived = (_, message) => {
       const msg = message as any;
-      if (msg.isUserMessage?.() && this.selectedUser?.id === msg.sender?.userId || msg.sender?.userId === this.userId) {
+      if (msg.isUserMessage?.() && (this.selectedUser?.idKeycloak === msg.sender?.userId || msg.sender?.userId === this.userId)) {
         this.messages.push({
-          sender: msg.sender?.nickname || 'Desconocido',
+          sender: msg.sender?.userId === this.userId ? this.nickname : msg.sender?.nickname || 'Desconocido',
           content: msg.message,
           isOwn: msg.sender?.userId === this.userId
         });
+        this.scrollToBottom();
       }
     };
     this.sb.groupChannel.addGroupChannelHandler('chat-handler', handler);
@@ -105,6 +119,7 @@ export class SendbirdWidgetComponent implements OnInit, OnDestroy {
         content: content,
         isOwn: true
       });
+      this.scrollToBottom();
     }
   }
 
