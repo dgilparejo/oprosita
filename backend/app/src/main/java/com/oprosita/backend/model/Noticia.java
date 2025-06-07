@@ -20,6 +20,7 @@ public class Noticia {
     @Column(nullable = true, length = 1000)
     private String descripcion;
 
+    @Column(length = 3000)
     private URI url;
 
     @OneToOne(optional = true)

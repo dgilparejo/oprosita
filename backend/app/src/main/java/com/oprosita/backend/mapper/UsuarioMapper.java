@@ -72,16 +72,18 @@ public class UsuarioMapper {
         return dtoList.stream()
                 .map(dto -> {
                     if (dto instanceof AlumnoDto alumnoDto) {
-                        return alumnoMapper.toGeneratedAlumno(alumnoDto);
+                        var alumno = alumnoMapper.toGeneratedAlumno(alumnoDto);
+                        alumno.setIdKeycloak(alumnoDto.getIdKeycloak());
+                        return alumno;
                     } else if (dto instanceof ProfesorDto profesorDto) {
-                        return profesorMapper.toGeneratedProfesor(profesorDto);
+                        var profesor = profesorMapper.toGeneratedProfesor(profesorDto);
+                        profesor.setIdKeycloak(profesorDto.getIdKeycloak());
+                        return profesor;
                     } else {
                         throw new IllegalArgumentException("Tipo de DTO no soportado");
                     }
                 })
-                .map(obj -> {
-                    return new UsuarioWrapperAdapter(obj);
-                })
+                .map(UsuarioWrapperAdapter::new)
                 .collect(Collectors.toList());
     }
 
@@ -91,6 +93,7 @@ public class UsuarioMapper {
                     .id(alumnoDto.getId())
                     .nombre(alumnoDto.getNombre())
                     .grupoId(alumnoDto.getGrupoId())
+                    .idKeycloak(alumnoDto.getIdKeycloak())
                     .tipo(CrearUsuario201Response.TipoEnum.ALUMNO)
                     .grupoIds(alumnoDto.getGrupoId() != null
                             ? List.of(alumnoDto.getGrupoId())
@@ -99,6 +102,7 @@ public class UsuarioMapper {
             return new CrearUsuario201Response()
                     .id(profesorDto.getId())
                     .nombre(profesorDto.getNombre())
+                    .idKeycloak(profesorDto.getIdKeycloak())
                     .tipo(CrearUsuario201Response.TipoEnum.PROFESOR)
                     .grupoIds(profesorDto.getGrupoIds());
         } else {
@@ -129,15 +133,16 @@ public class UsuarioMapper {
     public CrearUsuario201Response fromUsuario(com.oprosita.backend.model.Usuario usuario) {
         CrearUsuario201Response response = new CrearUsuario201Response()
                 .id(Math.toIntExact(usuario.getId()))
-                .nombre(usuario.getNombre());
+                .nombre(usuario.getNombre())
+                .idKeycloak(usuario.getIdKeycloak());
 
         if (usuario instanceof Alumno alumno) {
-            response.setTipo(CrearUsuario201Response.TipoEnum.valueOf("ALUMNO"));
+            response.setTipo(CrearUsuario201Response.TipoEnum.ALUMNO);
             if (alumno.getGrupo() != null) {
                 response.setGrupoId(Math.toIntExact(alumno.getGrupo().getId()));
             }
         } else if (usuario instanceof Profesor profesor) {
-            response.setTipo(CrearUsuario201Response.TipoEnum.valueOf("PROFESOR"));
+            response.setTipo(CrearUsuario201Response.TipoEnum.PROFESOR);
             List<Integer> grupoIds = profesor.getGrupos().stream()
                     .map(g -> Math.toIntExact(g.getId()))
                     .collect(Collectors.toList());
@@ -146,5 +151,4 @@ public class UsuarioMapper {
 
         return response;
     }
-
 }
