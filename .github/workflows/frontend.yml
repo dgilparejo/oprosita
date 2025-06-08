@@ -1,0 +1,32 @@
+name: Build and Push Frontend to DockerHub
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Extract frontend version from package.json
+        id: version
+        run: |
+          VERSION=$(jq -r '.version' frontend/package.json)
+          echo "frontend_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Log in to DockerHub
+        run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+      - name: Build and Push Frontend Image
+        run: |
+          docker build \
+            -t ${DOCKERHUB_USERNAME}/oprosita-frontend:${{ steps.version.outputs.frontend_version }} \
+            -f frontend/Dockerfile .
+          docker push ${DOCKERHUB_USERNAME}/oprosita-frontend:${{ steps.version.outputs.frontend_version }}
