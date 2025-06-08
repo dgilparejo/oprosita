@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:26.2
+FROM quay.io/keycloak/keycloak:26.2.5
 
 # Copiar el realm y el tema personalizado
 COPY realms /opt/keycloak/data/import
