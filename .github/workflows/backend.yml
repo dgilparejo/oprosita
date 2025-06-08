@@ -72,8 +72,8 @@ jobs:
       - name: Build and Push Backend Image
         run: |
           docker build \
-            --build-arg DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME} \
-            --build-arg OPENAPI_BACKEND_VERSION=${{ steps.versions.outputs.openapi_version }} \
-            -t ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }} \
-            -f ./backend/docker/backend/Dockerfile ./backend/app
+          --build-arg DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME} \
+          --build-arg OPENAPI_BACKEND_VERSION=${{ steps.versions.outputs.openapi_version }} \
+          -t ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }} \
+          -f backend/docker/backend/Dockerfile .
           docker push ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }}
