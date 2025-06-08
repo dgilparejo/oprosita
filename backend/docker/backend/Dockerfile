@@ -1,6 +1,6 @@
 # Etapa 0: Extraer .jar de openapi image
-ARG DOCKERHUB_USERNAME
-ARG OPENAPI_BACKEND_VERSION
+ARG DOCKERHUB_USERNAME=oprosita
+ARG OPENAPI_BACKEND_VERSION=latest
 FROM ${DOCKERHUB_USERNAME}/openapi-backend:${OPENAPI_BACKEND_VERSION} AS openapi
 
 # Etapa 1: Compilación del backend
