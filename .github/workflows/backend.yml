@@ -1,4 +1,79 @@
-name: backend.yml
+name: Build and Push Backend and MySQL to DockerHub
+
 on:
+  workflow_dispatch:
 
 jobs:
+  build-test-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Extract versions from pom.xml
+        id: versions
+        run: |
+          BACKEND_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='version']/text()" backend/app/pom.xml)
+          OPENAPI_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='properties']/*[local-name()='openapi.version.override']/text()" backend/app/pom.xml)
+          echo "backend_version=$BACKEND_VERSION" >> $GITHUB_OUTPUT
+          echo "openapi_version=$OPENAPI_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Instalar openapi-backend en el repo Maven local
+        run: |
+          cd openapi/openapi-backend
+          mvn clean install -DskipTests
+
+      - name: Run Tests and Generate Coverage Report
+        run: |
+          cd backend/app
+          mvn clean test jacoco:report
+
+      - name: Check JaCoCo Coverage
+        run: |
+          cd backend/app
+          MISSED=$(grep -oP '(?<=<counter type="INSTRUCTION" missed=")\d+' target/site/jacoco/jacoco.xml)
+          COVERED=$(grep -oP '(?<=covered=")\d+' target/site/jacoco/jacoco.xml | paste -sd+ - | bc)
+          TOTAL=$((MISSED + COVERED))
+          PERCENT=$((100 * COVERED / TOTAL))
+          echo "Cobertura: $PERCENT%"
+          if [ "$PERCENT" -lt 10 ]; then
+            echo "Cobertura de código insuficiente. Deteniendo el workflow."
+            exit 1
+          fi
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: backend/app/target/site/jacoco/
+
+      - name: Log in to DockerHub
+        run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+      - name: Build and Push MySQL Image
+        run: |
+          docker build -t ${DOCKERHUB_USERNAME}/oprosita-mysql:${{ steps.versions.outputs.backend_version }} ./backend/docker/mysql
+          docker push ${DOCKERHUB_USERNAME}/oprosita-mysql:${{ steps.versions.outputs.backend_version }}
+
+      - name: Build and Push Backend Image
+        run: |
+          docker build \
+            --build-arg DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME} \
+            --build-arg OPENAPI_BACKEND_VERSION=${{ steps.versions.outputs.openapi_version }} \
+            -t ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }} \
+            -f backend/docker/backend/Dockerfile ./backend
+          docker push ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }}
