@@ -21,6 +21,14 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Extract versions from pom.xml
+        id: versions
+        run: |
+          BACKEND_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='version']/text()" backend/app/pom.xml)
+          OPENAPI_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='properties']/*[local-name()='openapi.version.override']/text()" backend/app/pom.xml)
+          echo "backend_version=$BACKEND_VERSION" >> $GITHUB_OUTPUT
+          echo "openapi_version=$OPENAPI_VERSION" >> $GITHUB_OUTPUT
+
       - name: Instalar openapi-backend en el repo Maven local
         run: |
           cd openapi/openapi-backend
@@ -55,14 +63,14 @@ jobs:
 
       - name: Build and Push MySQL Image
         run: |
-          docker build -t ${DOCKERHUB_USERNAME}/oprosita-mysql:1.0.0 ./backend/docker/mysql
-          docker push ${DOCKERHUB_USERNAME}/oprosita-mysql:1.0.0
+          docker build -t ${DOCKERHUB_USERNAME}/oprosita-mysql:${{ steps.versions.outputs.backend_version }} ./backend/docker/mysql
+          docker push ${DOCKERHUB_USERNAME}/oprosita-mysql:${{ steps.versions.outputs.backend_version }}
 
       - name: Build and Push Backend Image
         run: |
           docker build \
             --build-arg DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME} \
-            --build-arg OPENAPI_BACKEND_VERSION=1.3.6 \
-            -t ${DOCKERHUB_USERNAME}/oprosita-backend:1.0.0 \
+            --build-arg OPENAPI_BACKEND_VERSION=${{ steps.versions.outputs.openapi_version }} \
+            -t ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }} \
             -f ./backend/docker/backend/Dockerfile ./backend/app
-          docker push ${DOCKERHUB_USERNAME}/oprosita-backend:1.0.0
+          docker push ${DOCKERHUB_USERNAME}/oprosita-backend:${{ steps.versions.outputs.backend_version }}
